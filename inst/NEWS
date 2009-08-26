@@ -2,6 +2,15 @@
 Package: R.matlab
 =================
 
+Version: 1.2.5 [2009-08-25]
+o BUG FIX: The Matlab "server" InputStreamByteWrapper gave the error
+  "Undefined function or method 'ServerSocket' for input arguments 
+  of type 'double'.", when launching it via Matlab$startServer(). It
+  seems like import java.net.* etc. does not work. A workaround is to
+  specify the full path for all Java classes, e.g. java.net.ServerSocket.
+  Thanks Nicolas Stadler for reporting this issue. 
+
+
 Version: 1.2.4 [2008-10-29]
 o If onWrite == NULL, then there is no longer an outer two-pass scan
   for figuring out the size of MAT structure.  However, instead each

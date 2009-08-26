@@ -14,7 +14,7 @@
 % Requirements:
 % This requires Matlab with Java support, i.e. Matlab v6 or higher.
 %
-% Author: Henrik Bengtsson, 2002-2006
+% Author: Henrik Bengtsson, 2002-2009
 %
 % References:
 % [1] http://www.mathworks.com/access/helpdesk/help/techdoc/
@@ -110,7 +110,7 @@ if (port < 1023 | port > 65535)
 end
 
 fprintf(1, 'Trying to open server socket (port %d)...', port);
-server = ServerSocket(port);
+server = java.net.ServerSocket(port);
 fprintf(1, 'done.\n');
 
 
@@ -127,9 +127,9 @@ clientSocket = accept(server);
 fprintf(1, 'Connected to client.\n');
 
 % ...client connected.
-is = DataInputStream(getInputStream(clientSocket));
-%is = BufferedReader(InputStreamReader(is0));
-os = DataOutputStream(getOutputStream(clientSocket));
+is = java.io.DataInputStream(getInputStream(clientSocket));
+%is = java.io.BufferedReader(InputStreamReader(is0));
+os = java.io.DataOutputStream(getOutputStream(clientSocket));
 
 
 
@@ -225,7 +225,7 @@ while (state >= 0),
     else
       disp(expr);
       eval(expr);
-      file = File(tmpname);
+      file = java.io.File(tmpname);
       maxLength = length(file);
       clear file;
       writeInt(os, maxLength);
@@ -259,7 +259,7 @@ while (state >= 0),
     len = readInt(is);
     fprintf(1, 'Will read MAT file structure of length: %d bytes.\n', len);
 
-    reader = InputStreamByteWrapper(4096);
+    reader = java.io.InputStreamByteWrapper(4096);
     bfr = [];
     count = 1;
     while (len > 0 & count > 0)
@@ -319,6 +319,13 @@ close(server);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % HISTORY:
+% 2009-08-25
+% o BUG FIX: Started to get the error "Undefined function or method
+%   'ServerSocket' for input arguments of type 'double'.".  It seems like
+%   import java.net.* etc does not work. A workaround is to specify the
+%   full path for all Java classes, e.g. java.net.ServerSocket.
+%   Thanks Nicolas Stadler for reporting this issue.
+% 2006-12-28
 % o Extended the accepted range of ports from [1023,49151] to [1023,66535].
 % 2006-05-08
 % o BUG FIX: The error message string for reporting port out of range
