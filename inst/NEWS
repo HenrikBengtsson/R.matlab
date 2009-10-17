@@ -2,6 +2,16 @@
 Package: R.matlab
 =================
 
+Version: 1.2.6 [2009-10-16]
+o MEMORY OPTIMIZATION: For very large compressed data objects, there
+  would not be enough memory to allocate the internal buffer resulting
+  in an error.  Before this buffer was initiated to be 10 times the size
+  of the compressed data.  If that fails, now readMat() tries smaller
+  and smaller initial buffers, before giving in up.  Also, it now starts
+  with a buffer 3 (not 10) times the compressed size.
+  Thanks to Michael Sumner for reporting this problem.
+
+
 Version: 1.2.5 [2009-08-25]
 o BUG FIX: The Matlab server script (MatlabServer.m) gave the error
   "Undefined function or method 'ServerSocket' for input arguments 

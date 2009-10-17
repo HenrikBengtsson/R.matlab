@@ -40,24 +40,22 @@
 
    To use the Matlab class or requesting verbose output messages, the
    \link[R.utils:R.utils-package]{R.utils} package is loaded
-   when needed (and therefore required at in those cases).
+   when needed (and therefore required in those cases).
 
    The \code{readMat()} and \code{writeMat()} methods do \eqn{not}
    require a Matlab installation neither do they depend on the
    \code{\link{Matlab}} class.
 
    To connect to Matlab, Matlab v6 or higher is required.
-   It does \emph{not} work with Matlab v5 or before (because there those
-   version does not support Java).
-   For confirmed Matlab versions, see \code{\link{help}}() on the "Matlab" class.
+   It does \emph{not} work with Matlab v5 or before (because those
+   versions do not support Java).
+   For confirmed Matlab versions, see the \code{\link{Matlab}} class.
  }
 
  \section{Installation}{
    To install this package do\cr
 
    \code{install.packages("R.matlab")}
-
-   Required packages are installed in the same way.
 
    To get the "devel" version, see \url{http://www.braju.com/R/}.
  }
@@ -109,7 +107,7 @@
    The lower the threshold is the more information you will see.\cr
 
    \bold{Cannot connect to Matlab}:\cr
-   If R fails to connect to Matlab, make sure to try the the example in
+   If R fails to connect to Matlab, make sure to try the example in
    help(Matlab) first.  Make sure that the Matlab server is running
    before trying to connect to it from R first.  If Matlab is running
    but \code{open()} times out, make sure Matlab is listening to the
@@ -117,7 +115,7 @@
    try to increase the time-out limit, see help(open.Matlab).\cr
  
    \bold{Expected an 'answer' from Matlab, but kept receiving nothing.}:\cr
-     When spawning a really long Matlab process by \code{evaluate()}, you
+     When launching a really long Matlab process by \code{evaluate()}, you
    may get the above error message.\cr
    \emph{Reason:} This happens because \code{evaluate()} expect a reply
    from Matlab as soon as Matlab is done. The waiting should be "blocked",
@@ -155,9 +153,6 @@
           class, e.g. \code{who(matlab)}, \code{clear(matlab)} etc.
           Can this be done automatically using "reflection", so
           that required arguments are automatically detected?
-    \item Add support for reading (and writing) sparse matrices
-          to be represented by the sparse matrix class defined in
-          the \code{SparseM} package.
     \item Add access to Matlab variables via \code{"$"} and
           \code{"$<-"}, e.g. \code{matlab$A} and
           \code{matlab$A <- 1234}. Is this wanted?
@@ -173,6 +168,8 @@
    Thanks to the following people who contributed with valuable
    feedback, suggestions, code etc.:
    \itemize{
+    \item Jason Riedy, Computer Science Division,
+          University of California, Berkeley.
     \item Patrick Drechsler, Biocenter, University of Wuerzburg.
     \item Andy Jacobson, Atmospheric and Oceanic Sciences Program,
           Princeton University.

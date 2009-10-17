@@ -370,6 +370,68 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
     name;
   }
 
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Function to uncompress zlib compressed data.  It utilizes the
+  # Rcompression::uncompress() function, but in order to avoid lack-of-memory
+  # allocation errors it will try harder to find a reasonably sized internal
+  # inflation buffer.
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  uncompress <- function(zraw, sizeRatio=3, delta=0.9, asText=TRUE, ...) {
+    # Argument 'delta':
+    if (delta <= 0 || delta >= 1) {
+      throw("Argument 'delta' is out of range (0,1): ", delta);
+    }
+
+    n <- length(zraw);
+    unzraw <- NULL;
+
+    verbose && printf(verbose, level=-50, "Compress data size: %.3f Mb\n", n/1024^2);
+
+    lastException <- NULL;
+    size <- NULL;
+    while (is.null(unzraw) && sizeRatio >= 1) {
+      # The initial size of the internal inflation buffer.  If it is too
+      # small, Rcompression::uncompress() will try to *double* it, which
+      # might be too big for memory allocation.
+      size <- sizeRatio * n;
+
+      verbose && printf(verbose, level=-50, "Size ratio: %.3f\n", sizeRatio);
+
+      lastException <- NULL;
+      tryCatch({
+        unzraw <- Rcompression::uncompress(zraw, size=size, asText=asText);
+        # Successful uncompression
+        break;
+      }, error = function(ex) {
+        msg <- ex$message;
+        # Is the error is due to corrupt data, ...
+        if (regexpr("corrupted compressed", msg) != -1) {
+          # ...then there is nothing we can do.
+          errorMsg <- paste("Failed to uncompress data: ", msg, sep="");
+          throw(errorMsg);
+        }
+
+        # Garbage collect
+        gc();
+
+        # ...but it could be that there is not enough memory
+        lastException <<- ex;
+      }) # tryCatch()
+
+      sizeRatio <- delta * sizeRatio;
+    } # while (...)
+
+    # Failed?
+    if (is.null(unzraw)) {
+      msg <- lastException$message;
+      throw(sprintf("Failed to uncompress compressed %d bytes (with smallest initial buffer size of %.3f Mb: %s)", n, size/1024^2, msg));
+    }
+  
+    unzraw;
+  } # uncompress()
+
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Debug functions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -1092,18 +1154,20 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 
         if (identical(tag$type, "miCOMPRESSED")) {
           if (!require("Rcompression", quietly=TRUE)) {
-            throw("Cannot read compressed data.  Omegahat package 'Rcompression' could not be loaded.  Alternatively, save your data in a non-compressed format by specifying -V6 when calling save() in Matlab or Octave.");
+            throw("Cannot read compressed data.  Omegahat.org package 'Rcompression' could not be loaded.  Alternatively, save your data in a non-compressed format by specifying -V6 when calling save() in Matlab or Octave.");
           }
           n <- tag$nbrOfBytes;
           zraw <- readBinMat(con=con, what=raw(), n=n);
-          verbose && cat(verbose, level=-110, "Decompressing ", n, " bytes");
+          verbose && cat(verbose, level=-110, "Uncompressing ", n, " bytes");
 
-          unzraw <- Rcompression::uncompress(zraw, asText=FALSE);
-          verbose && cat(verbose, level=-110,
-                         "Decompressed to ", length(unzraw), " bytes.");
+          unzraw <- uncompress(zraw, asText=FALSE);
+          rm(zraw);
+
+          verbose && printf(verbose, level=-110,
+                  "Inflated %.3f times from %d bytes to %d bytes.\n", 
+                  length(unzraw)/length(zraw), length(zraw), length(unzraw));
 
           pushBackRawMat(con, unzraw);
-          rm(zraw);
           rm(unzraw);
 
           tag <- readTag(this);
@@ -1773,8 +1837,16 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 
 
 
-######################################################################
+###########################################################################
 # HISTORY:
+# 2009-09-19 [HB]
+# o MEMORY OPTIMIZATION: For very large compressed data objects, there
+#   would not be enough memory to allocate the internal buffer resulting
+#   in an error.  Before this buffer was initiated to be 10 times the size
+#   of the compressed data.  If that fails, now readMat() tries smaller
+#   and smaller initial buffers, before giving in up.  Also, it now starts
+#   with a buffer 3 (not 10) times the compressed size.
+#   Thanks to Michael Sumner for reporting this problem.
 # 2008-02-12 [HB]
 # o BUG FIX: Sparse matrices for 'SparseM' did not work.
 # o Replaced all stop(paste()) with plain stop(). Same for warnings().
@@ -1895,4 +1967,4 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 # o Improved as.character(). /HB
 # o Added some Rdoc comments. /HB
 # o Created. /HB
-######################################################################
+###########################################################################
