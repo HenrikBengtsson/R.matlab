@@ -2,6 +2,11 @@
 Package: R.matlab
 =================
 
+Version: 1.3.0 [2010-02-03]
+o GENERALIZATION: Now readMat() can read also nested miMATRIX structures.
+  Issue reported by Jonathan Chard at Mango Solutions, UK.
+
+
 Version: 1.2.6 [2009-10-16]
 o MEMORY OPTIMIZATION: For very large compressed data objects, there
   would not be enough memory to allocate the internal buffer resulting

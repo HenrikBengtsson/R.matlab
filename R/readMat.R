@@ -87,7 +87,7 @@
 # \references{
 #   [1] The MathWorks Inc., \emph{Matlab - MAT-File Format, version 5}, June 1999.\cr
 #   [2] The MathWorks Inc., \emph{Matlab - Application Program Interface Guide, version 5}, 1998.\cr
-#   [3] The MathWorks Inc., \emph{Matlab - MAT-File Format, version 7}, October 2004, \url{http://www.mathworks.com/access/helpdesk/help/pdf_doc/matlab/matfile_format.pdf}\cr
+#   [3] The MathWorks Inc., \emph{Matlab - MAT-File Format, version 7}, September 2009, \url{http://www.mathworks.com/access/helpdesk/help/pdf_doc/matlab/matfile_format.pdf}\cr
 # }
 #
 # @keyword file
@@ -1199,11 +1199,6 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
           bits;
         } # getBits()
   
-        tag <- readTag(this);
-        if (tag$type != "miUINT32") {
-          throw("Tag type not supported: ", tag$type);
-        }
-
         knownTypes <- c("mxCELL_CLASS"=NA, "mxSTRUCT_CLASS"=NA, "mxOBJECT_CLASS"=NA, "mxCHAR_CLASS"=8, "mxSPARSE_CLASS"=NA, "mxDOUBLE_CLASS"=NA, "mxSINGLE_CLASS"=NA, "mxINT8_CLASS"=8, "mxUINT8_CLASS"=8, "mxINT16_CLASS"=16, "mxUINT16_CLASS"=16, "mxINT32_CLASS"=32, "mxUINT32_CLASS"=32);
 
         # Read the first miUINT32 integer
@@ -1218,10 +1213,10 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
         if (class < 1 || class > length(knownTypes)) { 
           stop("Unknown array type (class). Not in [1,", length(knownTypes), "]: ", class);
         }
-       class <- names(knownTypes)[class];
+        class <- names(knownTypes)[class];
         classSize <- knownTypes[class];
 
-             arrayFlags <- arrayFlags %/% 256;
+        arrayFlags <- arrayFlags %/% 256;
 
         # Byte 3 - Flags
         # "Flags. This field contains three, single-bit flags that indicate
@@ -1244,9 +1239,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
         nzmax <- readBinMat(con, what=integer(), size=4, n=1);
         left <<- left - 4;
         
-        signed <- isSigned(tag$type);
-        
-        flags <- list(tag=tag, logical=logical, global=global, complex=complex, class=class, classSize=classSize, signed=signed, nzmax=nzmax);
+        flags <- list(logical=logical, global=global, complex=complex, class=class, classSize=classSize, nzmax=nzmax);
 
         verbose && print(verbose, level=-100, unlist(flags[-1]));
         
@@ -1428,8 +1421,35 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
       readMiMATRIX <- function(this, tag) {
         verbose && enter(verbose, level=-70, "Reading miMATRIX");
         on.exit(verbose && exit(verbose));
-        
+        verbose && cat(verbose, level=-60, "Argument 'tag':");
+        verbose && str(verbose, level=-60, tag);
+
+        tag <- readTag(this);
+
+        if (is.null(tag)) {
+          verbose && cat(verbose, "Nothing more to read. Returning NULL.");
+          verbose && exit(verbose);
+          return(NULL);
+        }
+
+        if (tag$type == "miMATRIX") {
+          verbose && enter(verbose, level=-70, "Reading a nested miMATRIX");
+          node <- readMiMATRIX(this, tag);
+          verbose && exit(verbose);
+          verbose && exit(verbose);
+          return(node);
+        }
+
+
+        if (tag$type != "miUINT32") {
+          throw("Tag type not supported: ", tag$type);
+        }
+
         arrayFlags <- readArrayFlags(this);
+
+        arrayFlags$tag <- tag;
+        arrayFlags$signed <- isSigned(tag$type);
+
         dimensionsArray <- readDimensionsArray(this);
         arrayName <- readName(this);
 
@@ -1839,6 +1859,9 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 
 ###########################################################################
 # HISTORY:
+# 2010-02-03 [HB]
+# o GENERALIZATION: Now readMat() can read also nested miMATRIX structures.
+#   Issue reported by Jonathan Chard at Mango Solutions, UK.
 # 2009-09-19 [HB]
 # o MEMORY OPTIMIZATION: For very large compressed data objects, there
 #   would not be enough memory to allocate the internal buffer resulting

@@ -81,17 +81,7 @@
  \section{How to cite this package}{
    Whenever using this package, please cite [2] as\cr
 
-   \preformatted{@TECHREPORT{BengtssonH_2005,
-  author = {Bengtsson, Henrik},
-  title = {{R.matlab} - Local and remote {M}atlab connectivity in {R}},
-  institution = {Mathematical Statistics, Centre for Mathematical Sciences,
-                 Lund University, Sweden},
-  year = {2005},
-  type = {{Preprint in Mathematical Sciences (manuscript in progress)}},
-  note = {[manuscript in progress]},
-  url = {http://www.maths.lth.se/help/R/R.matlab/},
-}}
-\emph{}
+   \emph{No citation information available.}
 
  }
 

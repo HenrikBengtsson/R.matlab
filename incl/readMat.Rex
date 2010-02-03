@@ -8,11 +8,11 @@ for (version in 4:5) {
                                                 path, "...\n", sep="")
 
   pattern <- sprintf("-v%d[.]mat$", version)
-  filenames <- list.files(pattern=pattern, path=path, full.names=TRUE)
+  pathnames <- list.files(pattern=pattern, path=path, full.names=TRUE)
 
-  for (filename in filenames) {
-    cat("Reading MAT file: ", basename(filename), "\n", sep="")
-    mat <- readMat(filename)
+  for (pathname in pathnames) {
+    cat("Reading MAT file: ", basename(pathname), "\n", sep="")
+    mat <- readMat(pathname)
     if (interactive()) {
       cat("Press ENTER to view data:")
       readline()
@@ -68,8 +68,22 @@ if (require("SparseM")) {
 # Assert that compressed files can be read
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 if (require("Rcompression")) {
+  # A particular compressed file
   pathname <- file.path(path, "StructWithSparseMatrix-v4,compressed.mat")
   mat4 <- readMat(pathname, sparseMatrixClass="matrix")
+
+  # All compressed files
+  pattern <- ",compressed[.]mat$"
+  pathnames <- list.files(pattern=pattern, path=path, full.names=TRUE)
+  for (pathname in pathnames) {
+    cat("Reading MAT file: ", basename(pathname), "\n", sep="")
+    mat <- readMat(pathname)
+    if (interactive()) {
+      cat("Press ENTER to view data:")
+      readline()
+    }
+    print(mat)
+  }
 }
 
 
