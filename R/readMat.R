@@ -42,8 +42,8 @@
 #   \item{maxLength}{The maximum number of bytes to be read from the input
 #     stream, which should be equal to the length of the MAT file structure.
 #     If \code{NULL}, data will be read until End Of File has been reached.}
-#   \item{fixNames}{If @TRUE, names of Matlab variables and fields are 
-#     renamed such that they are valid variables names in R.}
+#   \item{fixNames}{If @TRUE, underscores within names of Matlab variables
+#     and fields are converted to periods.}
 #   \item{verbose}{Either a @logical, a @numeric, or a @see "R.utils::Verbose"
 #     object specifying how much verbose/debug information is written to
 #     standard output. If a Verbose object, how detailed the information is
@@ -1859,6 +1859,9 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 
 ###########################################################################
 # HISTORY:
+# 2010-04-20 [HB]
+# o DOCUMENTATION: Minor update to argument 'fixNames' of help(readMat).
+#   Thanks Stephen Eglen (University of Cambridge) for the suggestion. 
 # 2010-02-03 [HB]
 # o GENERALIZATION: Now readMat() can read also nested miMATRIX structures.
 #   Issue reported by Jonathan Chard at Mango Solutions, UK.

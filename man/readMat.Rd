@@ -51,8 +51,8 @@
   \item{maxLength}{The maximum number of bytes to be read from the input
     stream, which should be equal to the length of the MAT file structure.
     If \code{NULL}, data will be read until End Of File has been reached.}
-  \item{fixNames}{If \code{\link[base:logical]{TRUE}}, names of Matlab variables and fields are
-    renamed such that they are valid variables names in R.}
+  \item{fixNames}{If \code{\link[base:logical]{TRUE}}, underscores within names of Matlab variables
+    and fields are converted to periods.}
   \item{verbose}{Either a \code{\link[base]{logical}}, a \code{\link[base]{numeric}}, or a \code{\link[R.utils]{Verbose}}
     object specifying how much verbose/debug information is written to
     standard output. If a Verbose object, how detailed the information is
