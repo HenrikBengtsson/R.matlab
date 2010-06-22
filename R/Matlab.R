@@ -120,12 +120,16 @@
 #
 # \section{Confirmed Matlab versions}{
 #   This package has been confirmed to work \emph{successfully} out of 
-#   the box together with Matlab v6.1.0.450 (R12.1), 
-#   Matlab v6.5.0.180913a (R13), Matlab v7.0.0.19901 (R14), 
-#   Matlab v7.0.1.24704 (R14SP1), Matlab v7.0.4.365 (R14SP2),
-#   and Matlab v7.2.0.232 (R2006a).
-#   [If you successfully use a higher Matlab version, please tell us, so
-#    we can share it here.]
+#   the box together with:
+#   Matlab v6.1.0.450 (R12.1), 
+#   Matlab v6.5.0.180913a (R13),
+#   Matlab v7.0.0.19901 (R14), 
+#   Matlab v7.0.1.24704 (R14SP1),
+#   Matlab v7.0.4.365 (R14SP2),
+#   Matlab v7.2.0.232 (R2006a), and 
+#   Matlab 7.4.0 (R2007a).
+#   If you successfully use a different/higher Matlab version, 
+#   please tell us, so we can share it here.
 #
 #   It does \emph{not} work with Matlab v5 or before!
 # }
