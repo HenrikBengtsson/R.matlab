@@ -188,8 +188,10 @@ Trying to open server socket (port 9999)...done.
    Matlab v7.0.0.19901 (R14),
    Matlab v7.0.1.24704 (R14SP1),
    Matlab v7.0.4.365 (R14SP2),
-   Matlab v7.2.0.232 (R2006a), and
-   Matlab 7.4.0 (R2007a).
+   Matlab v7.2.0.232 (R2006a),
+   Matlab 7.4.0 (R2007a), and
+   Matlab 7.7.0.471 (R2008b), and
+   Matlab version 7.10.0.499 (R2010a).
    If you successfully use a different/higher Matlab version,
    please tell us, so we can share it here.
 
