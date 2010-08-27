@@ -2,7 +2,9 @@
 Package: R.matlab
 =================
 
-Version: 1.3.2 [2010-07-18]
+Version: 1.3.2 [2010-08-27]
+o DOCUMENTATION: Removed some minor ambiguities in help(Matlab) and
+  updated example(Matlab) with some more troubleshooting statements.
 o DOCUMENTATION: Added Matlab 7.4.0 (R2007a), 7.7.0.471 (R2008b), and
   7.10.0.499 (R2010a) to the list of confirmed version that are 
   compatible with R.matlab.  Thanks Ajay Tripathy at UC Berkeley and

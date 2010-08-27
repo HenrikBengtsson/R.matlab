@@ -90,9 +90,10 @@
 #   so called Java classpath has to be set. In Matlab, type 
 #   \code{which('classpath.txt')} to find where the default 
 #   Matlab classpath.txt file is located. Copy this file to the
-#   \emph{current directory} and append the \emph{path} (the directory) 
-#   to InputStreamByteWrapper.class file, which is the same as the path
-#   of the MatlabServer.m you identified above.\cr
+#   \emph{current directory}, and append the \emph{path} (the directory) 
+#   of InputStreamByteWrapper.class to the end of classpath.txt.
+#   The path of InputStreamByteWrapper.class should be the same as 
+#   the path of the MatlabServer.m that you identified above.\cr
 #
 #   \bold{Lazy alternative:} Instead of setting path and classpaths,
 #   you may try to copy the MatlabServer.m and InputStreamByteWrapper.class 
@@ -1133,6 +1134,9 @@ setMethodS3("setVerbose", "Matlab", function(this, threshold=0, ...) {
 
 ############################################################################
 # HISTORY:
+# 2010-08-27
+# o Updated example(Matlab) slightly.
+# o Clarified the Rdoc for Matlab.
 # 2007-01-22
 # o Replaced Sys.putenv() with new Sys.setenv(). 
 # 2006-12-28
