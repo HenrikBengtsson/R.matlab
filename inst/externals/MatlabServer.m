@@ -24,6 +24,7 @@
 % [3] http://www.mathworks.com/access/helpdesk/help/toolbox/
 %                                              modelsim/a1057689278b4.html
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+disp('Running MatlabServer v1.3.2');
 
 %  addpath R/R_LIBS/linux/library/R.matlab/misc/
 
@@ -321,6 +322,8 @@ close(server);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % HISTORY:
+% 2010-08-28
+% o Now the MatlabServer script reports it's version when started.
 % 2010-08-27
 % o BUG FIX: Now MatlabServer.m saves variables using the function form,
 %   i.e. save().  This solves the problem of having single quotation marks
