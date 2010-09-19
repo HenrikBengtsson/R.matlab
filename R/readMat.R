@@ -166,6 +166,17 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
  
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # sapply(X, ...) function that treats length(X) == 0 specially
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  sapply0 <- function(X, FUN, ...) {
+    if (length(X) == 0) {
+      FUN(X, ...);
+    } else {
+      base::sapply(X, FUN=FUN, ...);
+    }
+  } # sapply0()
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Function to convert a vector of integers into a vector of ASCII chars.
   # 
   # Extracted from the R.oo package.
@@ -277,7 +288,10 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
   ## convert* are internal helper functions.  They handle type dispatch
   ## and defaults for charset conversions.
   convertUTF8 <- function(ary) {
-    ary <- paste(intToChar(as.integer(ary)), collapse="");
+    ary <- intToChar(as.integer(ary));
+    if (length(ary) > 0) {
+      ary <- paste(ary, collapse="");
+    }
     Encoding(ary) <- "UTF-8";
     ary;
   }
@@ -346,7 +360,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   matToCharArray <- function(ary, type) {
     fn <- charConverter(type);
-    sapply(ary, fn);
+    sapply0(ary, FUN=fn);
   }
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -1446,6 +1460,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
         }
 
         arrayFlags <- readArrayFlags(this);
+        verbose && str(verbose, level=-70, arrayFlags);
 
         arrayFlags$tag <- tag;
         arrayFlags$signed <- isSigned(tag$type);
@@ -1697,7 +1712,12 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
             dim(matrix) <- dimensionsArray$dim;
           } else if (arrayFlags$class == "mxCHAR_CLASS") {
             matrix <- matToCharArray(matrix, tag$type);
-            dim(matrix) <- dimensionsArray$dim;
+            dim <- dimensionsArray$dim;
+            # AD HOC/special/illegal case?  /HB 2010-09-18
+            if (length(matrix) == 0 && prod(dim) > 0) {
+              matrix <- "";
+            }
+            dim(matrix) <- dim;
             matrix <- apply(matrix, MARGIN=1, FUN=paste, collapse="");
             matrix <- as.matrix(matrix);
           } else {
@@ -1859,6 +1879,13 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 
 ###########################################################################
 # HISTORY:
+# 2010-09-18 [HB]
+# o BUG FIX: readMat() would throw an exception on 'Error in dim(matrix) 
+#   <- dimensionsArray$dim : dims [product 1] do not match the length of 
+#   object [0]' in rare cases related to empty strings.  Not sure if 
+#   those cases are legal, but added an ad hoc workaround for them.
+#   Thanks Claude Flene at University of Turku for reporting this.
+# o Added internal sapply0() to deal with the above bug.
 # 2010-04-20 [HB]
 # o DOCUMENTATION: Minor update to argument 'fixNames' of help(readMat).
 #   Thanks Stephen Eglen (University of Cambridge) for the suggestion. 

@@ -43,7 +43,7 @@
 \% Requirements:
 \% This requires Matlab with Java support, i.e. Matlab v6 or higher.
 \%
-\% Author: Henrik Bengtsson, 2002-2009
+\% Author: Henrik Bengtsson, 2002-2010
 \%
 \% References:
 \% [1] http://www.mathworks.com/access/helpdesk/help/techdoc/
@@ -53,6 +53,7 @@
 \% [3] http://www.mathworks.com/access/helpdesk/help/toolbox/
 \%                                              modelsim/a1057689278b4.html
 \%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%
+disp('Running MatlabServer v1.3.2');
 
 \%  addpath R/R_LIBS/linux/library/R.matlab/misc/
 
@@ -207,7 +208,7 @@ while (state >= 0),
   \%-------------------
   elseif (state == strmatch('send', commands, 'exact'))
     tmpname = sprintf('\%s.mat', tempname);
-    expr = sprintf('save \%s \%s', tmpname, saveOption);
+    expr = sprintf('save(tmpname, ''\%s''', saveOption);
     ok = 1;
     for k=1:length(variables),
       variable = variables{k};
@@ -216,8 +217,9 @@ while (state >= 0),
         ok = 0;
         break;
       end;
-      expr = sprintf('\%s \%s', expr, variable);
+      expr = sprintf('\%s, ''\%s''', expr, variable);
     end;
+    expr = sprintf('\%s)', expr);
     if (~ok)
       writeInt(os, -1);
       writeUTF(os, lasterr);
@@ -237,7 +239,7 @@ while (state >= 0),
   \%-------------------
   elseif (state == strmatch('send-remote', commands, 'exact'))
     tmpname = sprintf('\%s.mat', tempname);
-    expr = sprintf('save \%s \%s', tmpname, saveOption);
+    expr = sprintf('save(tmpname, ''\%s''', saveOption);
     ok = 1;
     for k=1:length(variables),
       variable = variables{k};
@@ -246,8 +248,9 @@ while (state >= 0),
         ok = 0;
         break;
       end;
-      expr = sprintf('\%s \%s', expr, variable);
+      expr = sprintf('\%s, ''\%s''', expr, variable);
     end;
+    expr = sprintf('\%s)', expr);
     if (~ok)
       writeInt(os, -1);
       writeUTF(os, lasterr);
@@ -348,6 +351,13 @@ close(server);
 
 \%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%
 \% HISTORY:
+\% 2010-08-28
+\% o Now the MatlabServer script reports it's version when started.
+\% 2010-08-27
+\% o BUG FIX: Now MatlabServer.m saves variables using the function form,
+\%   i.e. save().  This solves the problem of having single quotation marks
+\%   in the pathname. Thanks Michael Q. Fan at NC State University for
+\%   reporting this problem.
 \% 2009-08-25
 \% o BUG FIX: Started to get the error "Undefined function or method
 \%   'ServerSocket' for input arguments of type 'double'.".  It seems like

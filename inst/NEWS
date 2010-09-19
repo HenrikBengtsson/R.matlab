@@ -2,6 +2,14 @@
 Package: R.matlab
 =================
 
+Version: 1.3.3 [2010-09-18]
+o BUG FIX: readMat() would throw an exception on 'Error in dim(matrix) 
+  <- dimensionsArray$dim : dims [product 1] do not match the length of 
+  object [0]' in rare cases related to empty strings.  Not sure if 
+  those cases are legal, but added an ad hoc workaround for them.
+  Thanks Claude Flene at University of Turku for reporting this.
+
+
 Version: 1.3.2 [2010-08-28]
 o Now the MatlabServer script reports it's version when started.
 o DOCUMENTATION: Removed some minor ambiguities in help(Matlab) and
