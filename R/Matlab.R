@@ -30,10 +30,11 @@
 #   with regard to \R. Note that it a standard Matlab session that runs.\cr
 #
 #   Also, the starting of the MatlabServer is simplier from Matlab v7,
-#   although it is pretty straightforward for Matlab v6 too
-#   (this has to do with the fact that in Matlab v7, the for 
-#   remote-data-transfer required Java class can be dynamically 
-#   added to the Matlab Java classpath).
+#   although it is pretty straightforward for Matlab v6 too.
+#   It is easier in Matlab v7, because the Java class required for 
+#   remote-data-transfer can be automatically/dynamically added to
+#   the Matlab Java classpath, whereas for Matlab v6 it has to be
+#   added manually (see below).
 # }
 #
 # \section{Remote and non-remote connections}{
@@ -85,9 +86,9 @@
 #   In R you can type \code{system.file("externals", package="R.matlab")} 
 #   to find out the path to MatlabServer.m.
 #   
-#   \bold{For Matlab v6 only:} Contrary to Matlab v6, Matlab v6 cannot
+#   \bold{For Matlab v6 only:} Contrary to Matlab v7, Matlab v6 cannot
 #   find the InputStreamByteWrapper class automatically. Instead, the
-#   so called Java classpath has to be set. In Matlab, type 
+#   so called Java classpath has to be set manually. In Matlab, type 
 #   \code{which('classpath.txt')} to find where the default 
 #   Matlab classpath.txt file is located. Copy this file to the
 #   \emph{current directory}, and append the \emph{path} (the directory) 
@@ -128,9 +129,10 @@
 #   Matlab v7.0.1.24704 (R14SP1),
 #   Matlab v7.0.4.365 (R14SP2),
 #   Matlab v7.2.0.232 (R2006a), 
-#   Matlab 7.4.0 (R2007a), and
-#   Matlab 7.7.0.471 (R2008b), and
-#   Matlab version 7.10.0.499 (R2010a).
+#   Matlab 7.4.0 (R2007a),
+#   Matlab 7.7.0.471 (R2008b),
+#   Matlab version 7.10.0.499 (R2010a), and
+#   Matlab version 7.11.0.584 (R2010b).
 #   If you successfully use a different/higher Matlab version, 
 #   please tell us, so we can share it here.
 #
@@ -1134,6 +1136,8 @@ setMethodS3("setVerbose", "Matlab", function(this, threshold=0, ...) {
 
 ############################################################################
 # HISTORY:
+# 2010-10-26
+# o Clarified and corrected some sentences the help(Matlab).
 # 2010-08-27
 # o Updated example(Matlab) slightly.
 # o Clarified the Rdoc for Matlab.

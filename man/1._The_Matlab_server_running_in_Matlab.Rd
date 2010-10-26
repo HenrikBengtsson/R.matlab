@@ -53,7 +53,7 @@
 \% [3] http://www.mathworks.com/access/helpdesk/help/toolbox/
 \%                                              modelsim/a1057689278b4.html
 \%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%
-disp('Running MatlabServer v1.3.2');
+disp('Running MatlabServer v1.3.4');
 
 \%  addpath R/R_LIBS/linux/library/R.matlab/misc/
 
@@ -291,7 +291,7 @@ while (state >= 0),
     len = readInt(is);
     fprintf(1, 'Will read MAT file structure of length: \%d bytes.\n', len);
 
-    reader = java.io.InputStreamByteWrapper(4096);
+    reader = InputStreamByteWrapper(4096);
     bfr = [];
     count = 1;
     while (len > 0 & count > 0)
@@ -351,6 +351,10 @@ close(server);
 
 \%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%
 \% HISTORY:
+\% 2010-10-25 [v1.3.4]
+\% o BUG FIX: The MatlabServer.m script incorrectly referred to the
+\%   InputStreamByteWrapper class as java.io.InputStreamByteWrapper.
+\%   Thanks Kenvor Cothey at GMO LCC for reporting on this.
 \% 2010-08-28
 \% o Now the MatlabServer script reports it's version when started.
 \% 2010-08-27

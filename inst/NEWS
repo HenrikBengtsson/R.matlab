@@ -2,6 +2,18 @@
 Package: R.matlab
 =================
 
+Version: 1.3.4 [2010-10-26]
+o DOCUMENTATION: Clarified and corrected some sentences in help(Matlab).
+o DOCUMENTATION: Added Matlab 7.11.0.584 (R2010b) to the list of
+  confirmed version that are compatible with R.matlab.
+o BUG FIX: The MatlabServer.m script incorrectly referred to the 
+  InputStreamByteWrapper class as java.io.InputStreamByteWrapper. This
+  hopefully solves previously reports on obtaining "??? Undefined variable
+  "java" or class "java.io.InputStreamByteWrapper". Error in ==> 
+  MatlabServer at 262 reader = java.io.InputStreamByteWrapper(4096);".
+  Thanks Kenvor Cothey at GMO LCC for reporting on this.
+
+
 Version: 1.3.3 [2010-09-18]
 o BUG FIX: readMat() would throw an exception on 'Error in dim(matrix) 
   <- dimensionsArray$dim : dims [product 1] do not match the length of 
