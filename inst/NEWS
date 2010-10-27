@@ -11,6 +11,7 @@ o BUG FIX: The MatlabServer.m script incorrectly referred to the
   hopefully solves previously reports on obtaining "??? Undefined variable
   "java" or class "java.io.InputStreamByteWrapper". Error in ==> 
   MatlabServer at 262 reader = java.io.InputStreamByteWrapper(4096);".
+  This bug was introduced in R.matlab v1.2.5 (2009-08-25).
   Thanks Kenvor Cothey at GMO LCC for reporting on this.
 
 
