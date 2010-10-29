@@ -16,7 +16,8 @@
 #   \item{con}{Binary @connection to which the MAT file structure should be
 #     written to. A string is interpreted as filename, which then will be
 #     opened (and closed afterwards).}
-#   \item{...}{\emph{Named} variables to be written.}
+#   \item{...}{\emph{Named} variables to be written where the names
+#     must be unique.}
 #   \item{matVersion}{A @character string specifying what MAT file format 
 #     version to be written to the connection. If \code{"5"}, a MAT v5 file
 #     structure is written. No other formats are currently supported.}
@@ -772,8 +773,12 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
 
   # Assert that objects to be written by writeMat() are named
   names <- names(args);
-  if (is.null(names) || any(names == 0)) {
-    warning("All objects written have to be named, e.g. use writeMat(..., x=a, y=y) and not writeMat(..., x=a, y): ", deparse(sys.call()));
+  if (is.null(names) || any(names == "")) {
+    throw("Detected non-named objects. Non-named objects will not be available in Matlab if completed. Use writeMat(..., x=a, y=y) and not writeMat(..., x=a, y): ", deparse(sys.call()));
+  }
+
+  if (any(duplicated(names))) {
+    throw("Detected objects with duplicated names. Only the last occurance of each duplicated object will be available in Matlab if completed: ", names[duplicated(names)]);
   }
 
 ###   if (is.null(names)) {
@@ -848,6 +853,9 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
 
 ######################################################################
 # HISTORY:
+# 2010-10-29
+# o BUG FIX: The test for non-named objects to writeMat() did not
+#   work correctly.
 # 2010-10-28
 # o DOCUMENTATION: Clarified in the help of writeMat() that it can
 #   only write 'uncompressed' MAT files.
