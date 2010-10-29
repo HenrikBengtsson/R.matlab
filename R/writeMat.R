@@ -7,7 +7,7 @@
 #  This function takes the given variables (\code{...}) and places them in a
 #  MAT file structure, which is then written to a binary connection.
 #
-#  Currently only the MAT version 5 file format is supported.
+#  Currently only the uncompressed MAT version 5 file format is supported.
 # }
 #
 # @synopsis
@@ -16,7 +16,7 @@
 #   \item{con}{Binary @connection to which the MAT file structure should be
 #     written to. A string is interpreted as filename, which then will be
 #     opened (and closed afterwards).}
-#   \item{...}{Named variables to be written.}
+#   \item{...}{\emph{Named} variables to be written.}
 #   \item{matVersion}{A @character string specifying what MAT file format 
 #     version to be written to the connection. If \code{"5"}, a MAT v5 file
 #     structure is written. No other formats are currently supported.}
@@ -761,12 +761,57 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
   # MAT v5 specific                                                        END
   #===========================================================================
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # "Main program"
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Make sure arguments are named, otherwise name them automagically
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Wrap up the objects to be written in a list structure.
   args <- list(...);
 
+  # Assert that objects to be written by writeMat() are named
+  names <- names(args);
+  if (is.null(names) || any(names == 0)) {
+    warning("All objects written have to be named, e.g. use writeMat(..., x=a, y=y) and not writeMat(..., x=a, y): ", deparse(sys.call()));
+  }
+
+###   if (is.null(names)) {
+###     names <- rep("", times=length(args));
+###   }
+### 
+###   # Detect non-named arguments
+###   notNamed <- (nchar(names) == 0);
+###   idxs <- which(notNamed);
+###   if (length(idxs) > 0) {
+###     # Inferring the names from the passed objects
+###     names2 <- as.character(substitute(args));
+###     names2 <- names2[idxs];
+### 
+###     # Check which are syntactically valid R names, 
+###     # e.g. not just writeMat(..., 1:10).
+###     isValid <- sapply(names2, FUN=function(name) {
+###       expr <- parse(text=sprintf("%s <- NULL;", name));
+###       res <- tryCatch({ eval(expr); TRUE }, error=function(ex) { FALSE });
+###       res;
+###     });
+### 
+###     # Fix invalid names
+###     if (any(!isValid)) {
+###       names3 <- names2[!isValid];
+###       names3 <- sprintf("unnamed%d", seq(along=names3));
+###       names2[!isValid] <- names3;
+###     }
+### 
+###     # Add the inferred names
+###     names[idxs] <- names2;
+###     names(args) <- names;
+###   } # if (length(idxs) > 0)
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Setup the connection to be written to
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (inherits(con, "connection")) {
     if (!isOpen(con)) {
       open(con, open="wb");
@@ -787,6 +832,11 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
   if (summary(con)$text != "binary")
     stop("Can only write a MAT file structure to a *binary* connection.");
 
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Write the data
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (matVersion == "5") {
     writeMat5(con, objects=args, onWrite=onWrite);
   } else {
@@ -798,6 +848,16 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
 
 ######################################################################
 # HISTORY:
+# 2010-10-28
+# o DOCUMENTATION: Clarified in the help of writeMat() that it can
+#   only write 'uncompressed' MAT files.
+# o ROBUSTNESS: Although readMat() can read non-named objects, in
+#   Matlab it is only the 'load()' function call that can read it
+#   but not the plain 'load' call.  Because of this, writeMat() 
+#   will now give a warning if it detects non-named objects.  For
+#   instance, in writeMat("foo.mat", x=a, y) the object 'a' is 
+#   named (as "x") whereas 'y' is not.  To name the objects and 
+#   avoid the warning, use writeMat("foo.mat", x=a, y=y).
 # 2008-10-29
 # o If onWrite == NULL, then there is no longer an outer two-pass scan
 #   for figuring out the size of MAT structure.  However, instead

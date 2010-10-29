@@ -2,6 +2,19 @@
 Package: R.matlab
 =================
 
+Version: 1.3.5 [2010-10-28]
+o DOCUMENTATION: Clarified in the help of writeMat() that it can
+  only write 'uncompressed' MAT files.
+o ROBUSTNESS: Although readMat() can read non-named objects, in
+  Matlab it is only the 'load()' function call that can read it
+  but not the plain 'load' call.  Because of this, writeMat() 
+  will now give a warning if it detects non-named objects.  For
+  instance, in writeMat("foo.mat", x=a, y) the object 'a' is 
+  named (as "x") whereas 'y' is not.  To name the objects and 
+  avoid the warning, use writeMat("foo.mat", x=a, y=y).  Thanks
+  Claudia Beleites at University of Trieste for reporting on this.
+
+
 Version: 1.3.4 [2010-10-26]
 o DOCUMENTATION: Clarified and corrected some sentences in help(Matlab).
 o DOCUMENTATION: Added Matlab 7.11.0.584 (R2010b) to the list of

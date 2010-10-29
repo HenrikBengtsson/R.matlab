@@ -16,7 +16,7 @@
  This function takes the given variables (\code{...}) and places them in a
  MAT file structure, which is then written to a binary connection.
 
- Currently only the MAT version 5 file format is supported.
+ Currently only the uncompressed MAT version 5 file format is supported.
 }
 
 \usage{\method{writeMat}{default}(con, ..., matVersion="5", onWrite=NULL, verbose=FALSE)}
@@ -25,7 +25,7 @@
   \item{con}{Binary \code{\link[base:connections]{connection}} to which the MAT file structure should be
     written to. A string is interpreted as filename, which then will be
     opened (and closed afterwards).}
-  \item{...}{Named variables to be written.}
+  \item{...}{\emph{Named} variables to be written.}
   \item{matVersion}{A \code{\link[base]{character}} string specifying what MAT file format
     version to be written to the connection. If \code{"5"}, a MAT v5 file
     structure is written. No other formats are currently supported.}
