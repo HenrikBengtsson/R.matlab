@@ -778,7 +778,7 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
   }
 
   if (any(duplicated(names))) {
-    throw("Detected objects with duplicated names. Only the last occurance of each duplicated object will be available in Matlab if completed: ", names[duplicated(names)]);
+    throw("Detected objects with duplicated names (", paste(names[duplicated(names)], collapse=", "), "). Only the last occurance of each duplicated object will be available in Matlab if completed: ", deparse(sys.call()));
   }
 
 ###   if (is.null(names)) {
@@ -854,6 +854,10 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
 ######################################################################
 # HISTORY:
 # 2010-10-29
+# o Now writeMat() gives an error, if non-unique object names
+#   are detected.
+# o Now writeMat() gives an error, not a warning, if non-named 
+#   objects are detected.
 # o BUG FIX: The test for non-named objects to writeMat() did not
 #   work correctly.
 # 2010-10-28
