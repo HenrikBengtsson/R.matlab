@@ -743,7 +743,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
         if (header$imagf != 0) {
           verbose && cat(verbose, level=-2, "Reading imaginary part of complex data set.")
           imag <- readBinMat(con, what=header$what, size=header$size, signed=header$signed, n=n);
-          data <- complex(real=real, imag=imag);
+          data <- complex(real=real, imaginary=imag);
         } else {
           data <- real;
           rm(real);
@@ -1879,6 +1879,9 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 
 ###########################################################################
 # HISTORY:
+# 2011-02-01
+# o ROBUSTNESS: Now using argument 'imaginary' (not 'imag') in calls
+#   to complex().
 # 2010-09-18 [HB]
 # o BUG FIX: readMat() would throw an exception on 'Error in dim(matrix) 
 #   <- dimensionsArray$dim : dims [product 1] do not match the length of 
