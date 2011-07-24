@@ -194,6 +194,13 @@ print(s["type",,])
 
 # Get substructure s(:,2)
 print(s[,,2])
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Example of verbose output
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bs <- readMat(file.path(path, "unsignedByte.mat"), verbose=TRUE)
+
 }
 
 \author{

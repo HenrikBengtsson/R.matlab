@@ -1810,14 +1810,20 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 
   # Argument 'verbose':
   if (inherits(verbose, "Verbose")) {
+    # Use cat() of R.utils here (and not the one in 'base')
+    cat <- R.utils::cat;
   } else if (is.numeric(verbose)) {
     require("R.utils") || throw("Package not available: R.utils");
     verbose <- Verbose(threshold=verbose);
+    # Use cat() of R.utils here (and not the one in 'base')
+    cat <- R.utils::cat;
   } else {
     verbose <- as.logical(verbose);
     if (verbose) {
       require("R.utils") || throw("Package not available: R.utils");
       verbose <- Verbose(threshold=-1);
+      # Use cat() of R.utils here (and not the one in 'base')
+      cat <- R.utils::cat;
     }
   }
 
@@ -1879,6 +1885,9 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 
 ###########################################################################
 # HISTORY:
+# 2011-07-24
+# o Now readMat() and writeMat() locally defines cat() (by copying the
+#   one in R.utils), iff R.utils is loaded.
 # 2011-02-01
 # o ROBUSTNESS: Now using argument 'imaginary' (not 'imag') in calls
 #   to complex().

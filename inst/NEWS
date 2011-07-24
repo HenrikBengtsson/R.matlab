@@ -3,6 +3,7 @@ Package: R.matlab
 =================
 
 Version: 1.4.0 [2011-07-24]
+o ROBUSTNESS: Added an example of verbose output to example(readMat).
 o Added a namespace to the package, which will be more or less
   a requirement in the next major release of R.
 
