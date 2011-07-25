@@ -392,6 +392,10 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
   # inflation buffer.
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   uncompress <- function(zraw, sizeRatio=3, delta=0.9, asText=TRUE, ...) {
+    if (!require("Rcompression", quietly=TRUE)) {
+      throw("Cannot read compressed data.  Omegahat.org package 'Rcompression' could not be loaded.  Alternatively, save your data in a non-compressed format by specifying -V6 when calling save() in Matlab or Octave.");
+    }
+
     # Argument 'delta':
     if (delta <= 0 || delta >= 1) {
       throw("Argument 'delta' is out of range (0,1): ", delta);
@@ -1167,9 +1171,6 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
         verbose && print(verbose, level=-100, unlist(tag));
 
         if (identical(tag$type, "miCOMPRESSED")) {
-          if (!require("Rcompression", quietly=TRUE)) {
-            throw("Cannot read compressed data.  Omegahat.org package 'Rcompression' could not be loaded.  Alternatively, save your data in a non-compressed format by specifying -V6 when calling save() in Matlab or Octave.");
-          }
           n <- tag$nbrOfBytes;
           zraw <- readBinMat(con=con, what=raw(), n=n);
           verbose && cat(verbose, level=-110, "Uncompressing ", n, " bytes");
@@ -1885,6 +1886,11 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 
 ###########################################################################
 # HISTORY:
+# 2011-07-25
+# o CLEANUP: Now all references to the Rcompression package is within
+#   the local uncompress() function of readMat().  This makes the code
+#   more modular making it easier to implement alternatives to
+#   Rcompression::uncompress().
 # 2011-07-24
 # o Now readMat() and writeMat() locally defines cat() (by copying the
 #   one in R.utils), iff R.utils is loaded.
