@@ -386,12 +386,35 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-  # Function to uncompress zlib compressed data.  It utilizes the
-  # Rcompression::uncompress() function, but in order to avoid lack-of-memory
-  # allocation errors it will try harder to find a reasonably sized internal
-  # inflation buffer.
+  # \description{
+  #  Function to uncompress zlib compressed data.
+  #  If R v2.10.0 or newer, we'll utilize base::memDecompress(), otherwise
+  #  we'll utilize Rcompression::uncompress(), iff package is installed.
+  # }
+  #
+  # \arguments{
+  #  \item{zraw}{A @raw @vector to be uncompressed.}
+  #  \item{asText}{If @TRUE, a @character string is returned, 
+  #    otherwise a @raw @vector.}
+  #  \item{...}{Not used.}
+  # }
+  # 
+  # \value{
+  #   Returns a @raw @vector (or a @character string if 'asText' is TRUE).
+  # }
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-  uncompress <- function(zraw, sizeRatio=3, delta=0.9, asText=TRUE, ...) {
+  uncompressMemDecompress <- function(zraw, asText=TRUE, type="gzip", ...) {
+    # To please R CMD check for R versions before R v2.10.0
+    memDecompress <- NULL; rm(memDecompress);
+    unzraw <- memDecompress(zraw, type=type, asChar=asText, ...);
+    unzraw;
+  } # uncompressMemDecompress()
+
+
+  # This is a smart wrapper function around Rcompression::uncompress(), 
+  # which in order to avoid lack-of-memory allocation errors will via
+  # trial and error find a reasonably sized internal inflation buffer.
+  uncompressRcompression <- function(zraw, asText=TRUE, sizeRatio=3, delta=0.9, ...) {
     if (!require("Rcompression", quietly=TRUE)) {
       throw("Cannot read compressed data.  Omegahat.org package 'Rcompression' could not be loaded.  Alternatively, save your data in a non-compressed format by specifying -V6 when calling save() in Matlab or Octave.");
     }
@@ -447,7 +470,15 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
     }
   
     unzraw;
-  } # uncompress()
+  } # uncompressRcompression()
+
+
+  # memDecompress() was introduced in R v2.10.0
+  if (getRversion() >= "2.10.0" && exists("memDecompress", mode="function")) {
+    uncompress <- uncompressMemDecompress;
+  } else {
+    uncompress <- uncompressRcompression;
+  }
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -1886,6 +1917,10 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 
 ###########################################################################
 # HISTORY:
+# 2011-09-24
+# o GENERALIZATION: Now readMat() utilizes base::memDecompress() to
+#   uncompress compressed data structures, unless running R v2.9.x or
+#   before, in case Rcompression::uncompress() is used, iff installed.
 # 2011-07-25
 # o CLEANUP: Now all references to the Rcompression package is within
 #   the local uncompress() function of readMat().  This makes the code
