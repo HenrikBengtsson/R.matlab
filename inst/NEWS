@@ -6,7 +6,8 @@ Version: 1.5.0 [2011-09-24]
 o GENERALIZATION: Now readMat() utilizes base::memDecompress() to
   uncompress compressed data structures, unless running R v2.9.x or
   before, in case Rcompression::uncompress() is used, iff installed.
-  Thanks Stephen Eglen at for the reminder of memDecompress().
+  Thanks Stephen Eglen at University of Cambridge for reminding me
+  about memDecompress().
 
 
 Version: 1.4.0 [2011-07-25]
