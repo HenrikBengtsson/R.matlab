@@ -15,13 +15,14 @@
 #  supported. The implementation is based on [1].
 #
 #  From Matlab v7, \emph{compressed} MAT version 5 files are used by
-#  default [3], which can be read (not written) if the \pkg{Rcompression}
-#  package is installed.  See @see "R.matlab" for more details on that 
-#  package.
-#
-#  If \pkg{Rcompression} is not available, use \code{save -V6} in Matlab
-#  to write a MAT file compatible with Matlab v6, that is, to write a 
-#  non-compressed MAT version 5 file.  
+#  default [3].  This function supports reading such files,
+#  if running R v2.10.0 or newer.
+#  For older versions of R, the \pkg{Rcompression} package is used.
+#  To install that package, please see instructions at
+#  \url{http://www.omegahat.org/cranRepository.html}.
+#  As a last resort, use \code{save -V6} in Matlab to write MAT files
+#  that are compatible with Matlab v6, that is, to write 
+#  non-compressed MAT version 5 files.
 #
 #  Note: Do not mix up version numbers for the Matlab software and
 #  the Matlab file formats.
@@ -76,8 +77,9 @@
 #   The internal MAT v4 reader was written by 
 #   Andy Jacobson at Program in Atmospheric and Oceanic Sciences, 
 #   Princeton University. 
-#   Support for read compressed files, sparse matrices and UTF-encoded
-#   strings was added by Jason Riedy, UC Berkeley.
+#   Support for reading compressed files via \pkg{Rcompression}, 
+#   sparse matrices and UTF-encoded strings was added by 
+#   Jason Riedy, UC Berkeley.
 # }
 #
 # \seealso{

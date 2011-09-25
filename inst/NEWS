@@ -8,6 +8,7 @@ o GENERALIZATION: Now readMat() utilizes base::memDecompress() to
   before, in case Rcompression::uncompress() is used, iff installed.
   Thanks Stephen Eglen at University of Cambridge for reminding me
   about memDecompress().
+o CLEANUP: Now using packageStartupMessage() instead of cat().
 
 
 Version: 1.4.0 [2011-07-25]

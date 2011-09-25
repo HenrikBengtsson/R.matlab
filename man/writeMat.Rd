@@ -16,7 +16,8 @@
  This function takes the given variables (\code{...}) and places them in a
  MAT file structure, which is then written to a binary connection.
 
- Currently only the uncompressed MAT version 5 file format is supported.
+ Currently only the uncompressed MAT version 5 file format is supported,
+ that is, compressed MAT files cannot be written (only read).
 }
 
 \usage{\method{writeMat}{default}(con, ..., matVersion="5", onWrite=NULL, verbose=FALSE)}

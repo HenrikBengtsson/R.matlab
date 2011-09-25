@@ -15,13 +15,15 @@
     assign("Sys.setenv", Sys.putenv, envir=env);
   }
 
-  cat(getName(pkg), " v", getVersion(pkg), " (", getDate(pkg), ")",
-      " successfully loaded. See ?", pkgname, " for help.\n", sep="");
+  packageStartupMessage(getName(pkg), " v", getVersion(pkg), " (", 
+    getDate(pkg), ") successfully loaded. See ?", pkgname, " for help.");
 }
 
 
 ############################################################################
 # HISTORY:
+# 2011-09-24
+# o Now using packageStartupMessage() instead of cat().
 # 2011-07-24
 # o Added a namespace to the package.
 ############################################################################

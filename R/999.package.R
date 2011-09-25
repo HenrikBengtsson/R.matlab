@@ -21,10 +21,6 @@
 #   This is a cross-platform package implemented in plain \R.
 #   This package depends on the \pkg{R.oo} package [1].
 #
-#   In order to read compressed MAT files, the \pkg{Rcompression} 
-#   package is required.  To install that package, please see 
-#   instructions \url{http://www.omegahat.org/cranRepository.html}.
-#
 #   To use the Matlab class or requesting verbose output messages, the 
 #   \link[R.utils:R.utils-package]{R.utils} package is loaded 
 #   when needed (and therefore required in those cases).
