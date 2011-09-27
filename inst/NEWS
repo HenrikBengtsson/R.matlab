@@ -2,6 +2,13 @@
 Package: R.matlab
 =================
 
+Version: 1.5.1 [2011-09-27]
+o The version 1.5.0 that was submitted to CRAN did not include the
+  adjustments for startup messages.  Thus, resubmitting this one
+  to CRAN.
+o Updated the R and package dependencies.
+
+
 Version: 1.5.0 [2011-09-24]
 o GENERALIZATION: Now readMat() utilizes base::memDecompress() to
   uncompress compressed data structures, unless running R v2.9.x or
