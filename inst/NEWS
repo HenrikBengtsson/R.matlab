@@ -2,6 +2,10 @@
 Package: R.matlab
 =================
 
+Version: 1.5.2 [2011-11-02]
+o CLEANUP: Fixed a R CMD check NOTE that would show up in R v2.15.0 devel.
+
+
 Version: 1.5.1 [2011-09-27]
 o The version 1.5.0 that was submitted to CRAN did not include the
   adjustments for startup messages.  Thus, resubmitting this one

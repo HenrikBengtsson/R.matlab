@@ -6,13 +6,15 @@
 ## .First.lib <- function(libname, pkgname) {
 .onAttach <- function(libname, pkgname) {
   pkg <- Package(pkgname);
-  assign(pkgname, pkg, pos=getPosition(pkg));
+  pos <- getPosition(pkg);
+  assign(pkgname, pkg, pos=pos);
 
   # Patch for Sys.setenv() and Sys.putenv()
   # Sys.setenv() replaces Sys.putenv() from R v2.5.0. Code for migration.
   if (!exists("Sys.setenv", mode="function", envir=baseenv())) {
-    env <- as.environment("package:R.matlab");
-    assign("Sys.setenv", Sys.putenv, envir=env);
+    # To please R CMD check on R (>= 2.15.0)
+    Sys.putenv <- NULL; rm("Sys.putenv"); 
+    assign("Sys.setenv", Sys.putenv, pos=pos);
   }
 
   packageStartupMessage(getName(pkg), " v", getVersion(pkg), " (", 
@@ -22,6 +24,8 @@
 
 ############################################################################
 # HISTORY:
+# 2010-11-02
+# o Added a workaround for an R (>= 2.15.0) CMD check NOTE.
 # 2011-09-24
 # o Now using packageStartupMessage() instead of cat().
 # 2011-07-24
