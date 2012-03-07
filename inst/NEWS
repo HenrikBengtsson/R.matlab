@@ -2,6 +2,17 @@
 Package: R.matlab
 =================
 
+Version: 1.5.4 [2012-03-06]
+o CRAN POLICY: Removed all internal copies of 'base' functions
+  that have .Internal() calls.
+
+
+Version: 1.5.3 [2011-12-08]
+o DOCUMENTATION: Added a section to help(Matlab) on how to connect
+  through firewalls.  Thanks Bas de Regt at University of Adelaide
+  for the suggestion.
+
+
 Version: 1.5.2 [2011-11-02]
 o CLEANUP: Fixed a R CMD check NOTE that would show up in R v2.15.0 devel.
 

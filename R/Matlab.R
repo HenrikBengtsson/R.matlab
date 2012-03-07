@@ -150,6 +150,12 @@
 #   is not possible for others to connect to the Matlab server.
 # }
 #
+# \section{Firewalls}{
+#   If the Matlab server is running on a machine behind a firewall,
+#   one may have to connect via a proxy.  If on Windows, see
+#   \code{setInternet2()} in the \pkg{utils} package on how to do this.
+# }
+#
 # \section{Matlab server is timing out}{
 #   It might be that an @seemethod "evaluate" call to the Matlab server
 #   takes a long time for the server to finish resulting in a time-out
@@ -411,7 +417,7 @@ setMethodS3("open", "Matlab", function(con, trials=30, interval=1, ...) {
 # }
 #*/###########################################################################
 setMethodS3("isOpen", "Matlab", function(con, ...) {
-  # isOpen() is already a generic function in 'base'.
+  # isOpen() is already a function in 'base'.
   this <- con;
   (!is.null(this$con) && isOpen(this$con))
 })
@@ -1136,6 +1142,9 @@ setMethodS3("setVerbose", "Matlab", function(this, threshold=0, ...) {
 
 ############################################################################
 # HISTORY:
+# 2011-12-08
+# o DOCUMENTATION: Added a section to help(Matlab) on how to connect
+#   through firewalls.
 # 2010-10-26
 # o Clarified and corrected some sentences the help(Matlab).
 # 2010-08-27
