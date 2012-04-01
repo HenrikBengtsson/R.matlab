@@ -2,6 +2,12 @@
 Package: R.matlab
 =================
 
+Version: 1.5.5 [2012-03-31]
+o ROBUSTNESS: Move most of the test code that was in the examples
+  of readMat() and writeMat() to formal system tests of the package,
+  and made those examples simpler.
+
+
 Version: 1.5.4 [2012-03-06]
 o CRAN POLICY: Removed all internal copies of 'base' functions
   that have .Internal() calls.
@@ -28,8 +34,8 @@ Version: 1.5.0 [2011-09-24]
 o GENERALIZATION: Now readMat() utilizes base::memDecompress() to
   uncompress compressed data structures, unless running R v2.9.x or
   before, in case Rcompression::uncompress() is used, iff installed.
-  Thanks Stephen Eglen at University of Cambridge for reminding me
-  about memDecompress().
+  R v2.10.0 was released October 2009.  Thanks Stephen Eglen at 
+  University of Cambridge for reminding me about memDecompress().
 o CLEANUP: Now using packageStartupMessage() instead of cat().
 
 
