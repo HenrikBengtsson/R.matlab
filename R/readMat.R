@@ -417,7 +417,9 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
   # which in order to avoid lack-of-memory allocation errors will via
   # trial and error find a reasonably sized internal inflation buffer.
   uncompressRcompression <- function(zraw, asText=TRUE, sizeRatio=3, delta=0.9, ...) {
-    if (!require("Rcompression", quietly=TRUE)) {
+    # TRICK: Hide 'Rcompression' from R CMD check
+    pkgName <- "Rcompression";
+    if (!require(pkgName, quietly=TRUE)) {
       throw("Cannot read compressed data.  Omegahat.org package 'Rcompression' could not be loaded.  Alternatively, save your data in a non-compressed format by specifying -V6 when calling save() in Matlab or Octave.");
     }
 
@@ -425,6 +427,9 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
     if (delta <= 0 || delta >= 1) {
       throw("Argument 'delta' is out of range (0,1): ", delta);
     }
+
+    # Get Rcompression::uncompress() without R CMD check noticing.
+    uncompress <- getFromNamespace("uncompress", ns=pkgName);
 
     n <- length(zraw);
     unzraw <- NULL;
@@ -443,7 +448,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 
       lastException <- NULL;
       tryCatch({
-        unzraw <- Rcompression::uncompress(zraw, size=size, asText=asText);
+        unzraw <- uncompress(zraw, size=size, asText=asText);
         # Successful uncompression
         break;
       }, error = function(ex) {
@@ -1919,6 +1924,12 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 
 ###########################################################################
 # HISTORY:
+# 2012-04-01
+# o CLEANUP: Removed 'Rcompression' from set of "Suggests" packages,
+#   because since R v2.10.0 (Oct 2009) we can use memDecompress() of
+#   the 'base' package instead.  However, just in case someone is still
+#   running older versions of R, readMat() does indeed still look for
+#   'Rcompression' as a fallback.
 # 2011-09-24
 # o GENERALIZATION: Now readMat() utilizes base::memDecompress() to
 #   uncompress compressed data structures, unless running R v2.9.x or

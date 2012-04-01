@@ -2,10 +2,15 @@
 Package: R.matlab
 =================
 
-Version: 1.5.5 [2012-03-31]
+Version: 1.5.5 [2012-04-01]
 o ROBUSTNESS: Move most of the test code that was in the examples
   of readMat() and writeMat() to formal system tests of the package,
   and made those examples simpler.
+o CLEANUP: Removed 'Rcompression' from set of "Suggests" packages,
+  because since R v2.10.0 (Oct 2009) we can use memDecompress() of
+  the 'base' package instead.  However, just in case someone is still
+  running older versions of R, readMat() does indeed still look for
+  'Rcompression' as a fallback.
 
 
 Version: 1.5.4 [2012-03-06]

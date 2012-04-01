@@ -69,8 +69,7 @@ if (require("SparseM")) {
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 # Assert that compressed files can be read
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-hasMemDecompress <- (getRversion() >= "2.10.0" && exists("memDecompress", mode="function"));
-if (hasMemDecompress || require("Rcompression")) {
+if (getRversion() >= "2.10.0") {
   # A particular compressed file
   pathname <- file.path(path, "StructWithSparseMatrix-v4,compressed.mat")
   mat4 <- readMat(pathname, sparseMatrixClass="matrix")
