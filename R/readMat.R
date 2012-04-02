@@ -1213,8 +1213,10 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
           zraw <- readBinMat(con=con, what=raw(), n=n);
           verbose && cat(verbose, level=-110, "Uncompressing ", n, " bytes");
 
+          verbose && printf(verbose, level=-110, "zraw: %s\n", hpaste(zraw, maxHead=8, maxTail=8));
+
+          tryCatch({
           unzraw <- uncompress(zraw, asText=FALSE);
-          rm(zraw);
 
           verbose && printf(verbose, level=-110,
                   "Inflated %.3f times from %d bytes to %d bytes.\n", 
@@ -1222,6 +1224,19 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 
           pushBackRawMat(con, unzraw);
           rm(unzraw);
+          }, error = function(ex) {
+## zz <<- zraw;
+## cat("######################################################\n");
+## cat("######################################################\n");
+## print(ex);
+## cat("######################################################\n");
+## cat("######################################################\n");
+## readline();
+            msg <- ex$message;
+            msg <- sprintf("INTERNAL ERROR: Failed to decompress data. Please report to the R.matlab package maintainer (%s). The reason was: %s", getMaintainer(R.matlab), msg);
+            throw(msg);
+          })
+          rm(zraw);
 
           tag <- readTag(this);
         }
@@ -1924,6 +1939,11 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 
 ###########################################################################
 # HISTORY:
+# 2012-04-02
+# o Made error message when failing to decompress data more informative.
+# o Added verbose hpaste() details on the 'zraw' vector to be uncompressed.
+# o BUG FIX: readMat(..., verbose=-111) would give an error on object
+#   'zraw' not found.
 # 2012-04-01
 # o CLEANUP: Removed 'Rcompression' from set of "Suggests" packages,
 #   because since R v2.10.0 (Oct 2009) we can use memDecompress() of
