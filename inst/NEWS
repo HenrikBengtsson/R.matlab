@@ -2,7 +2,7 @@
 Package: R.matlab
 =================
 
-Version: 1.5.7 [2012-04-12]
+Version: 1.5.7 [2012-04-13]
 o The 'Rcompression' updated in v1.5.5 introduced a bug, causing
   the loading of that package to fail.
 

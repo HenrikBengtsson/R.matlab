@@ -487,7 +487,6 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
     uncompress <- uncompressRcompression;
   }
 
-
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Debug functions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -1212,34 +1211,36 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
           n <- tag$nbrOfBytes;
           zraw <- readBinMat(con=con, what=raw(), n=n);
           verbose && cat(verbose, level=-110, "Uncompressing ", n, " bytes");
-
-          verbose && printf(verbose, level=-110, "zraw: %s\n", hpaste(zraw, maxHead=8, maxTail=8));
-
+          verbose && printf(verbose, level=-110, "zraw [%d bytes]: %s\n", length(zraw), hpaste(zraw, maxHead=8, maxTail=8));
+          # Sanity check
+          stopifnot(identical(length(zraw), n));
+## zraw0 <<- zraw;
           tryCatch({
-          unzraw <- uncompress(zraw, asText=FALSE);
+            unzraw <- uncompress(zraw, asText=FALSE);
 
-          verbose && printf(verbose, level=-110,
-                  "Inflated %.3f times from %d bytes to %d bytes.\n", 
-                  length(unzraw)/length(zraw), length(zraw), length(unzraw));
+            verbose && printf(verbose, level=-110,
+                    "Inflated %.3f times from %d bytes to %d bytes.\n", 
+                    length(unzraw)/length(zraw), length(zraw), length(unzraw));
 
-          pushBackRawMat(con, unzraw);
-          rm(unzraw);
+            pushBackRawMat(con, unzraw);
+            rm(unzraw);
           }, error = function(ex) {
-## zz <<- zraw;
-## cat("######################################################\n");
-## cat("######################################################\n");
-## print(ex);
-## cat("######################################################\n");
-## cat("######################################################\n");
-## readline();
             msg <- ex$message;
-            msg <- sprintf("INTERNAL ERROR: Failed to decompress data. Please report to the R.matlab package maintainer (%s). The reason was: %s", getMaintainer(R.matlab), msg);
-            throw(msg);
-          })
+            msg <- sprintf("INTERNAL ERROR: Failed to uncompress data. Please report to the R.matlab package maintainer (%s). The reason was: %s", getMaintainer(R.matlab), msg);
+            onError <- getOption("R.matlab::readMat/onUncompressError");
+            if (identical(onError, "warning")) {
+              verbose && enter(verbose, "Skipping");
+              verbose && cat(verbose, msg);
+              warning(msg);
+              verbose && exit(verbose);
+            } else {
+              throw(msg);
+            }
+          });
           rm(zraw);
 
           tag <- readTag(this);
-        }
+        } # if (identical(tag$type, "miCOMPRESSED"))
   
         tag;
       } # readTag()
@@ -1939,6 +1940,12 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 
 ###########################################################################
 # HISTORY:
+# 2012-04-13
+# o Added option 'R.matlab::readMat/onUncompressError' allowing to skip
+#   data object that fails to uncompress.  This will at least allow
+#   to read remaining objects in a MAT file.
+# o Added a sanity check for the length of the internal 'zraw' buffer
+#   to be uncompressed.
 # 2012-04-12
 # o BUG FIX: Forgot to add 'character.only=TRUE' in require() for
 #   loading 'Rcompression' in the 2012-04-01 update.
