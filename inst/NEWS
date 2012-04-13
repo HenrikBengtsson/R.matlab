@@ -2,6 +2,11 @@
 Package: R.matlab
 =================
 
+Version: 1.5.7 [2012-04-12]
+o The 'Rcompression' updated in v1.5.5 introduced a bug, causing
+  the loading of that package to fail.
+
+
 Version: 1.5.6 [2012-04-02]
 o BUG FIX: readMat(..., verbose=-111) would give an error on object
   'zraw' not being found.
@@ -30,7 +35,7 @@ o DOCUMENTATION: Added a section to help(Matlab) on how to connect
 
 
 Version: 1.5.2 [2011-11-02]
-o CLEANUP: Fixed a R CMD check NOTE that would show up in R v2.15.0 devel.
+o CLEANUP: Fixed an R CMD check NOTE that would show up in R v2.15.0 devel.
 
 
 Version: 1.5.1 [2011-09-27]

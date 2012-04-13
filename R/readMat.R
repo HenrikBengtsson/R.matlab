@@ -419,7 +419,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
   uncompressRcompression <- function(zraw, asText=TRUE, sizeRatio=3, delta=0.9, ...) {
     # TRICK: Hide 'Rcompression' from R CMD check
     pkgName <- "Rcompression";
-    if (!require(pkgName, quietly=TRUE)) {
+    if (!require(pkgName, character.only=TRUE, quietly=TRUE)) {
       throw("Cannot read compressed data.  Omegahat.org package 'Rcompression' could not be loaded.  Alternatively, save your data in a non-compressed format by specifying -V6 when calling save() in Matlab or Octave.");
     }
 
@@ -1939,6 +1939,9 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 
 ###########################################################################
 # HISTORY:
+# 2012-04-12
+# o BUG FIX: Forgot to add 'character.only=TRUE' in require() for
+#   loading 'Rcompression' in the 2012-04-01 update.
 # 2012-04-02
 # o Made error message when failing to decompress data more informative.
 # o Added verbose hpaste() details on the 'zraw' vector to be uncompressed.
