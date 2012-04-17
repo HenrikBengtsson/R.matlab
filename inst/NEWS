@@ -2,6 +2,10 @@
 Package: R.matlab
 =================
 
+Version: 1.5.8 [2012-04-16]
+o Package now only *imports* R.methodsS3.
+
+
 Version: 1.5.7 [2012-04-13]
 o The 'Rcompression' update in v1.5.5 introduced a bug, causing
   the loading of that package to fail.

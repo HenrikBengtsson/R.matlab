@@ -23,7 +23,7 @@ tryCatch({
   # Not named
   writeMat(filename, A)
 }, error = function(ex) {
-  cat("ERROR:", getMessage(ex), "\n")
+  cat("ERROR:", ex$message, "\n")
 })
 
 
@@ -33,5 +33,5 @@ tryCatch({
   # Not uniquely named
   writeMat(filename, A=A, B=B, A=C)
 }, error = function(ex) {
-  cat("ERROR:", getMessage(ex), "\n")
+  cat("ERROR:", ex$message, "\n")
 })
