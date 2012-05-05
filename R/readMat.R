@@ -480,12 +480,67 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
   } # uncompressRcompression()
 
 
-  # memDecompress() was introduced in R v2.10.0
-  if (getRversion() >= "2.10.0" && exists("memDecompress", mode="function")) {
-    uncompress <- uncompressMemDecompress;
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Decompression method
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Default decompress function
+  uncompress <- function(...) {
+    throw("Cannot decompress compressed MAT file because none of the decompression methods are available: ", hpaste(decompressWith0, maxHead=Inf));
+  } # uncompress()
+  attr(uncompress, "label") <- "N/A";
+
+
+  # Override with available methods
+  decompressWith <- getOption("R.matlab::decompressWith", c("memDecompress", "Rcompression"));
+
+  # Validate option
+  if (is.character(decompressWith)) {
+  } else if (is.function(decompressWith)) {
   } else {
-    uncompress <- uncompressRcompression;
+    throw("Unknown mode of 'R.matlab::decompressWith': ", mode(decompressWith));
   }
+
+  decompressWith0 <- decompressWith;
+
+  if (length(decompressWith) > 0) {
+    if (is.character(decompressWith)) {
+      # Is memDecompress() available?
+      # memDecompress() was introduced in R v2.10.0
+      if (is.element("memDecompress", decompressWith)) {
+        if (getRversion() < "2.10.0" || !exists("memDecompress", mode="function")) {
+          decompressWith <- setdiff(decompressWith, "memDecompress");
+        }
+      }
+    
+      # Is Rcompression package available?
+      if (is.element("Rcompression", decompressWith)) {
+        if (require("R.utils")) {
+          if (!isPackageInstalled("Rcompression")) {
+            decompressWith <- setdiff(decompressWith, "Rcompression");
+          }
+        }
+      }
+
+      # Select decompression method
+      if (is.character(decompressWith)) {
+        if (decompressWith[1] == "memDecompress") {
+          uncompress <- uncompressMemDecompress;
+          attr(uncompress, "label") <- decompressWith[1];
+        } else if (decompressWith[1] == "Rcompression") {
+          uncompress <- uncompressRcompression;
+          attr(uncompress, "label") <- decompressWith[1];
+        } else {
+          # Don't throw an exception here, because it may be 
+          # that the MAT files is not compressed.
+        }
+      }
+    } else if (is.function(decompressWith)) {
+      uncompress <- decompressWith;
+      attr(uncompress, "label") <- "<function>";
+
+    }
+  } # if (length(decompressWith) > 0)
+
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Debug functions
@@ -1210,7 +1265,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
         if (identical(tag$type, "miCOMPRESSED")) {
           n <- tag$nbrOfBytes;
           zraw <- readBinMat(con=con, what=raw(), n=n);
-          verbose && cat(verbose, level=-110, "Uncompressing ", n, " bytes");
+          verbose && cat(verbose, level=-110, "Decompressing ", n, " bytes");
           verbose && printf(verbose, level=-110, "zraw [%d bytes]: %s\n", length(zraw), hpaste(zraw, maxHead=8, maxTail=8));
           # Sanity check
           stopifnot(identical(length(zraw), n));
@@ -1226,8 +1281,9 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
             rm(unzraw);
           }, error = function(ex) {
             msg <- ex$message;
-            msg <- sprintf("INTERNAL ERROR: Failed to uncompress data. Please report to the R.matlab package maintainer (%s). The reason was: %s", getMaintainer(R.matlab), msg);
-            onError <- getOption("R.matlab::readMat/onUncompressError");
+            assign("R.matlab.debug.zraw", zraw, envir=globalenv());
+            msg <- sprintf("INTERNAL ERROR: Failed to decompress data (using '%s'). Please report to the R.matlab package maintainer (%s). The reason was: %s", attr(uncompress, "label"), getMaintainer(R.matlab), msg);
+            onError <- getOption("R.matlab::readMat/onDecompressError");
             if (identical(onError, "warning")) {
               verbose && enter(verbose, "Skipping");
               verbose && cat(verbose, msg);
@@ -1940,8 +1996,11 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 
 ###########################################################################
 # HISTORY:
+# 2012-05-05
+# o Now readMat() decompression error messages are more informative.
+# o Now it is possible to specify the decompression method for readMat().
 # 2012-04-13
-# o Added option 'R.matlab::readMat/onUncompressError' allowing to skip
+# o Added option 'R.matlab::readMat/onDecompressError' allowing to skip
 #   data object that fails to uncompress.  This will at least allow
 #   to read remaining objects in a MAT file.
 # o Added a sanity check for the length of the internal 'zraw' buffer

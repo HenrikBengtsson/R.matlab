@@ -2,6 +2,11 @@
 Package: R.matlab
 =================
 
+Version: 1.5.9 [2012-05-05]
+o Now readMat() decompression error messages are more informative.
+o Now it is possible to specify the decompression method for readMat().
+
+
 Version: 1.5.8 [2012-04-16]
 o Package now only *imports* R.methodsS3.
 
