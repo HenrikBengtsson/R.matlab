@@ -2,6 +2,17 @@
 Package: R.matlab
 =================
 
+Version: 1.6.0 [2012-06-07]
+o BUG FIX: readMat() could not read sparse matrices containing logical
+  values, only numerics.  This was because the 'logical' bit in the
+  Array Flags was not utilized by readMat(), which in turn was because
+  the file format documentation is rather vague on how to use that bit.
+  This means that readMat() now represents sparse logical matrices
+  using logical values, except when sparseMatrixClass="SparseM",
+  because SparseM matrices can only hold numeric values.
+  Thanks to Irtisha Sinhg at Cornell University for reporting on this.
+
+
 Version: 1.5.9 [2012-05-05]
 o Now readMat() decompression error messages are more informative.
 o Now it is possible to specify the decompression method for readMat().

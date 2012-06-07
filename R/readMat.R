@@ -90,6 +90,7 @@
 #   [1] The MathWorks Inc., \emph{Matlab - MAT-File Format, version 5}, June 1999.\cr
 #   [2] The MathWorks Inc., \emph{Matlab - Application Program Interface Guide, version 5}, 1998.\cr
 #   [3] The MathWorks Inc., \emph{Matlab - MAT-File Format, version 7}, September 2009, \url{http://www.mathworks.com/access/helpdesk/help/pdf_doc/matlab/matfile_format.pdf}\cr
+#   [4] The MathWorks Inc., \emph{Matlab - MAT-File Format, version R2012a}, September 2012, \url{http://www.mathworks.com/help/pdf_doc/matlab/matfile_format.pdf}\cr
 # }
 #
 # @keyword file
@@ -864,6 +865,11 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
           j <- as.integer(data[,2]);
           s <- data[,3];
           rm(data);
+
+          verbose && str(verbose, level=-102, header);
+          verbose && str(verbose, level=-102, i);
+          verbose && str(verbose, level=-102, j);
+          verbose && str(verbose, level=-102, s);
           
           # When saving a sparse matrix, Matlab is making sure that one can infer
           # the size of the m-by-n sparse matrix for the index matrix [i,j]. If
@@ -931,10 +937,13 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
   
     repeat {
       header <- readMat4Header(con, firstFourBytes=firstFourBytes);
+      verbose && str(verbose, level=-102, header);
       if (is.null(header))
         break;
 
       data <- readMat4Data(con, header);
+      verbose && str(verbose, level=-102, data);
+
       result <- append(result, data);
       rm(data);
 
@@ -1366,6 +1375,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
         
         flags <- list(logical=logical, global=global, complex=complex, class=class, classSize=classSize, nzmax=nzmax);
 
+        verbose && cat(verbose, level=-100, "Flags:");
         verbose && print(verbose, level=-100, unlist(flags[-1]));
         
         flags;
@@ -1515,18 +1525,32 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
     
     
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
-      readValues <- function(this) {
+      readValues <- function(this, logical=FALSE) {
         verbose && enter(verbose, level=-70, "Reading Values");
         on.exit(verbose && exit(verbose));
         
         tag <- readTag(this);
 
-        sizeOf <- tag$sizeOf %/% 8;
+        # "If the 'logical' bit is set, it indicates the array is used for
+        # logical indexing." [4].  This is a rather vague explanation, but
+        # by comparing the byte content of sparse matrices containing 
+        # doubles to those containing logical, it appears as if the latter
+        # are stored as single 0/1 bytes, regardless of what the "tag"
+        # is indicating.
+        if (logical) {
+          # Override tag patarmeters.
+          sizeOf <- 1L;
+          what <- logical(0);
+        } else {
+          sizeOf <- tag$sizeOf %/% 8;
+          what <- tag$what;
+        }
+
         len <- tag$nbrOfBytes %/% sizeOf;
 
         verbose && cat(verbose, level=-100, "Reading ", len, " values each of ", sizeOf, " bytes. In total ", tag$nbrOfBytes, " bytes.");
         
-        value <- readBinMat(con, what=tag$what, size=sizeOf, n=len, signed=tag$signed);
+        value <- readBinMat(con, what=what, size=sizeOf, n=len, signed=tag$signed);
         verbose && str(verbose, level=-102, value);
         
         left <<- left - sizeOf*len;
@@ -1571,6 +1595,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
         }
 
         arrayFlags <- readArrayFlags(this);
+        verbose && cat(verbose, level=-100, "Array flags:");
         verbose && str(verbose, level=-70, arrayFlags);
 
         arrayFlags$tag <- tag;
@@ -1644,9 +1669,9 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
           names(matrix) <- arrayName$name;
         } else if (arrayFlags$complex) {
           verbose && enter(verbose, level=-4, "Reading complex matrix.")
-          pr <- readValues(this);
+          pr <- readValues(this, logical=arrayFlags$logical);
           if (left > 0)
-            pi <- readValues(this);
+            pi <- readValues(this, logical=arrayFlags$logical);
           matrix <- complex(real=pr$value, imaginary=pi$value);
 
           # Set dimension of complex matrix
@@ -1724,9 +1749,10 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
               stop("MAT v5 file format error: Length of column vector 'jc' (sparse arrays) is not ", ncol, "+1 as expected: ", length(jc));
             }
 
-            # Read real part
-            pr <- readValues(this)$value;
+            # Read vector
+            pr <- readValues(this, logical=arrayFlags$logical)$value;
 
+            verbose && str(verbose, level=-102, header);
             verbose && str(verbose, level=-102, ir);
             verbose && str(verbose, level=-102, jc);
             verbose && str(verbose, level=-102, pr);
@@ -1736,7 +1762,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
             #  number (if the complex bit is set in Array Flags)." [1, p20]
             if (arrayFlags$complex) {
               # Read imaginary part
-              pi <- readValues(this)$value;
+              pi <- readValues(this, logical=arrayFlags$logical)$value;
               verbose && str(verbose, level=-102, pi);
             }
 
@@ -1753,10 +1779,14 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 
           if (sparseMatrixClass == "Matrix"
               && require("Matrix", quietly=TRUE)) {
-            if (is.integer(pr) || is.logical(pr)) {
+            # Logical or numeric sparse Matrix?
+            if (is.logical(pr)) {
+              className <- "lgCMatrix";
+            } else {
               pr <- as.double(pr);
+              className <- "dgCMatrix";
             }
-            matrix <- new("dgCMatrix",
+            matrix <- new(className,
                           x=pr, p=as.integer(jc), i=as.integer(ir-1),
                           Dim=as.integer(c(nrow,ncol)));
             matrix <- list(matrix);
@@ -1764,7 +1794,10 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
           }
           else if (sparseMatrixClass == "SparseM"
                    && require("SparseM", quietly=TRUE)) {
-            if (is.integer(pr) || is.logical(pr)) {
+            if (is.logical(pr)) {
+              # Sparse matrices of SparseM cannot hold logical values.
+              pr <- as.double(pr);
+            } else {
               pr <- as.double(pr);
             }
             matrix <- new("matrix.csc",
@@ -1775,7 +1808,12 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
           }
           else {
             # Create expanded matrix...
-            matrix <- matrix(0, nrow=nrow, ncol=ncol);
+            if (is.logical(pr)) {
+              defValue <- FALSE;
+            } else {
+              defValue <- 0;
+            }
+            matrix <- matrix(defValue, nrow=nrow, ncol=ncol);
             attr(matrix, "name") <- arrayName$name;
 
             # Now, for each column insert the non-zero elements
@@ -1808,7 +1846,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
           }
           # End mxSPARSE_CLASS
         } else {
-          data <- readValues(this);
+          data <- readValues(this, logical=arrayFlags$logical);
           matrix <- data$value;
       
           verbose && cat(verbose, level=-5, "Converting to ", arrayFlags$class, " matrix.");
@@ -1996,6 +2034,15 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 
 ###########################################################################
 # HISTORY:
+# 2012-06-07
+# o BUG FIX: readMat() could not read sparse matrices containing logical
+#   values, only numerics.  This was because the 'logical' bit in the
+#   Array Flags was not utilized by readMat(), which in turn was because
+#   the file format documentation is rather vague on how to use that bit.
+#   This means that readMat() now represents sparse logical matrices
+#   using logical values, except when sparseMatrixClass="SparseM",
+#   because SparseM matrices can only hold numeric values.
+#   Thanks to Irtisha Sinhg at Cornell University for reporting on this.
 # 2012-05-05
 # o Now readMat() decompression error messages are more informative.
 # o Now it is possible to specify the decompression method for readMat().

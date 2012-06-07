@@ -67,6 +67,24 @@ if (require("SparseM")) {
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# Assert that sparse logical matrices can be read
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+pathname <- file.path(path, "SparseLogicalDouble-v5.mat")
+mat4c <- readMat(pathname, sparseMatrixClass="matrix")
+stopifnot(all(mat4c$L == mat4c$D));
+
+if (require("Matrix")) {
+  mat4d <- readMat(pathname, sparseMatrixClass="Matrix")
+  stopifnot(all(mat4d$L == mat4d$D));
+}
+
+if (require("SparseM")) {
+  mat4e <- readMat(pathname, sparseMatrixClass="SparseM")
+  stopifnot(all(as.matrix(mat4e$L) == as.matrix(mat4e$D)));
+}
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 # Assert that compressed files can be read
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 if (getRversion() >= "2.10.0") {
@@ -121,4 +139,3 @@ print(s[,,2])
 # Example of verbose output
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 bs <- readMat(file.path(path, "unsignedByte.mat"), verbose=TRUE)
-
