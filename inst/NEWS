@@ -2,6 +2,10 @@
 Package: R.matlab
 =================
 
+Version: 1.6.1 [2012-06-30]
+o Updated package dependencies.
+
+
 Version: 1.6.0 [2012-06-07]
 o BUG FIX: readMat() could not read sparse matrices containing logical
   values, only numerics.  This was because the 'logical' bit in the
