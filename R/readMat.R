@@ -37,8 +37,8 @@
 # @synopsis
 #
 # \arguments{
-#   \item{con}{Binary @connection to which the MAT file structure should be
-#     written to. A string is interpreted as filename, which then will be
+#   \item{con}{Binary @connection from which the MAT file structure should be
+#     read. A string is interpreted as filename, which then will be
 #     opened (and closed afterwards).}
 #   \item{maxLength}{The maximum number of bytes to be read from the input
 #     stream, which should be equal to the length of the MAT file structure.
