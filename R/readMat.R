@@ -1290,7 +1290,8 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
             rm(unzraw);
           }, error = function(ex) {
             msg <- ex$message;
-            assign("R.matlab.debug.zraw", zraw, envir=globalenv());
+            env <- globalenv(); # To please 'R CMD check'
+            assign("R.matlab.debug.zraw", zraw, envir=env);
             msg <- sprintf("INTERNAL ERROR: Failed to decompress data (using '%s'). Please report to the R.matlab package maintainer (%s). The reason was: %s", attr(uncompress, "label"), getMaintainer(R.matlab), msg);
             onError <- getOption("R.matlab::readMat/onDecompressError");
             if (identical(onError, "warning")) {

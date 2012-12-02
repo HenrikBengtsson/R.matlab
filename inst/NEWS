@@ -1,6 +1,10 @@
-
 Package: R.matlab
 =================
+
+Version: 1.6.2 [2012-12-02]
+o CLEANUP: R CMD check no longer warns on global assignments.
+o Bumped up package dependencies.
+
 
 Version: 1.6.1 [2012-06-30]
 o Updated package dependencies.

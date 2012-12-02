@@ -1,12 +1,12 @@
 Package: R.matlab
-Version: 1.6.1
-Date: 2012-06-30
+Version: 1.6.2
+Date: 2012-12-02
 Title: Read and write of MAT files together with R-to-Matlab connectivity
 Author: Henrik Bengtsson <henrikb@braju.com>, Jason Riedy <ejr@cs.berkeley.edu>
 Maintainer: Henrik Bengtsson <henrikb@braju.com>
-Depends: R (>= 2.5.0), R.oo (>= 1.9.8)
-Imports: R.methodsS3 (>= 1.4.2), R.oo (>= 1.9.8)
-Suggests: R.utils (>= 1.12.1), Matrix, SparseM
+Depends: R (>= 2.5.0), R.oo (>= 1.10.1)
+Imports: R.methodsS3 (>= 1.4.2), R.oo (>= 1.10.1)
+Suggests: R.utils (>= 1.18.0), Matrix, SparseM
 Description: This package provides methods to read and write MAT files.  It also makes it possible to communicate (evaluate code, send and retrieve objects etc.) with Matlab v6 or higher running locally or on a remote host.
 License: LGPL (>= 2.1)
 URL: http://www.braju.com/R/
