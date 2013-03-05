@@ -9,9 +9,7 @@
 \name{writeCommand.Matlab}
 \alias{writeCommand.Matlab}
 \alias{Matlab.writeCommand}
-\alias{writeCommand.Matlab}
 \alias{writeCommand,Matlab-method}
-
 
 \title{Writes (sends) a command to the Matlab server}
 
@@ -21,7 +19,9 @@
  This method is for internal use only.
 }
 
-\usage{\method{writeCommand}{Matlab}(this, cmd, ...)}
+\usage{
+\method{writeCommand}{Matlab}(this, cmd, ...)
+}
 
 \arguments{
  \item{...}{Not used.}

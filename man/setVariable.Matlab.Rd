@@ -9,9 +9,7 @@
 \name{setVariable.Matlab}
 \alias{setVariable.Matlab}
 \alias{Matlab.setVariable}
-\alias{setVariable.Matlab}
 \alias{setVariable,Matlab-method}
-
 
 \title{Sets one or several Matlab variables}
 
@@ -22,7 +20,9 @@
   which is always available.
 }
 
-\usage{\method{setVariable}{Matlab}(this, ..., remote=this$remote)}
+\usage{
+\method{setVariable}{Matlab}(this, ..., remote=this$remote)
+}
 
 \arguments{
   \item{...}{Named \R variables to be set in Matlab.}

@@ -43,7 +43,9 @@
  may avoid this problem as well.
 }
 
-\usage{\method{readMat}{default}(con, maxLength=NULL, fixNames=TRUE, verbose=FALSE, sparseMatrixClass=c("Matrix", "SparseM", "matrix"), ...)}
+\usage{
+\method{readMat}{default}(con, maxLength=NULL, fixNames=TRUE, verbose=FALSE, sparseMatrixClass=c("Matrix", "SparseM", "matrix"), ...)
+}
 
 \arguments{
   \item{con}{Binary \code{\link[base:connections]{connection}} from which the MAT file structure should be

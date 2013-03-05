@@ -9,9 +9,7 @@
 \name{finalize.Matlab}
 \alias{finalize.Matlab}
 \alias{Matlab.finalize}
-\alias{finalize.Matlab}
 \alias{finalize,Matlab-method}
-
 
 \title{Finalizes the object if deleted}
 
@@ -23,7 +21,9 @@
   (by the garbage collector).
 }
 
-\usage{\method{finalize}{Matlab}(this, ...)}
+\usage{
+\method{finalize}{Matlab}(this, ...)
+}
 
 \arguments{
  \item{...}{Not used.}

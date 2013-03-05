@@ -9,9 +9,7 @@
 \name{as.character.Matlab}
 \alias{as.character.Matlab}
 \alias{Matlab.as.character}
-\alias{as.character.Matlab}
 \alias{as.character,Matlab-method}
-
 
 \title{Gets a string describing the current Matlab connection}
 
@@ -19,7 +17,9 @@
   Gets a string describing the current Matlab connection.
 }
 
-\usage{\method{as.character}{Matlab}(x, ...)}
+\usage{
+\method{as.character}{Matlab}(x, ...)
+}
 
 \arguments{
  \item{...}{Not used.}

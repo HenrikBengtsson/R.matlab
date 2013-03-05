@@ -9,9 +9,7 @@
 \name{isOpen.Matlab}
 \alias{isOpen.Matlab}
 \alias{Matlab.isOpen}
-\alias{isOpen.Matlab}
 \alias{isOpen,Matlab-method}
-
 
 \title{Checks if connection to the Matlab server is open}
 
@@ -19,7 +17,9 @@
  Checks if connection to the Matlab server is open.
 }
 
-\usage{\method{isOpen}{Matlab}(con, ...)}
+\usage{
+\method{isOpen}{Matlab}(con, ...)
+}
 
 \arguments{
  \item{...}{Not used.}

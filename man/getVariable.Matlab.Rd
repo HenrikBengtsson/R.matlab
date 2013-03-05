@@ -9,9 +9,7 @@
 \name{getVariable.Matlab}
 \alias{getVariable.Matlab}
 \alias{Matlab.getVariable}
-\alias{getVariable.Matlab}
 \alias{getVariable,Matlab-method}
-
 
 \title{Gets one or several Matlab variables}
 
@@ -22,7 +20,9 @@
   which is always available.
 }
 
-\usage{\method{getVariable}{Matlab}(this, variables, remote=this$remote, ...)}
+\usage{
+\method{getVariable}{Matlab}(this, variables, remote=this$remote, ...)
+}
 
 \arguments{
  \item{variables}{String vector of Matlab containing names of variable that

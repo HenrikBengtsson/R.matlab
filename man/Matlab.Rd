@@ -30,7 +30,9 @@ extends \link[R.oo]{Object}\cr
 
  }
 
- \usage{Matlab(host="localhost", port=9999, remote=!(host \%in\% c("localhost", "127.0.0.1")))}
+ \usage{
+Matlab(host="localhost", port=9999, remote=!(host \%in\% c("localhost", "127.0.0.1")))
+}
 
  \arguments{
    \item{host}{Name of host to connect to.}

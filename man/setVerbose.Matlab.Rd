@@ -9,9 +9,7 @@
 \name{setVerbose.Matlab}
 \alias{setVerbose.Matlab}
 \alias{Matlab.setVerbose}
-\alias{setVerbose.Matlab}
 \alias{setVerbose,Matlab-method}
-
 
 \title{Sets the verbose level to get more details about the Matlab access}
 
@@ -19,7 +17,9 @@
   Sets the verbose level to get more details about the Matlab access.
 }
 
-\usage{\method{setVerbose}{Matlab}(this, threshold=0, ...)}
+\usage{
+\method{setVerbose}{Matlab}(this, threshold=0, ...)
+}
 
 \arguments{
  \item{threshold}{A threshold that the \code{level} argument

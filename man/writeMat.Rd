@@ -20,7 +20,9 @@
  that is, compressed MAT files cannot be written (only read).
 }
 
-\usage{\method{writeMat}{default}(con, ..., matVersion="5", onWrite=NULL, verbose=FALSE)}
+\usage{
+\method{writeMat}{default}(con, ..., matVersion="5", onWrite=NULL, verbose=FALSE)
+}
 
 \arguments{
   \item{con}{Binary \code{\link[base:connections]{connection}} to which the MAT file structure should be

@@ -9,9 +9,7 @@
 \name{open.Matlab}
 \alias{open.Matlab}
 \alias{Matlab.open}
-\alias{open.Matlab}
 \alias{open,Matlab-method}
-
 
 \title{Tries to open a connection to the Matlab server}
 
@@ -21,7 +19,9 @@
   \code{interval} second up to \code{trials} times.
 }
 
-\usage{\method{open}{Matlab}(con, trials=30, interval=1, ...)}
+\usage{
+\method{open}{Matlab}(con, trials=30, interval=1, ...)
+}
 
 \arguments{
  \item{trials}{The number of trials before giving up.}
