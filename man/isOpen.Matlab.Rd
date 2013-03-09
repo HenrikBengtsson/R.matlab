@@ -29,7 +29,7 @@
   Returns \code{\link[base:logical]{TRUE}} if \code{\link[base:connections]{connection}} is open, otherwise \code{\link[base:logical]{FALSE}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson, Jason Riedy}
 
 \seealso{
   For more information see \code{\link{Matlab}}.

@@ -337,7 +337,7 @@ close(matlab)
 print(matlab)
 }}
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson, Jason Riedy}
 
  \seealso{
    Stand-alone methods \code{\link{readMat}}() and \code{\link{writeMat}}()

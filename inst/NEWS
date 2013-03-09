@@ -1,7 +1,8 @@
 Package: R.matlab
 =================
 
-Version: 1.6.4 [2013-03-04]
+Version: 1.6.4 [2013-03-08]
+o Added an Authors@R field to the DESCRIPTION.
 o DOCUMENTATION: Updated the help usage section for all static methods. 
 
 

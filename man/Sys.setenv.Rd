@@ -22,7 +22,7 @@
   and needs to be document in order for the package to pass the tests.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson, Jason Riedy}
 
 
 \keyword{documentation}

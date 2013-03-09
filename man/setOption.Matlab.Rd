@@ -45,7 +45,7 @@
  30 seconds for a reply from the Matlab server before giving up.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson, Jason Riedy}
 
 \seealso{
   \code{\link[R.matlab:getOption.Matlab]{*getOption}()}.

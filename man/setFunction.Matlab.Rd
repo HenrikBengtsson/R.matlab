@@ -53,7 +53,7 @@ print(res)
 
 }}
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson, Jason Riedy}
 
 \seealso{
   For more information see \code{\link{Matlab}}.
