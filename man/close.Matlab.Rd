@@ -30,7 +30,7 @@
   Returns what \code{\link[R.matlab:close.Matlab]{*close}()} returns.
 }
 
-\author{Henrik Bengtsson, Jason Riedy}
+\author{Henrik Bengtsson}
 
 \seealso{
   For more information see \code{\link{Matlab}}.

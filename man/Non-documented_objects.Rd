@@ -37,7 +37,7 @@
   The rest are deprecated methods.
 }
 
-\author{Henrik Bengtsson, Jason Riedy}
+\author{Henrik Bengtsson}
 
 
 \keyword{documentation}

@@ -35,7 +35,7 @@
   successfully an exception is thrown.
 }
 
-\author{Henrik Bengtsson, Jason Riedy}
+\author{Henrik Bengtsson}
 
 \seealso{
   For more information see \code{\link{Matlab}}.

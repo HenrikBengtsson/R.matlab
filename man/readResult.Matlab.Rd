@@ -31,7 +31,7 @@
   Returns an \R object.
 }
 
-\author{Henrik Bengtsson, Jason Riedy}
+\author{Henrik Bengtsson}
 
 \seealso{
   For more information see \code{\link{Matlab}}.

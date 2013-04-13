@@ -120,7 +120,7 @@ onWrite <- function(x)
 }
 }
 
-\author{Henrik Bengtsson, Jason Riedy}
+\author{Henrik Bengtsson}
 
 \seealso{
   \code{\link{readMat}}().

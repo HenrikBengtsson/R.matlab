@@ -11,7 +11,7 @@
 #  the \code{maxLength} has to be communicated before sending the actual
 #  MAT file structure.
 #
-#  Both the MAT version 4 and MAT version 5 file formats are 
+#  Both the MAT version 4 and MAT version 5 file formats are
 #  supported. The implementation is based on [1].
 #
 #  From Matlab v7, \emph{compressed} MAT version 5 files are used by
@@ -21,7 +21,7 @@
 #  To install that package, please see instructions at
 #  \url{http://www.omegahat.org/cranRepository.html}.
 #  As a last resort, use \code{save -V6} in Matlab to write MAT files
-#  that are compatible with Matlab v6, that is, to write 
+#  that are compatible with Matlab v6, that is, to write
 #  non-compressed MAT version 5 files.
 #
 #  Note: Do not mix up version numbers for the Matlab software and
@@ -49,13 +49,13 @@
 #     object specifying how much verbose/debug information is written to
 #     standard output. If a Verbose object, how detailed the information is
 #     is specified by the threshold level of the object. If a numeric, the
-#     value is used to set the threshold of a new Verbose object. If @TRUE, 
+#     value is used to set the threshold of a new Verbose object. If @TRUE,
 #     the threshold is set to -1 (minimal). If @FALSE, no output is written
 #     (and neither is the \link[R.utils:R.utils-package]{R.utils} package required).
 #   }
 #   \item{sparseMatrixClass}{If \code{"matrix"}, a sparse matrix is expanded to
-#     a regular @matrix.  If either \code{"Matrix"} (default) or \code{"SparseM"}, 
-#     the sparse matrix representation by the package of the same name will be used. 
+#     a regular @matrix.  If either \code{"Matrix"} (default) or \code{"SparseM"},
+#     the sparse matrix representation by the package of the same name will be used.
 #     These packages are only loaded if the a sparse matrix is read.}
 #   \item{...}{Not used.}
 # }
@@ -73,13 +73,12 @@
 # @examples "../incl/readMat.Rex"
 #
 # \author{
-#   Henrik Bengtsson, Mathematical Statistics, Lund University.
-#   The internal MAT v4 reader was written by 
-#   Andy Jacobson at Program in Atmospheric and Oceanic Sciences, 
-#   Princeton University. 
-#   Support for reading compressed files via \pkg{Rcompression}, 
-#   sparse matrices and UTF-encoded strings was added by 
-#   Jason Riedy, UC Berkeley.
+#   Henrik Bengtsson.
+#   The internal MAT v4 reader was written by
+#   Andy Jacobson (Princeton University).
+#   Support for reading compressed files via \pkg{Rcompression},
+#   sparse matrices and UTF-encoded strings was added by
+#   Jason Riedy (UC Berkeley).
 # }
 #
 # \seealso{
@@ -105,24 +104,24 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
   #===========================================================================
   # General functions to read both MAT v4 and MAT v5 files.              BEGIN
   #===========================================================================
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # willRead(), hasHead() and isDone() operators keep count on the number of
   # bytes actually read and compares it with 'maxLength'.
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   nbrOfBytesRead <- 0;
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-  # readBinMat() need to know what endian the numerics in the stream are 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # readBinMat() need to know what endian the numerics in the stream are
   # written with. From the beginning we assume Little Endian, but that might
   # be updated when we have read the MAT-file header.
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-  detectedEndian <- "little"; 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  detectedEndian <- "little";
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # ASCII is the 8-bit ASCII table with ASCII characters from 0-255.
-  # 
+  #
   # Extracted from the R.oo package.
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ASCII <- c(
     "",    "\001","\002","\003","\004","\005","\006","\007", # 000-007
     "\010","\011","\012","\013","\014","\015","\016","\017", # 010-017
@@ -158,19 +157,19 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
     "\370","\371","\372","\373","\374","\375","\376","\377"  # 370-377
   );
 
-  # We removed ASCII 0x00, because it represents an empty string in 
-  # R v2.7.0 (and maybe some earlier version) and in R v2.8.0 we will get 
+  # We removed ASCII 0x00, because it represents an empty string in
+  # R v2.7.0 (and maybe some earlier version) and in R v2.8.0 we will get
   # a warning.  However, for backward compatibility we will still use it
   # for version prior to R v2.7.0.  See also email from Brian Ripley
   # on 2008-04-23 on this problem.
   if (compareVersion(as.character(getRversion()), "2.7.0") < 0) {
     ASCII[1] <- eval(parse(text="\"\\000\""));
   }
- 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # sapply(X, ...) function that treats length(X) == 0 specially
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   sapply0 <- function(X, FUN, ...) {
     if (length(X) == 0) {
       FUN(X, ...);
@@ -179,18 +178,18 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
     }
   } # sapply0()
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Function to convert a vector of integers into a vector of ASCII chars.
-  # 
+  #
   # Extracted from the R.oo package.
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   intToChar <- function(i) {
     ASCII[i %% 256 + 1];
-  } 
+  }
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Function to assert that it is possible to read a certain number of bytes.
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   willRead <- function(nbrOfBytes) {
     if (is.null(maxLength))
       return();
@@ -198,20 +197,20 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
       return();
     stop("Trying to read more bytes than expected from connection. Have read ", nbrOfBytesRead, " byte(s) and trying to read another ", nbrOfBytes, " byte(s), but expected ", maxLength, " byte(s).");
   } # willRead()
-  
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Function to tell now many bytes we actually have read.
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   hasRead <- function(nbrOfBytes) {
     nbrOfBytesRead <<- nbrOfBytesRead + nbrOfBytes;
     if (is.null(maxLength))
       return(TRUE);
     return(nbrOfBytesRead <= maxLength);
   } # hasRead()
-  
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Function to check is there are more bytes to read.
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   isDone <- function() {
     if (is.null(maxLength))
       return(FALSE);
@@ -243,19 +242,19 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
     NULL;
   }
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-  # Function to read 'n' binary values of a data type of type 'what' 
-  # and size 'size', cf. readBin(). 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Function to read 'n' binary values of a data type of type 'what'
+  # and size 'size', cf. readBin().
   # This function will also keep track of the actual number of bytes read.
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   readBinMat <- function(con, what, size=1, n, signed=TRUE, endian=detectedEndian) {
     # Check maxLength to see if we are done.
     if (isDone())
       return(c());
     if (is.na(signed))
-      signed <- TRUE;  
+      signed <- TRUE;
     willRead(size*n);
-   
+
     fillRawBuffer(size*n);
 
     bfr <- readBin(con=rawBuffer, what=what, size=size, n=n, signed=signed, endian=endian);
@@ -265,16 +264,16 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
     hasRead(length(bfr)*size);
     bfr;
   } # readBinMat()
-    
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Function to read 'nchars' characters from the input connection.
   # This function will also keep track of the actual number of bytes read.
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   readCharMat <- function(con, nchars) {
     # Check maxLength to see if we are done.
     if (isDone())
       return(c());
-  
+
     willRead(nchars);
     fillRawBuffer(nchars);
     bfr <- rawBuffer[1:nchars];
@@ -345,41 +344,41 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
            convertGeneric);
   }
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Function to convert an array of numbers to a UTF-8 string.  If the
   # type is miUTF16 or miUTF32, iconv-supporting implementations will
   # convert the charset correctly.  Otherwise non-ASCII characters are
   # replaced by NA.
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   matToString <- function(ary, type) {
     do.call(charConverter(type), list(ary));
   } # matToString
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Function to convert an array of numbers to an array of UTF-8
   # characters.  If the type is miUTF16 or miUTF32, iconv-supporting
   # implementations will convert the charset correctly.  Otherwise
   # non-ASCII characters are replaced by NA.
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   matToCharArray <- function(ary, type) {
     fn <- charConverter(type);
     sapply0(ary, FUN=fn);
   }
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Function to push back a raw vector to the main input stream
   # This is used to push back a decompressed stream of data.
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   pushBackRawMat <- function(con, raw) {
     rawBuffer <<- c(raw, rawBuffer);
     NULL;
   } # pushBackRawMat()
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Function to make a variable name into a safe R variable name.
   # For instance, underscores ('_') are replaced by periods ('.').
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   asSafeRName <- function(name) {
     if (fixNames) {
       name <- gsub("_", ".", name);
@@ -388,7 +387,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
   }
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # \description{
   #  Function to uncompress zlib compressed data.
   #  If R v2.10.0 or newer, we'll utilize base::memDecompress(), otherwise
@@ -397,15 +396,15 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
   #
   # \arguments{
   #  \item{zraw}{A @raw @vector to be uncompressed.}
-  #  \item{asText}{If @TRUE, a @character string is returned, 
+  #  \item{asText}{If @TRUE, a @character string is returned,
   #    otherwise a @raw @vector.}
   #  \item{...}{Not used.}
   # }
-  # 
+  #
   # \value{
   #   Returns a @raw @vector (or a @character string if 'asText' is TRUE).
   # }
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   uncompressMemDecompress <- function(zraw, asText=TRUE, type="gzip", ...) {
     # To please R CMD check for R versions before R v2.10.0
     memDecompress <- NULL; rm(memDecompress);
@@ -414,7 +413,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
   } # uncompressMemDecompress()
 
 
-  # This is a smart wrapper function around Rcompression::uncompress(), 
+  # This is a smart wrapper function around Rcompression::uncompress(),
   # which in order to avoid lack-of-memory allocation errors will via
   # trial and error find a reasonably sized internal inflation buffer.
   uncompressRcompression <- function(zraw, asText=TRUE, sizeRatio=3, delta=0.9, ...) {
@@ -476,14 +475,14 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
       msg <- lastException$message;
       throw(sprintf("Failed to uncompress compressed %d bytes (with smallest initial buffer size of %.3f Mb: %s)", n, size/1024^2, msg));
     }
-  
+
     unzraw;
   } # uncompressRcompression()
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Decompression method
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Default decompress function
   uncompress <- function(...) {
     throw("Cannot decompress compressed MAT file because none of the decompression methods are available: ", hpaste(decompressWith0, maxHead=Inf));
@@ -512,7 +511,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
           decompressWith <- setdiff(decompressWith, "memDecompress");
         }
       }
-    
+
       # Is Rcompression package available?
       if (is.element("Rcompression", decompressWith)) {
         if (require("R.utils")) {
@@ -531,7 +530,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
           uncompress <- uncompressRcompression;
           attr(uncompress, "label") <- decompressWith[1];
         } else {
-          # Don't throw an exception here, because it may be 
+          # Don't throw an exception here, because it may be
           # that the MAT files is not compressed.
         }
       }
@@ -543,9 +542,9 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
   } # if (length(decompressWith) > 0)
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Debug functions
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   debugIndent <- 0;
   debug <- function(..., sep="") {
     if (debugIndent > 0)
@@ -566,12 +565,12 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
     debug(..., "...");
     debugIndent <<- debugIndent + indent;
   }
-  
+
   debugExit <- function(..., indent=-1) {
     debugIndent <<- debugIndent + indent;
     debug(..., "...done\n");
   }
-  
+
   #===========================================================================
   # General functions to read both MAT v4 and MAT v5 files.                END
   #===========================================================================
@@ -590,15 +589,15 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
     any(MOPT == 0);
   }
 
-  
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Function to convert four signed or unsigned integers in big or little
   # endian order into a (MOPT) vector c(M,O,P,T) of unsigned integers.
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   getMOPT <- function(fourBytes) {
     if (length(fourBytes) != 4)
       stop("Argument 'fourBytes' must a vector of 4 bytes: ", length(fourBytes));
-    
+
     # Make sure the four bytes are non-signed integers
     fourBytes <- as.integer(fourBytes);
     neg <- (fourBytes < 0);
@@ -623,20 +622,20 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 
     if (!isMOPT)
         stop("File format error: Not a valid MAT v4. The first four bytes (MOPT) were: ", paste(MOPT, collapse=", "));
-    
+
     verbose && cat(verbose, level=-50, "Read MOPT bytes: ", moptToString(MOPT));
-    
+
     MOPT;
   } # getMOPT()
 
 
- 
+
   readMat4 <- function(con, maxLength=NULL, firstFourBytes=NULL) {
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Function to read a MAT v4 Matrix Header Format
-    # 
+    #
     # Fix length: 20 bytes
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     readMat4Header <- function(con, firstFourBytes=NULL) {
       header <- list();
 
@@ -662,7 +661,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
       MOPT <- getMOPT(firstFourBytes);
 
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      # MOPT[1] "indicates the numeric format of binary numbers on the machine 
+      # MOPT[1] "indicates the numeric format of binary numbers on the machine
       #          that wrote the file.
       #          0 IEEE Little Endian (PC, 386, 486, DEC Risc)
       #          1 IEEE Big Endian (Macintosh, SPARC, Apollo,SGI, HP 9000/300,
@@ -690,9 +689,9 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
       # column-major format.  Its value here will be ignored. /Andy November 2003
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       header$ocode <- MOPT[2];
-  
+
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      # MOPT[3] "indicates which format the data is stored in according to the 
+      # MOPT[3] "indicates which format the data is stored in according to the
       #          following table:
       #          0 double-precision (64-bit) floating point numbers
       #          1 single-precision (32-bit) floating point numbers
@@ -701,13 +700,13 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
       #          4 16-bit unsigned integers
       #          5 8-bit unsigned integers
       #          The precision used by the save command depends on the size and
-      #          type of each matrix. Matrices with any noninteger entries and 
-      #          matrices with 10,000 or fewer elements are saved in floating 
-      #          point formats requiring 8 bytes per real element. Matrices 
-      #          with all integer entries and more than 10,000 elements are 
+      #          type of each matrix. Matrices with any noninteger entries and
+      #          matrices with 10,000 or fewer elements are saved in floating
+      #          point formats requiring 8 bytes per real element. Matrices
+      #          with all integer entries and more than 10,000 elements are
       #          saved in the following formats, requiring fewer bytes per element."
       #
-      # precision defines the number of type of data written and thus the number of 
+      # precision defines the number of type of data written and thus the number of
       # bytes per datum.
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       if (MOPT[3] == 0) {
@@ -743,14 +742,14 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
       } else {
         stop("Unknown third byte in MOPT header (not in [0,5]): ", paste(MOPT, collapse=", "));
       }
-  
+
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       # MOPT[4]  "indicates the matrix type according to the following table:
       #          0 Numeric (Full) matrix
       #          1 Text matrix
       #          2 Sparse matrix
       #          Note that the elements of a text matrix are stored as floating
-      #          point numbers between 0 and 255 representing ASCII-encoded 
+      #          point numbers between 0 and 255 representing ASCII-encoded
       #          characters."
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       header$matrixType <- "numeric";
@@ -778,7 +777,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       # The 'imagf' fields
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      # "The imaginary flag is an integer whose value is either 0 or 1. If 1, 
+      # "The imaginary flag is an integer whose value is either 0 or 1. If 1,
       #  then the matrix has an imaginary part. If 0, there is only real data."
       header$imagf  <- readBinMat(con, what=integer(), size=4, n=1)
 
@@ -794,11 +793,11 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 
       header;
     }
-    
-    
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Function to read a MAT v4 Matrix Data Format
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     readMat4Data <- function(con, header) {
       # "Immediately following the fixed length header is the data whose length
       #  is dependent on the variables in the fixed length header:"
@@ -812,7 +811,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
       name <- readCharMat(con, header$namlen);
 
       verbose && cat(verbose, level=-50, "Matrix name: '", name, "'");
-      
+
       name <- asSafeRName(name);
 
       verbose && cat(verbose, level=-51, "Matrix safe name: '", name, "'");
@@ -828,10 +827,10 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
       if (header$matrixType == "text") {
 ##        data <- readCharMat(con, nchars=n);
 ##      data <- strsplit(data, split="");
-        data <- readBinMat(con, what=header$what, size=header$size, 
+        data <- readBinMat(con, what=header$what, size=header$size,
                                                      signed=header$signed, n=n);
         data <- intToChar(data);
-        
+
         # Make into a matrix
         dim(data) <- c(header$mrows, header$ncols);
         data <- apply(data, MARGIN=1, FUN=paste, sep="", collapse="");
@@ -845,10 +844,10 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
           data <- real;
           rm(real);
         }
-        
+
         # Make into a matrix or an array
         dim(data) <- c(header$mrows, header$ncols);
-        
+
         if (header$matrixType == "sparse") {
           # From help sparse in Matlab:
           # "S = SPARSE(i,j,s,m,n,nzmax) uses the rows of [i,j,s] to generate an
@@ -858,7 +857,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
           #  nonzeros in the resulting sparse matrix S .  Any elements of s
           #  which have duplicate values of i and j are added together."
 
-          # The last entry in 'data' is (only) used to specify the size of the 
+          # The last entry in 'data' is (only) used to specify the size of the
           # matrix, i.e. to infer (m,n).
 
           i <- as.integer(data[,1]);
@@ -870,7 +869,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
           verbose && str(verbose, level=-102, i);
           verbose && str(verbose, level=-102, j);
           verbose && str(verbose, level=-102, s);
-          
+
           # When saving a sparse matrix, Matlab is making sure that one can infer
           # the size of the m-by-n sparse matrix for the index matrix [i,j]. If
           # there are no non-zero elements in the last row or last column, Matlab
@@ -899,7 +898,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
             data <- new("matrix.coo", ra=s, ia=i, ja=j, dimension=dim);
 #            data <- as(data, "matrix.csc");
           } else {
-            # Instead of applying row-by-row, we calculate the position of each 
+            # Instead of applying row-by-row, we calculate the position of each
             # sparse element in an hardcoded fashion.
             pos <- (j-1)*n + i;
             rm(i,j);  # Not needed anymore
@@ -907,7 +906,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 # Instead, see 'last' above.
 #            pos <- pos[-length(pos)];
 #            s <- s[-length(s)];
-          
+
             data <- matrix(0, nrow=n, ncol=m);
             data[pos] <- s;
 
@@ -920,13 +919,13 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 
       verbose && cat(verbose, level=-60, "Matrix elements:\n");
       verbose && str(verbose, level=-60, data);
-      
+
       data <- list(data);
       names(data) <- name;
 
       data;
     } # readMat4Data()
-  
+
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # "Main program"
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -934,7 +933,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
     # that 'con' really is a connection.
 
     result <- list();
-  
+
     repeat {
       header <- readMat4Header(con, firstFourBytes=firstFourBytes);
       verbose && str(verbose, level=-102, header);
@@ -955,11 +954,11 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
     result;
   } # readMat4()
 
-  
+
   # Debug function to generate more informative error messages.
   moptToString <- function(MOPT) {
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # MOPT[1] "indicates the numeric format of binary numbers on the machine 
+    # MOPT[1] "indicates the numeric format of binary numbers on the machine
     #          that wrote the file.
     #          0 IEEE Little Endian (PC, 386, 486, DEC Risc)
     #          1 IEEE Big Endian (Macintosh, SPARC, Apollo,SGI, HP 9000/300,
@@ -995,7 +994,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
       oStr <- sprintf("<Unknown value of MOPT[2]. Should be 0: %d.>", as.integer(MOPT[2]));
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # MOPT[3] "indicates which format the data is stored in according to the 
+    # MOPT[3] "indicates which format the data is stored in according to the
     #          following table:
     #          0 double-precision (64-bit) floating point numbers
     #          1 single-precision (32-bit) floating point numbers
@@ -1004,13 +1003,13 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
     #          4 16-bit unsigned integers
     #          5 8-bit unsigned integers
     #          The precision used by the save command depends on the size and
-    #          type of each matrix. Matrices with any noninteger entries and 
-    #          matrices with 10,000 or fewer elements are saved in floating 
-    #          point formats requiring 8 bytes per real element. Matrices 
-    #          with all integer entries and more than 10,000 elements are 
+    #          type of each matrix. Matrices with any noninteger entries and
+    #          matrices with 10,000 or fewer elements are saved in floating
+    #          point formats requiring 8 bytes per real element. Matrices
+    #          with all integer entries and more than 10,000 elements are
     #          saved in the following formats, requiring fewer bytes per element."
     #
-    # precision defines the number of type of data written and thus the number of 
+    # precision defines the number of type of data written and thus the number of
     # bytes per datum.
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     if (MOPT[3] == 0)
@@ -1034,7 +1033,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
     #          1 Text matrix
     #          2 Sparse matrix
     #          Note that the elements of a text matrix are stored as floating
-    #          point numbers between 0 and 255 representing ASCII-encoded 
+    #          point numbers between 0 and 255 representing ASCII-encoded
     #          characters."
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     if (MOPT[4] == 0)
@@ -1050,7 +1049,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
     moptStr <- paste("MOPT[1]: ", mStr, ". MOPT[2]: ", oStr, ". MOPT[3]: ", pStr, ". MOPT[4]: ", tStr, ".", sep="");
     moptStr;
   } # moptToString()
-  
+
   #===========================================================================
   # MAT v4 specific                                                        END
   #===========================================================================
@@ -1062,11 +1061,11 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
     # Used to test if there a matrix read contains an imaginary part too.
     left <- NA;
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Function to read the MAT-file header, which contains information of what
     # version of the MAT file we are reading, if it used little or big endian
     # etc.
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     readMat5Header <- function(this, firstFourBytes=NULL) {
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       # "MATLAB uses the first four bytes to determine if a MAT-file uses a
@@ -1075,13 +1074,13 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       if (is.null(firstFourBytes))
         firstFourBytes <- readBinMat(con, what=integer(), size=1, n=4);
-  
+
       MOPT <- firstFourBytes;
 
       if (MOPT[1] %in% 0:4 && MOPT[2] == 0 && MOPT[3] %in% 0:5 && MOPT[4] %in% 0:2) {
         stop("Detected MAT file format v4. Do not use readMat5() explicitly, but use readMat().");
       }
-  
+
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       #  Text [124 bytes] (we already have read four of them)
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1089,17 +1088,17 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
       description <- c(MOPT, readBinMat(con, what=integer(), size=1, n=120));
       description <- paste(intToChar(description), collapse="");
 #      cat("Description: '", description, "'\n", sep="");
-  
-      # - - - - - - - - - - 
+
+      # - - - - - - - - - -
       #  Version
-      # - - - - - - - - - - 
+      # - - - - - - - - - -
       # At this point we can not know which the endian is and we just have to
-      # make a guess and adjust later. 
+      # make a guess and adjust later.
       version <- readBinMat(con, what=integer(), size=2, n=1, endian="little");
 
-      # - - - - - - - - - - 
+      # - - - - - - - - - -
       #  Endian Indicator
-      # - - - - - - - - - - 
+      # - - - - - - - - - -
       endian <- readCharMat(con, nchars=2);
       if (endian == "MI")
         detectedEndian <<- "big"
@@ -1109,27 +1108,27 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
         warning("Unknown endian: ", endian, ". Will assume Bigendian.");
         detectedEndian <<- "big";
       }
-    
+
       if (detectedEndian == "big") {
          hi <- version %/% 256;
          low <- version %% 256;
          version <- 256*low + hi;
       }
-  
+
       if (version == 256) {         # version == 0x0100
         version = "5";
       } else {
         warning("Unknown MAT version tag: ", version, ". Will assume version 5.");
         version = as.character(version);
       }
-    
+
       list(description=description, version=version, endian=detectedEndian);
     } # readMat5Header()
-  
-  
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Function to read a MAT v5 Data Element
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     readMat5DataElement <- function(this) {
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
       isSigned <- function(type) {
@@ -1141,8 +1140,8 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
           return(NA);
         is.element(type, signed);
       } # isSigned()
-       
-    
+
+
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
       #
       # "Each data element begins with an 8-byte tag followed immediately
@@ -1167,31 +1166,31 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
       readTag <- function(this) {
         verbose && enter(verbose, level=-80, "Reading Tag");
         on.exit(verbose && exit(verbose));
-        
+
         type <- readBinMat(con, what=integer(), size=4, n=1);
         # Did we read EOF?
         if (length(type) == 0)
           return(NULL);
-      
+
         left <<- left - 4;
 
         # Data sizes and types according to [3]
         knownTypes <- c(
-          "miMATRIX"=0,      
-          "miINT8"=8, 	     #  1 miINT8 8 bit, signed					 
-          "miUINT8"=8, 	     #  2 miUINT8 8 bit, unsigned				 
-          "miINT16"=16,      #  3 miINT16 16-bit, signed				 
-          "miUINT16"=16,     #  4 miUINT16 16-bit, unsigned			 
-          "miINT32"=32,      #  5 miINT32 32-bit, signed				 
-          "miUINT32"=32,     #  6 miUINT32 32-bit, unsigned			 
+          "miMATRIX"=0,
+          "miINT8"=8, 	     #  1 miINT8 8 bit, signed
+          "miUINT8"=8, 	     #  2 miUINT8 8 bit, unsigned
+          "miINT16"=16,      #  3 miINT16 16-bit, signed
+          "miUINT16"=16,     #  4 miUINT16 16-bit, unsigned
+          "miINT32"=32,      #  5 miINT32 32-bit, signed
+          "miUINT32"=32,     #  6 miUINT32 32-bit, unsigned
           "miSINGLE"=32,     #  7 miSINGLE IEEE 754 single format
-          "--"=NA,			     #  8 -- Reserved										 
+          "--"=NA,			     #  8 -- Reserved
           "miDOUBLE"=64,     #  9 miDOUBLE IEEE 754 double format
-          "--"=NA,			     # 10 -- Reserved										 
-          "--"=NA,			     # 11 -- Reserved										 
-          "miINT64"=64,	     # 12 miINT64 64-bit, signed				 
-          "miUINT64"=64,     # 13 miUINT64 64-bit, unsigned			 
-          "miMATRIX"=NA,     # 14 miMATRIX MATLAB array 
+          "--"=NA,			     # 10 -- Reserved
+          "--"=NA,			     # 11 -- Reserved
+          "miINT64"=64,	     # 12 miINT64 64-bit, signed
+          "miUINT64"=64,     # 13 miUINT64 64-bit, unsigned
+          "miMATRIX"=NA,     # 14 miMATRIX MATLAB array
           "miCOMPRESSED"=NA, # 15 miCOMPRESSED Compressed Data
           "miUTF8"=8,        # 16 miUTF8 Unicode UTF-8 Encoded Character Data
           "miUTF16"=16,      # 17 miUTF16 Unicode UTF-16 Encoded Character Data
@@ -1199,15 +1198,15 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
         );
 
         knownWhats <- list(
-          "miMATRIX"=0, 
-          "miINT8"=integer(), 
-          "miUINT8"=integer(), 
+          "miMATRIX"=0,
+          "miINT8"=integer(),
+          "miUINT8"=integer(),
           "miINT16"=integer(),
-          "miUINT16"=integer(), 
-          "miINT32"=integer(), 
+          "miUINT16"=integer(),
+          "miINT32"=integer(),
           "miUINT32"=integer(),
           "miSINGLE"=double(),
-          "--"=NA, 
+          "--"=NA,
           "miDOUBLE"=double(),
           "--"=NA,
           "--"=NA,
@@ -1222,7 +1221,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
         nbrOfBytes <- NULL;
 
         # From [1, page 9]:
-        # "Programming Note - When reading a MAT-file, you can tell if you 
+        # "Programming Note - When reading a MAT-file, you can tell if you
         #  are processing a compressed data element by comparing the value
         #  of the first two bytes of the tag with the value zero (0). If
         #  these two bytes are not zero, the tag uses the compressed format."
@@ -1250,7 +1249,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
           }
           if (type+1 < 1 || type+1 > length(knownTypes))
             stop("Unknown data type. Not in range [1,", length(knownTypes), "]: ", type);
-          
+
           # Treat unsigned values too.
           padding <- 4 - ((nbrOfBytes-1) %% 4 + 1);
         } else {
@@ -1259,16 +1258,16 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
           left <<- left - 4;
           padding <- 8 - ((nbrOfBytes-1) %% 8 + 1);
         }
-      
+
         type <- names(knownTypes)[type+1];
         sizeOf <- as.integer(knownTypes[type]);
         what <- knownWhats[[type]];
 #        cat("type=", type, ", sizeOf=", sizeOf, ", what=", typeof(what), "\n", sep="");
-      
+
         signed <- isSigned(type);
-      
+
         tag <- list(type=type, signed=signed, sizeOf=sizeOf, what=what, nbrOfBytes=nbrOfBytes, padding=padding, compressed=compressed);
-        
+
         verbose && print(verbose, level=-100, unlist(tag));
 
         if (identical(tag$type, "miCOMPRESSED")) {
@@ -1283,7 +1282,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
             unzraw <- uncompress(zraw, asText=FALSE);
 
             verbose && printf(verbose, level=-110,
-                    "Inflated %.3f times from %d bytes to %d bytes.\n", 
+                    "Inflated %.3f times from %d bytes to %d bytes.\n",
                     length(unzraw)/length(zraw), length(zraw), length(unzraw));
 
             pushBackRawMat(con, unzraw);
@@ -1307,21 +1306,21 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 
           tag <- readTag(this);
         } # if (identical(tag$type, "miCOMPRESSED"))
-  
+
         tag;
       } # readTag()
-      
-      
+
+
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
       #
       # Subelement     Data Type  Number of Bytes
       # ---------------------------------------------------------------------
       # Array Flags    miUINT32   2*sizeOf(miUINT32) (8 bytes)
-      
+
       readArrayFlags <- function(this) {
         verbose && enter(verbose, level=-70, "Reading Array Flags");
         on.exit(verbose && exit(verbose));
-        
+
         getBits <- function(i) {
           ready <- FALSE;
           bits <- c();
@@ -1333,7 +1332,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
           }
           bits;
         } # getBits()
-  
+
         knownTypes <- c("mxCELL_CLASS"=NA, "mxSTRUCT_CLASS"=NA, "mxOBJECT_CLASS"=NA, "mxCHAR_CLASS"=8, "mxSPARSE_CLASS"=NA, "mxDOUBLE_CLASS"=NA, "mxSINGLE_CLASS"=NA, "mxINT8_CLASS"=8, "mxUINT8_CLASS"=8, "mxINT16_CLASS"=16, "mxUINT16_CLASS"=16, "mxINT32_CLASS"=32, "mxUINT32_CLASS"=32);
 
         # Read the first miUINT32 integer
@@ -1345,7 +1344,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
         # array type (class) represented by the data element."
         #
         class <- arrayFlags %% 256;
-        if (class < 1 || class > length(knownTypes)) { 
+        if (class < 1 || class > length(knownTypes)) {
           stop("Unknown array type (class). Not in [1,", length(knownTypes), "]: ", class);
         }
         class <- names(knownTypes)[class];
@@ -1373,51 +1372,51 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
         # Read the second miUINT32 integer
         nzmax <- readBinMat(con, what=integer(), size=4, n=1);
         left <<- left - 4;
-        
+
         flags <- list(logical=logical, global=global, complex=complex, class=class, classSize=classSize, nzmax=nzmax);
 
         verbose && cat(verbose, level=-100, "Flags:");
         verbose && print(verbose, level=-100, unlist(flags[-1]));
-        
+
         flags;
       } # readArrayFlags()
-      
-      
+
+
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
       readDimensionsArray <- function(this) {
         verbose && enter(verbose, level=-70, "Reading Dimensions Array");
         on.exit(verbose && exit(verbose));
-        
+
         tag <- readTag(this);
         if (tag$type != "miINT32") {
           throw("Tag type not supported: ", tag$type);
         }
-      
+
         sizeOf <- tag$sizeOf %/% 8;
         len <- tag$nbrOfBytes %/% sizeOf;
         verbose && cat(verbose, level=-100, "Reading ", len, " integers each of size ", sizeOf, " bytes.");
         dim <- readBinMat(con, what=integer(), size=sizeOf, n=len);
         left <<- left - sizeOf*len;
-        
+
         verbose && cat(verbose, level=-101, "Reading ", tag$padding, " padding bytes.");
         padding <- readBinMat(con, what=integer(), size=1, n=tag$padding);
         left <<- left - tag$padding;
-        
+
         dimArray <- list(tag=tag, dim=dim);
-        
+
         verbose && print(verbose, level=-100, list(dim=dim));
-        
+
         dimArray;
       } # readDimensionsArray()
-    
-    
+
+
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
       readName <- function(this) {
         verbose && enter(verbose, level=-70, "Reading Array Name");
         on.exit(verbose && exit(verbose));
-        
+
         tag <- readTag(this);
-      
+
         sizeOf <- tag$sizeOf %/% 8;
         nchars <- tag$nbrOfBytes %/% sizeOf;
         verbose && cat(verbose, level=-100, "Reading ", nchars, " characters.");
@@ -1427,53 +1426,53 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
         name <- matToString(name, tag$type);
         name <- asSafeRName(name);
         left <<- left - nchars;
-      
+
         verbose && cat(verbose, level=-101, "Reading ", tag$padding, " padding bytes.");
         padding <- readBinMat(con, what=integer(), size=1, n=tag$padding);
         left <<- left - tag$padding;
-        
+
       verbose && cat(verbose, level=-50, "Name: '", name, "'");
-        
+
         list(tag=tag, name=name);
       } # readName()
-      
-      
+
+
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
       readFieldNameLength <- function(this) {
         verbose && enter(verbose, level=-70, "Reading Field Name Length");
         on.exit(verbose && exit(verbose));
-        
+
         tag <- readTag(this);
         if (tag$type != "miINT32") {
           throw("Tag type not supported: ", tag$type);
         }
-      
+
         sizeOf <- tag$sizeOf %/% 8;
         len <- tag$nbrOfBytes %/% sizeOf;
   #      cat("sizeOf=", sizeOf, "\n");
   #      cat("len=", len, "\n");
         maxLength <- readBinMat(con, what=integer(), size=sizeOf, n=len);
-        
+
         left <<- left - len;
-      
+
         padding <- readBinMat(con, what=integer(), size=1, n=tag$padding);
         left <<- left - tag$padding;
-      
+
        verbose && cat(verbose, level=-100, "Field name length+1: ", maxLength);
 
         list(tag=tag, maxLength=maxLength);
       } # readFieldNameLength()
-      
-      
+
+
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
       readFieldNames <- function(this, maxLength) {
         verbose && enter(verbose, level=-70, "Reading Field Names");
         on.exit(verbose && exit(verbose));
-        
+
         tag <- readTag(this);
         ## Be generous in what types are accepted for names; MATLAB(tm) has
         ## a habit of sprouting new file features.
-      
+
         names <- c();
         sizeOf <- tag$sizeOf %/% 8;
         nbrOfNames <- tag$nbrOfBytes %/% maxLength;
@@ -1494,10 +1493,10 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
         left <<- left - tag$padding;
 
       verbose && cat(verbose, level=-50, "Field names: ", paste(paste("'", names, "'", sep=""), collapse=", "));
-        
+
         list(tag=tag, names=names);
       } # readFieldNames()
-    
+
 
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
       # From [1, page 26]:
@@ -1511,7 +1510,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
       readFields <- function(this, names) {
         verbose && enter(verbose, level=-70, "Reading Fields");
         on.exit(verbose && exit(verbose));
-        
+
         fields <- list();
         for (k in seq(names)) {
           verbose && enter(verbose, level=-3, "Reading field: ", names[k]);
@@ -1520,21 +1519,21 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
           verbose && exit(verbose);
         }
         names(fields) <- names;
-        
+
         fields;
       } # readFields()
-    
-    
+
+
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
       readValues <- function(this, logical=FALSE) {
         verbose && enter(verbose, level=-70, "Reading Values");
         on.exit(verbose && exit(verbose));
-        
+
         tag <- readTag(this);
 
         # "If the 'logical' bit is set, it indicates the array is used for
         # logical indexing." [4].  This is a rather vague explanation, but
-        # by comparing the byte content of sparse matrices containing 
+        # by comparing the byte content of sparse matrices containing
         # doubles to those containing logical, it appears as if the latter
         # are stored as single 0/1 bytes, regardless of what the "tag"
         # is indicating.
@@ -1550,23 +1549,23 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
         len <- tag$nbrOfBytes %/% sizeOf;
 
         verbose && cat(verbose, level=-100, "Reading ", len, " values each of ", sizeOf, " bytes. In total ", tag$nbrOfBytes, " bytes.");
-        
+
         value <- readBinMat(con, what=what, size=sizeOf, n=len, signed=tag$signed);
         verbose && str(verbose, level=-102, value);
-        
+
         left <<- left - sizeOf*len;
-        
+
         verbose && cat(verbose, level=-101, "Reading ", tag$padding, " padding bytes.");
-        
+
         padding <- readBinMat(con, what=integer(), size=1, n=tag$padding);
-        
+
         left <<- left - tag$padding;
-        
+
         list(tag=tag, value=value);
       } # readValues()
-    
-    
-    
+
+
+
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
       readMiMATRIX <- function(this, tag) {
         verbose && enter(verbose, level=-70, "Reading miMATRIX");
@@ -1606,7 +1605,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
         arrayName <- readName(this);
 
 #str(arrayName)
-      
+
         if (arrayFlags$class == "mxCELL_CLASS") {
           nbrOfCells <- prod(dimensionsArray$dim);
           verbose && cat(verbose, level=-4, "Reading mxCELL_CLASS with ", nbrOfCells, " cells.");
@@ -1682,8 +1681,8 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
           # Put into a named list
           matrix <- list(matrix);
           names(matrix) <- arrayName$name;
-          verbose && exit(verbose, suffix=paste("...done: '", names(matrix), "' [", 
-                   mode(matrix), ": ", paste(dim(matrix), collapse="x"),  
+          verbose && exit(verbose, suffix=paste("...done: '", names(matrix), "' [",
+                   mode(matrix), ": ", paste(dim(matrix), collapse="x"),
                                                  " elements]", sep=""));
         } else if (arrayFlags$class == "mxSPARSE_CLASS") {
           # Dimensions of the sparse matrix
@@ -1691,7 +1690,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
           ncol <- dimensionsArray$dim[2];
 
           verbose && cat(verbose, level=-4, "Reading mxSPARSE_CLASS ", nrow, "x", ncol, " matrix.");
-          
+
           # From [2, page5-6]
           # "Sparse Matrices
           #  Sparse matrices have a different storage convention in MATLAB. The
@@ -1737,7 +1736,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
             #  column N. Within each column, row position 1 must appear prior to
             #  row position 2, and so on."
             ir <- readValues(this)$value;
-            
+
             # Note that the indices for MAT v5 sparse arrays start at 0 (not 1).
             ir <- ir + 1;
             if (any(ir < 1 | ir > nrow)) {
@@ -1757,7 +1756,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
             verbose && str(verbose, level=-102, ir);
             verbose && str(verbose, level=-102, jc);
             verbose && str(verbose, level=-102, pr);
-            
+
             # "This subelement contains the imaginary data in the array, if one
             #  or more of the numeric values in the MATLAB array is a complex
             #  number (if the complex bit is set in Array Flags)." [1, p20]
@@ -1849,7 +1848,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
         } else {
           data <- readValues(this, logical=arrayFlags$logical);
           matrix <- data$value;
-      
+
           verbose && cat(verbose, level=-5, "Converting to ", arrayFlags$class, " matrix.");
           if (arrayFlags$class == "mxDOUBLE_CLASS") {
             matrix <- as.double(matrix);
@@ -1873,18 +1872,18 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
           } else {
             stop("Unknown or unsupported class id in array flags: ", arrayFlags$class);
           }
-      
+
           matrix <- list(matrix);
           names(matrix) <- arrayName$name;
         }
-      
+
         matrix;
       } # readMiMATRIX()
-    
+
 
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
       # General structure of a MAT v5 Data Element:
-      # 
+      #
       #      1    2    3    4    5    6    7    8
       #   +----+----+----+----+----+----+----+----+
       #   |    Data type      |  Number of Bytes  |  Tag
@@ -1916,7 +1915,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
       data;
     } # readMat5DataElement()
 
-      
+
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # "Main program"
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1940,8 +1939,8 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
         break;
       }
       result <- append(result, data);
-      verbose && exit(verbose, suffix=paste("...done: '", names(data), "' [", 
-                   mode(data[[1]]), ": ", paste(dim(data[[1]]), collapse="x"), 
+      verbose && exit(verbose, suffix=paste("...done: '", names(data), "' [",
+                   mode(data[[1]]), ": ", paste(dim(data[[1]]), collapse="x"),
                                                                 "]", sep=""));
     }
 
@@ -2011,9 +2010,9 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
   #  contain a zero, MATLAB will assume the file is a Version 4 MAT-file."
   #
   # Details:
-  # For MAT v5 the first 124 bytes is free text followed by 2 bytes 
-  # specifying the version and 2 bytes specifying the endian, but for 
-  # MAT v4 the first four bytes represents the 'type'. 
+  # For MAT v5 the first 124 bytes is free text followed by 2 bytes
+  # specifying the version and 2 bytes specifying the endian, but for
+  # MAT v4 the first four bytes represents the 'type'.
   #
   # Thus, we read the first four bytes and test if it can be a MAT v4 file.
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2083,15 +2082,15 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 # o ROBUSTNESS: Now using argument 'imaginary' (not 'imag') in calls
 #   to complex().
 # 2010-09-18 [HB]
-# o BUG FIX: readMat() would throw an exception on 'Error in dim(matrix) 
-#   <- dimensionsArray$dim : dims [product 1] do not match the length of 
-#   object [0]' in rare cases related to empty strings.  Not sure if 
+# o BUG FIX: readMat() would throw an exception on 'Error in dim(matrix)
+#   <- dimensionsArray$dim : dims [product 1] do not match the length of
+#   object [0]' in rare cases related to empty strings.  Not sure if
 #   those cases are legal, but added an ad hoc workaround for them.
 #   Thanks Claude Flene at University of Turku for reporting this.
 # o Added internal sapply0() to deal with the above bug.
 # 2010-04-20 [HB]
 # o DOCUMENTATION: Minor update to argument 'fixNames' of help(readMat).
-#   Thanks Stephen Eglen (University of Cambridge) for the suggestion. 
+#   Thanks Stephen Eglen (University of Cambridge) for the suggestion.
 # 2010-02-03 [HB]
 # o GENERALIZATION: Now readMat() can read also nested miMATRIX structures.
 #   Issue reported by Jonathan Chard at Mango Solutions, UK.
@@ -2115,8 +2114,8 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 #   available.
 # o Fixed buffering to use the rawBuffer in readMat's scope.
 # 2007-04-19
-# o Added a "hint" to error message 'Tag type not supported: 
-#   miCOMPRESSED' to clarify that readMat() does not support 
+# o Added a "hint" to error message 'Tag type not supported:
+#   miCOMPRESSED' to clarify that readMat() does not support
 #   compressed MAT files.
 # 2006-09-01
 # o Trying to add support for gzip:ed data sections, but it does not
@@ -2124,12 +2123,12 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 # o Added more tag types according to [3].  Now the code also tests
 #   for unsupported tag types, e.g. miCOMPRESSED.
 # 2005-06-29
-# o BUG FIX: Forgot to "implement" miSINGLE, i.e. to set 'knownTypes' 
+# o BUG FIX: Forgot to "implement" miSINGLE, i.e. to set 'knownTypes'
 #   and 'knowWhats' for this. Thanks to Craig Aumann for the report.
 # 2005-06-10
 # o BUG FIX: readMat() would not read complex matrices correctly;
 #   each element in a complex matrix was made into its own variable
-#   with name "". Thanks to Chris Sims at Princeton University for 
+#   with name "". Thanks to Chris Sims at Princeton University for
 #   reporting this.
 # o Now making use of the Verbose() class. Sorry, but this means
 #   if verbose != FALSE, the function requires Verbose in R.utils.
@@ -2141,7 +2140,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 #   Matlab struct:s can be read.
 # 2005-04-22
 # o Updated to read Matlab struct:s as R structure:s.
-# o BUG FIX: Reading empty struct:s (and cells) tried to read one 
+# o BUG FIX: Reading empty struct:s (and cells) tried to read one
 #   field because seq(0) and not seq(length=0) was used. Updated all
 #   occurances of this problem.
 # 2005-04-08
@@ -2194,7 +2193,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 #   the Description comment everytime a MAT file is read. Removed. /HB
 # 2002-11-11
 # o BUG FIX: readMAT() would not work because getBits() previously in
-#   package R.oo was removed. getBits() is now added as a local 
+#   package R.oo was removed. getBits() is now added as a local
 #   function inside readMAT(). /HB
 # 2002-09-03
 # o readMAT() is now a stand-alone function. /HB
@@ -2212,7 +2211,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 #   order, which resulted in incorrect values of complex, global, and
 #   logical. /HB
 # o Updated readHeader() to read the endian information and possible
-#   adjust the version tag if it was Bigendian. First, then the 
+#   adjust the version tag if it was Bigendian. First, then the
 #   verification of the correct version number is done. /HB
 # o TEST: Went to the web and downloaded a few sample MAT files.
 #   All v5 files loaded with any problems. The v4 files were reported

@@ -34,7 +34,7 @@
   Returns the value of the option.
 }
 
-\author{Henrik Bengtsson, Jason Riedy}
+\author{Henrik Bengtsson}
 
 \seealso{
   \code{\link[R.matlab:setOption.Matlab]{*setOption}()}.

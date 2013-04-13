@@ -34,7 +34,7 @@
   successfully opened, otherwise \code{\link[base:logical]{FALSE}}.
 }
 
-\author{Henrik Bengtsson, Jason Riedy}
+\author{Henrik Bengtsson}
 
 \seealso{
   For more information see \code{\link{Matlab}}.

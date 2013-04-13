@@ -44,7 +44,7 @@
   with the Matlab server is given, such as what commands are sent etc.
 }
 
-\author{Henrik Bengtsson, Jason Riedy}
+\author{Henrik Bengtsson}
 
 \seealso{
   For more information see \code{\link{Matlab}}.

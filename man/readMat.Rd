@@ -89,13 +89,12 @@ print(data)
 }
 
 \author{
-  Henrik Bengtsson, Mathematical Statistics, Lund University.
+  Henrik Bengtsson.
   The internal MAT v4 reader was written by
-  Andy Jacobson at Program in Atmospheric and Oceanic Sciences,
-  Princeton University.
+  Andy Jacobson (Princeton University).
   Support for reading compressed files via \pkg{Rcompression},
   sparse matrices and UTF-encoded strings was added by
-  Jason Riedy, UC Berkeley.
+  Jason Riedy (UC Berkeley).
 }
 
 \seealso{

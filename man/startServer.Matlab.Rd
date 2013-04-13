@@ -68,7 +68,7 @@
   where Matlab is started, copies of them will automatically be made.
 }
 
-\author{Henrik Bengtsson, Jason Riedy}
+\author{Henrik Bengtsson}
 
 \seealso{
   For more information see \code{\link{Matlab}}.

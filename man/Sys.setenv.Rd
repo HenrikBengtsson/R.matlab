@@ -22,7 +22,7 @@
   and needs to be document in order for the package to pass the tests.
 }
 
-\author{Henrik Bengtsson, Jason Riedy}
+\author{Henrik Bengtsson}
 
 
 \keyword{documentation}

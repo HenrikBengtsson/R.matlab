@@ -66,6 +66,7 @@ Matlab(host="localhost", port=9999, remote=!(host \%in\% c("localhost", "127.0.0
  \bold{Methods inherited from Object}:\cr
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save
 
+
  }
 
  \section{Requirements}{
@@ -337,7 +338,7 @@ close(matlab)
 print(matlab)
 }}
 
- \author{Henrik Bengtsson, Jason Riedy}
+ \author{Henrik Bengtsson}
 
  \seealso{
    Stand-alone methods \code{\link{readMat}}() and \code{\link{writeMat}}()
