@@ -5,6 +5,7 @@ Version: 1.7.0 [2013-04-15]
 o readMat() now support reading 64-bit integers [array type (class)
   'mxINT64_CLASS' and 'mxUINT64_CLASS'] on machines/versions of R
   with .Machine$sizeof.long >= 8 or .Machine$sizeof.longlong >= 8.
+o Package utilizes new startupMessage() of R.oo. 
 o ROBUSTNESS: Now nearly all S3 methods are declared properly in
   the namespace.
 
