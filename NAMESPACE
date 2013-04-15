@@ -3,6 +3,7 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 importFrom("R.methodsS3", "setMethodS3")
 importFrom("R.oo", "setConstructorS3")
+importFrom("R.oo", "finalize")
 importFrom("R.methodsS3", "throw")
 
 
@@ -10,8 +11,33 @@ importFrom("R.methodsS3", "throw")
 # EXPORTS
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Object that must exported explicitly
-export(.conflicts.OK) 
+export(.conflicts.OK)
 
 # Export all public methods, that is, those without a preceeding dot
 # in their names.
 exportPattern("^[^\\.]")
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# DECLARATIONS
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+S3method("readMat", "default")
+S3method("writeMat", "default")
+S3method("isOpen", "default")
+
+# Matlab
+S3method("as.character", "Matlab")
+S3method("getOption", "Matlab")
+S3method("setOption", "Matlab")
+S3method("open", "Matlab")
+S3method("isOpen", "Matlab")
+S3method("finalize", "Matlab")
+S3method("close", "Matlab")
+S3method("writeCommand", "Matlab")
+S3method("readResult", "Matlab")
+S3method("startServer", "Matlab")
+S3method("evaluate", "Matlab")
+S3method("getVariable", "Matlab")
+S3method("setVariable", "Matlab")
+S3method("setFunction", "Matlab")
+S3method("setVerbose", "Matlab")

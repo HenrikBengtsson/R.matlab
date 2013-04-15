@@ -1,10 +1,12 @@
 Package: R.matlab
 =================
 
-Version: 1.6.5 [2013-04-15]
+Version: 1.7.0 [2013-04-15]
 o readMat() now support reading 64-bit integers [array type (class)
   'mxINT64_CLASS' and 'mxUINT64_CLASS'] on machines/versions of R
   with .Machine$sizeof.long >= 8 or .Machine$sizeof.longlong >= 8.
+o ROBUSTNESS: Now nearly all S3 methods are declared properly in
+  the namespace.
 
 
 Version: 1.6.4 [2013-03-08]
