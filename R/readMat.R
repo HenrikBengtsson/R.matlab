@@ -242,6 +242,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
     NULL;
   }
 
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Function to read 'n' binary values of a data type of type 'what'
   # and size 'size', cf. readBin().
@@ -1132,10 +1133,10 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
     readMat5DataElement <- function(this) {
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
       isSigned <- function(type) {
-        signed   <- c("mxINT8_CLASS", "mxINT16_CLASS", "mxINT32_CLASS");
-        signed   <- c(signed, "miINT8", "miINT16", "miINT32");
-        unsigned <- c("mxUINT8_CLASS", "mxUINT16_CLASS", "mxUINT32_CLASS");
-        unsigned <- c(unsigned, "miUINT8", "miUINT16", "miUINT32");
+        signed   <- c("mxINT8_CLASS", "mxINT16_CLASS", "mxINT32_CLASS", "mxINT64_CLASS");
+        signed   <- c(signed, "miINT8", "miINT16", "miINT32", "miINT64");
+        unsigned <- c("mxUINT8_CLASS", "mxUINT16_CLASS", "mxUINT32_CLASS", "mxUINT64_CLASS");
+        unsigned <- c(unsigned, "miUINT8", "miUINT16", "miUINT32", "miUINT64");
         if (!is.element(type, c(signed, unsigned)))
           return(NA);
         is.element(type, signed);
@@ -1333,7 +1334,9 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
           bits;
         } # getBits()
 
-        knownTypes <- c("mxCELL_CLASS"=NA, "mxSTRUCT_CLASS"=NA, "mxOBJECT_CLASS"=NA, "mxCHAR_CLASS"=8, "mxSPARSE_CLASS"=NA, "mxDOUBLE_CLASS"=NA, "mxSINGLE_CLASS"=NA, "mxINT8_CLASS"=8, "mxUINT8_CLASS"=8, "mxINT16_CLASS"=16, "mxUINT16_CLASS"=16, "mxINT32_CLASS"=32, "mxUINT32_CLASS"=32);
+        # Known types and the number of bytes they occupy.
+        # NOTE: The index corresponds to its encoded value.
+        knownTypes <- c("mxCELL_CLASS"=NA, "mxSTRUCT_CLASS"=NA, "mxOBJECT_CLASS"=NA, "mxCHAR_CLASS"=8, "mxSPARSE_CLASS"=NA, "mxDOUBLE_CLASS"=NA, "mxSINGLE_CLASS"=NA, "mxINT8_CLASS"=8, "mxUINT8_CLASS"=8, "mxINT16_CLASS"=16, "mxUINT16_CLASS"=16, "mxINT32_CLASS"=32, "mxUINT32_CLASS"=32, "mxINT64_CLASS"=64, "mxUINT64_CLASS"=64);
 
         # Read the first miUINT32 integer
         arrayFlags <- readBinMat(con, what=integer(), size=4, n=1);
@@ -1857,6 +1860,10 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
             matrix <- as.single(matrix);
             dim(matrix) <- dimensionsArray$dim;
           } else if (is.element(arrayFlags$class, c("mxINT8_CLASS", "mxUINT8_CLASS", "mxINT16_CLASS", "mxUINT16_CLASS", "mxINT32_CLASS", "mxUINT32_CLASS"))) {
+            matrix <- as.integer(matrix);
+            dim(matrix) <- dimensionsArray$dim;
+          } else if (is.element(arrayFlags$class, c("mxINT64_CLASS", "mxUINT64_CLASS"))) {
+            # Coerce 64-bit integers to doubles.
             matrix <- as.integer(matrix);
             dim(matrix) <- dimensionsArray$dim;
           } else if (arrayFlags$class == "mxCHAR_CLASS") {
