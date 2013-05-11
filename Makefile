@@ -142,9 +142,11 @@ spell_Rd:
 	$(R_SCRIPT) -e "f <- list.files('man', pattern='[.]Rd$$', full.names=TRUE); utils::aspell(f, filter='Rd')"
 
 
+spell_NEWS:
+	$(R_SCRIPT) -e "utils::aspell('$(FILES_NEWS)')"
+
 spell:
 	$(R_SCRIPT) -e "utils::aspell('DESCRIPTION', filter='dcf')"
-	$(R_SCRIPT) -e "utils::aspell('$(FILES_NEWS)')"
 
 
 # Build package vignettes
