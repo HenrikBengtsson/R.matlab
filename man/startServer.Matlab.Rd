@@ -22,10 +22,12 @@
 
 \usage{
 ## Static method (use this):
-## Matlab$startServer(matlab=getOption("matlab"), port=9999, minimize=TRUE, options=c("nodesktop", "nodisplay", "nosplash"), ...)
+## Matlab$startServer(matlab=getOption("matlab"), port=9999, minimize=TRUE,
+##   options=c("nodesktop", "nodisplay", "nosplash"), ...)
 
 ## Don't use the below:
-\method{startServer}{Matlab}(this, matlab=getOption("matlab"), port=9999, minimize=TRUE, options=c("nodesktop", "nodisplay", "nosplash"), ...)
+\method{startServer}{Matlab}(this, matlab=getOption("matlab"), port=9999, minimize=TRUE,
+  options=c("nodesktop", "nodisplay", "nosplash"), ...)
 }
 
 \arguments{

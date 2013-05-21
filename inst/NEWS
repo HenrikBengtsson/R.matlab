@@ -1,6 +1,10 @@
 Package: R.matlab
 =================
 
+Version: 1.7.1 [2013-05-20]
+o CRAN POLICY: Now all Rd \usage{} lines are at most 90 characters long.
+
+
 Version: 1.7.0 [2013-04-15]
 o readMat() now support reading 64-bit integers [array type (class)
   'mxINT64_CLASS' and 'mxUINT64_CLASS'] on machines/versions of R

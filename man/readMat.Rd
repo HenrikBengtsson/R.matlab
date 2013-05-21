@@ -44,7 +44,8 @@
 }
 
 \usage{
-\method{readMat}{default}(con, maxLength=NULL, fixNames=TRUE, verbose=FALSE, sparseMatrixClass=c("Matrix", "SparseM", "matrix"), ...)
+\method{readMat}{default}(con, maxLength=NULL, fixNames=TRUE, verbose=FALSE,
+  sparseMatrixClass=c("Matrix", "SparseM", "matrix"), ...)
 }
 
 \arguments{

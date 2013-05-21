@@ -19,8 +19,7 @@
 }
 
 \usage{
-\method{setFunction}{Matlab}(this, code, name=NULL, collapse="
-", ...)
+\method{setFunction}{Matlab}(this, code, name=NULL, collapse="\n", ...)
 }
 
 \arguments{
