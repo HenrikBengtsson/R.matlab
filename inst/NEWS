@@ -2,8 +2,9 @@ Package: R.matlab
 =================
 
 Version: 1.8.0 [2013-05-22]
-o SPEEDUP: Made readMat() significant faster by improving the
-  internal raw buffer management.
+o SPEEDUP: Made readMat() significant faster by dramatically decrease
+  the amount of memory allocation and garbage collection needed by
+  the internal raw buffer mechanism.
 o Now readRaw() also accepts a raw vector as input.
 o DOCUMENTATION: Restructured help("readMat").  Added a section on
   'Speed performance'.
