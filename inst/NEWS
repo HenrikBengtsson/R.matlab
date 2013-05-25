@@ -244,7 +244,7 @@ o Now the first pass in writeMat() that counts the number of
   most common use case, will no longer involve the counting.
   Thank to Adam Grossman at Stanford University for suggesting
   the modification and providing initial code.  He reports
-  a substantial speed up in writing large files (38MB file).
+  a substantial speedup in writing large files (38MB file).
 o CLEAN UP: Removed internal debugging/asserting code.
 o Renamed the HISTORY file to NEWS.
 
