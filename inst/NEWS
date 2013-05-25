@@ -1,11 +1,18 @@
 Package: R.matlab
 =================
 
-Version: 1.8.0 [2013-05-22]
-o SPEEDUP: Made readMat() significant faster by dramatically decrease
-  the amount of memory allocation and garbage collection needed by
-  the internal raw buffer mechanism.
+Version: 2.0.0 [2013-05-23]
+o SPEEDUP: Made readMat() significant faster. More than 15x speedup(!)
+  is observed on MAT files with many small structures.  This was
+  achieved by (i) dramatically decreasing the amount of memory allocation
+  and garbage collection needed by the internal raw buffer mechanism,
+  by (ii) dropping an internal rm() calls that was called very often,
+  as well as by (iii) minimizing the number of times local funcions and
+  objects are created.
 o Now readRaw() also accepts a raw vector as input.
+o Now readMat() no longer generates warnings reporting on "In readBin(
+  con = rawBufferT, what = what, size = size, n = n, signed = signed,  :
+  'signed = FALSE' is only valid for integers of sizes 1 and 2."
 o DOCUMENTATION: Restructured help("readMat").  Added a section on
   'Speed performance'.
 
