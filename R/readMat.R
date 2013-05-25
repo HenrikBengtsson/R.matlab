@@ -215,23 +215,25 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Gets a vector of bits for an integer
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  getBits <- function(i) {
-    ready <- FALSE;
-    bits <- integer(0L);
-    while (!ready) {
-      bit <- as.integer(i %% 2);
-      bits <- c(bits, bit);
-      i <- i %/% 2;
-      ready <- (i == 0L);
-    }
-    bits;
-  } # getBits()
+##   getBits <- function(i, nbits) {
+##     ready <- FALSE;
+##     bits <- integer(nbits);
+##     while (!ready) {
+##       bit <- i %% 2;
+##       bits <- c(bits, bit);
+##       i <- i %/% 2;
+##       ready <- (i == 0L);
+##     }
+##     bits <- as.integer(bits);
+##     bits;
+##   } # getBits()
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Function to assert that it is possible to read a certain number of bytes.
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   willRead <- function(nbrOfBytes) {
+      return()
     if (is.null(maxLength))
       return();
     if (nbrOfBytesRead + nbrOfBytes <= maxLength)
@@ -243,6 +245,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
   # Function to tell now many bytes we actually have read.
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   hasRead <- function(nbrOfBytes) {
+      return()
     nbrOfBytesRead <<- nbrOfBytesRead + nbrOfBytes;
     if (is.null(maxLength))
       return(TRUE);
@@ -446,9 +449,11 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
     ### stopifnot(length(bfr) == nchars);
 
     # Coerce to a string
-    bfr <- as.integer(bfr);
-    bfr <- intToChar(bfr);
-    bfr <- paste(bfr, collapse="");
+    bfr <- rawToChar(bfr);
+    ## Was:
+    ## bfr <- as.integer(bfr);
+    ## bfr <- intToChar(bfr);
+    ## bfr <- paste(bfr, collapse="");
 
     eatRawBuffer(nchars);
     hasRead(nchars);
@@ -460,13 +465,27 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
   ## convert* are internal helper functions.  They handle type dispatch
   ## and defaults for charset conversions.
   convertUTF8 <- function(ary) {
-    ary <- intToChar(as.integer(ary));
     if (length(ary) > 0L) {
-      ary <- paste(ary, collapse="");
+      ary <- as.raw(ary);
+      ary <- rawToChar(ary);
+    } else {
+      ary <- "";
     }
     Encoding(ary) <- "UTF-8";
     ary;
   }
+##   Was:
+##   convertUTF8 <- function(ary) {
+##     if (length(ary) > 0L) {
+##       ary <- as.integer(ary);
+##       ary <- intToChar(ary);
+##       ary <- paste(ary, collapse="");
+##     } else {
+##       ary <- "";
+##     }
+##     Encoding(ary) <- "UTF-8";
+##     ary;
+##   }
 
   convertGeneric <- function(ary) {
     ## Set entires outside the ASCII range to NA except for NUL.
@@ -483,23 +502,23 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
     ## look for UTF-16BE or UTF16BE, etc..
     has.utf16 <- utils::head(grep("UTF-?16BE", utfs, value=TRUE), n=1L);
     has.utf32 <- utils::head(grep("UTF-?32BE", utfs, value=TRUE), n=1L);
-    rm(utfs);
+    rm(list="utfs");
     if (length(has.utf16) > 0L) {
       convertUTF16 <- function(ary) {
         n <- length(ary);
         ary16 <- paste(intToChar(c(sapply(ary,
-                                          function(x) { c(x%/%2^8,
-                                                          x%%2^8); }))),
+                                          function(x) { c(x%/%256,
+                                                          x%%256); }))),
                        collapse="");
         iconv(ary16, has.utf16, "UTF-8");
       }
       convertUTF32 <- function(ary) {
         n <- length(ary);
         ary32 <- paste(intToChar(c(sapply(ary,
-                                          function(x) { c((x%/%2^24)%%2^8,
-                                                          (x%/%2^16)%%2^8,
-                                                          (x%/%2^8)%%2^8,
-                                                          x%%2^8); }))),
+                                          function(x) { c((x%/%16777216)%%256,
+                                                          (x%/%65536)%%256,
+                                                          (x%/%256)%%256,
+                                                          x%%256); }))),
                        collapse="");
         iconv(ary32, has.utf32, "UTF-8");
       }
@@ -541,7 +560,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   asSafeRName <- function(name) {
     if (fixNames) {
-      name <- gsub("_", ".", name);
+      name <- gsub("_", ".", name, fixed=TRUE);
     }
     name;
   }
@@ -567,7 +586,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   uncompressMemDecompress <- function(zraw, asText=TRUE, type="gzip", ...) {
     # To please R CMD check for R versions before R v2.10.0
-    memDecompress <- NULL; rm(memDecompress);
+    memDecompress <- NULL; rm(list="memDecompress");
     unzraw <- memDecompress(zraw, type=type, asChar=asText, ...);
     unzraw;
   } # uncompressMemDecompress()
@@ -1103,7 +1122,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
           data <- complex(real=real, imaginary=imag);
         } else {
           data <- real;
-          rm(real);
+          rm(list="real");
         }
 
         # Make into a matrix or an array
@@ -1124,7 +1143,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
           i <- as.integer(data[,1L]);
           j <- as.integer(data[,2L]);
           s <- data[,3L];
-          rm(data);
+          rm(list="data");
 
           if (verbose) {
             str(verbose, level=-102, header);
@@ -1163,12 +1182,12 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
             # Instead of applying row-by-row, we calculate the position of each
             # sparse element in an hardcoded fashion.
             pos <- (j-1L)*n + i;
-            rm(i,j);  # Not needed anymore
+            rm(list=c("i", "j"));  # Not needed anymore
 
             data <- matrix(0, nrow=n, ncol=m);
             data[pos] <- s;
 
-            rm(pos, s); # Not needed anymore
+            rm(list=c("pos", "s")); # Not needed anymore
           }
         }
       } else {
@@ -1204,7 +1223,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
       verbose && str(verbose, level=-102, data);
 
       result <- append(result, data);
-      rm(data);
+      rm(list="data");
 
       firstFourBytes <- NULL;
     } # repeat
@@ -1394,7 +1413,6 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
       #   +---------------------------------------+
       #   :                                       :
       #
-
       mat5ReadTag <- function(this) {
         if (verbose) {
           enter(verbose, level=-80, "Reading Tag");
@@ -1428,8 +1446,8 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 
         if (compressed) {
           # NOTE: Do not swap for different endians here. /HB 020827
-          nbrOfBytes <- type %/% 2^16;
-          type <- type %% 2^16;
+          nbrOfBytes <- type %/% 65536;
+          type <- type %% 65536;
           if (detectedEndian == "big") {
             tmp <- type;
           }
@@ -1455,7 +1473,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 
         verbose && print(verbose, level=-100, unlist(tag));
 
-        if (identical(tag$type, "miCOMPRESSED")) {
+        if (tag$type == "miCOMPRESSED") {
           n <- tag$nbrOfBytes;
           zraw <- readBinMat(con=con, what=raw(), n=n);
           if (verbose) {
@@ -1472,7 +1490,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
                     length(unzraw)/length(zraw), length(zraw), length(unzraw));
 
             pushBackRawMat(con, unzraw);
-            rm(unzraw);
+            rm(list="unzraw");
           }, error = function(ex) {
             msg <- ex$message;
             env <- globalenv(); # To please 'R CMD check'
@@ -1490,10 +1508,10 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
               throw(msg);
             }
           });
-          rm(zraw);
+          rm(list="zraw");
 
           tag <- mat5ReadTag(this);
-        } # if (identical(tag$type, "miCOMPRESSED"))
+        } # if (tag$type == "miCOMPRESSED")
 
         tag;
       } # mat5ReadTag()
@@ -1533,10 +1551,21 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
       #  a global variable in the base workspace. If the logical bit is
       #  set, it indicates the array is used for logical indexing."
       flags <- arrayFlags %% 256;
-      flags <- as.logical(getBits(flags + 2^8)[-9L]);
-      logical <- flags[2L];
-      global  <- flags[3L];
-      complex <- flags[4L];
+
+      # Was:
+      ## bits <- as.logical(getBits(flags + 256L, nbits=9L)[-9L]);
+      ## logical <- bits[2L];
+      ## global  <- bits[3L];
+      ## complex <- bits[4L];
+
+      f1 <- flags %% 2;
+      f2 <- (flags - f1) %% 4;
+      f3 <- (flags - f1 - f2) %% 8;
+      f4 <- (flags - f1 - f2 - f3) %% 16;
+      logical <- as.logical(f2);
+      global  <- as.logical(f3);
+      complex <- as.logical(f4);
+
 
       # Bytes 1 & 2 - The two hi-bytes are "undefined".
 
@@ -1949,7 +1978,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
           if (arrayFlags$complex) {
             if (nzmax < length(pi)) { pi <- pi[1:nzmax]; }
             pr <- complex(real=pr, imaginary=pi);
-            rm(pi); # Not needed anymore!
+            rm(list="pi"); # Not needed anymore!
           }
         } # if (nzmax > 0)
 
@@ -2015,7 +2044,8 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
             value <- value[ok];
             matrix[row,col] <- value;
           }
-          rm(ir,jc,first,last,idx,value,row); # Not needed anymore
+          # Not needed anymore
+          rm(list=c("ir", "jc", "first", "last", "idx", "value", "row"));
 
           matrix <- list(matrix);
           names(matrix) <- arrayName$name;
@@ -2233,10 +2263,10 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
     stop("MAT file format error: Nothing to read. Empty input stream.");
 
   if (isMat4(firstFourBytes)) {
-    verbose && cat(verbose, level=0, "Trying to read MAT v4 file stream...");
+    verbose && cat(verbose, level=0, "Trying to read MAT v4 file stream.");
     readMat4(con, firstFourBytes=firstFourBytes, maxLength=maxLength);
   } else {
-    verbose && cat(verbose, level=0, "Trying to read MAT v5 file stream...");
+    verbose && cat(verbose, level=0, "Trying to read MAT v5 file stream.");
     readMat5(con, firstFourBytes=firstFourBytes, maxLength=maxLength);
   }
 }) # readMat()
@@ -2246,6 +2276,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 ###########################################################################
 # HISTORY:
 # 2013-05-23
+# o SPEEDUP: Replaced all rm(x) with rm(list="x").
 # o SPEEDUP: Major speed up by dropping rm() calls in some internal
 #   functions that are called many times.  For instance, a single
 #   rm(tmp) call in the local function that reads MAT read tags
