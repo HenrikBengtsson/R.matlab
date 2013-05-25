@@ -502,7 +502,6 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
     ## look for UTF-16BE or UTF16BE, etc..
     has.utf16 <- utils::head(grep("UTF-?16BE", utfs, value=TRUE), n=1L);
     has.utf32 <- utils::head(grep("UTF-?32BE", utfs, value=TRUE), n=1L);
-    rm(list="utfs");
     if (length(has.utf16) > 0L) {
       convertUTF16 <- function(ary) {
         n <- length(ary);
@@ -638,10 +637,6 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
           errorMsg <- paste("Failed to uncompress data: ", msg, sep="");
           throw(errorMsg);
         }
-
-        # Garbage collect
-        gc();
-
         # ...but it could be that there is not enough memory
         lastException <<- ex;
       }) # tryCatch()
@@ -1122,7 +1117,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
           data <- complex(real=real, imaginary=imag);
         } else {
           data <- real;
-          rm(list="real");
+          real <- NULL; # Not needed anymore
         }
 
         # Make into a matrix or an array
@@ -1143,7 +1138,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
           i <- as.integer(data[,1L]);
           j <- as.integer(data[,2L]);
           s <- data[,3L];
-          rm(list="data");
+          data <- NULL; # Not needed anymore
 
           if (verbose) {
             str(verbose, level=-102, header);
@@ -1182,12 +1177,11 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
             # Instead of applying row-by-row, we calculate the position of each
             # sparse element in an hardcoded fashion.
             pos <- (j-1L)*n + i;
-            rm(list=c("i", "j"));  # Not needed anymore
+            i <- j <- NULL; # Not needed anymore
 
             data <- matrix(0, nrow=n, ncol=m);
             data[pos] <- s;
-
-            rm(list=c("pos", "s")); # Not needed anymore
+            pos <- s <- NULL; # Not needed anymore
           }
         }
       } else {
@@ -1223,7 +1217,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
       verbose && str(verbose, level=-102, data);
 
       result <- append(result, data);
-      rm(list="data");
+      data <- NULL; # Not needed anymore
 
       firstFourBytes <- NULL;
     } # repeat
@@ -1490,7 +1484,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
                     length(unzraw)/length(zraw), length(zraw), length(unzraw));
 
             pushBackRawMat(con, unzraw);
-            rm(list="unzraw");
+            unzraw <- NULL; # Not needed anymore
           }, error = function(ex) {
             msg <- ex$message;
             env <- globalenv(); # To please 'R CMD check'
@@ -1508,7 +1502,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
               throw(msg);
             }
           });
-          rm(list="zraw");
+          zraw <- NULL; # Not needed anymore
 
           tag <- mat5ReadTag(this);
         } # if (tag$type == "miCOMPRESSED")
@@ -1978,7 +1972,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
           if (arrayFlags$complex) {
             if (nzmax < length(pi)) { pi <- pi[1:nzmax]; }
             pr <- complex(real=pr, imaginary=pi);
-            rm(list="pi"); # Not needed anymore!
+            pi <- NULL; # Not needed anymore
           }
         } # if (nzmax > 0)
 
@@ -2045,7 +2039,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
             matrix[row,col] <- value;
           }
           # Not needed anymore
-          rm(list=c("ir", "jc", "first", "last", "idx", "value", "row"));
+          ir <- jc <- first <- last <- idx <- value <- row <- NULL;
 
           matrix <- list(matrix);
           names(matrix) <- arrayName$name;
@@ -2275,8 +2269,10 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 
 ###########################################################################
 # HISTORY:
-# 2013-05-23
-# o SPEEDUP: Replaced all rm(x) with rm(list="x").
+# 2013-05-25
+# o SPEEDUP: Dropped the explicit gc() call after decompressing.
+# o SPEEDUP: Replaced all rm() calls with NULL assignments.
+# 2013-05-22
 # o SPEEDUP: Major speed up by dropping rm() calls in some internal
 #   functions that are called many times.  For instance, a single
 #   rm(tmp) call in the local function that reads MAT read tags

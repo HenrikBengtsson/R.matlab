@@ -1,7 +1,7 @@
 Package: R.matlab
 =================
 
-Version: 2.0.0 [2013-05-23]
+Version: 2.0.0 [2013-05-25]
 o SPEEDUP: Made readMat() significant faster. More than 15x speedup(!)
   is observed on MAT files with many small structures.  This was
   achieved by (i) dramatically decreasing the amount of memory allocation
