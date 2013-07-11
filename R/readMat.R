@@ -1489,7 +1489,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
             msg <- ex$message;
             env <- globalenv(); # To please 'R CMD check'
             assign("R.matlab.debug.zraw", zraw, envir=env);
-            msg <- sprintf("INTERNAL ERROR: Failed to decompress data (using '%s'). Please report to the R.matlab package maintainer (%s). The reason was: %s", attr(uncompress, "label"), getMaintainer(R.matlab), msg);
+            msg <- sprintf("INTERNAL ERROR: Failed to decompress data (using '%s'). Please report to the R.matlab (v%s) package maintainer (%s). The reason was: %s", attr(uncompress, "label"), getVersion(R.matlab), getMaintainer(R.matlab), msg);
             onError <- getOption("R.matlab::readMat/onDecompressError", "error");
             if (identical(onError, "warning")) {
               warning(msg);
@@ -2269,6 +2269,9 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 
 ###########################################################################
 # HISTORY:
+# 2013-07-11
+# o Now the 'INTERNAL ERROR' message that people forward to the package
+#   maintainer also includes the version of the R.matlab package.
 # 2013-05-25
 # o SPEEDUP: Dropped the explicit gc() call after decompressing.
 # o SPEEDUP: Replaced all rm() calls with NULL assignments.
