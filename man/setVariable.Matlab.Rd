@@ -11,10 +11,10 @@
 \alias{Matlab.setVariable}
 \alias{setVariable,Matlab-method}
 
-\title{Sets one or several Matlab variables}
+\title{Sets one or several MATLAB variables}
 
 \description{
-  Sets one or several \R variables on the Matlab server.
+  Sets one or several \R variables on the MATLAB server.
   The transfer of the data can be done locally via a temporary file
   (\code{remote=FALSE}) or through the socket \code{\link[base:connections]{connection}} (\code{remote=TRUE}),
   which is always available.
@@ -25,13 +25,13 @@
 }
 
 \arguments{
-  \item{...}{Named \R variables to be set in Matlab.}
+  \item{...}{Named \R variables to be set in MATLAB.}
   \item{remote}{If \code{\link[base:logical]{TRUE}} the variables are transferred on the
     socket \code{\link[base:connections]{connection}}, otherwise they are transferred via a temporary file.}
 }
 
 \value{
-  Returns nothing. If the Matlab server did not received the variables
+  Returns nothing. If the MATLAB server did not received the variables
   successfully an exception is thrown.
 }
 

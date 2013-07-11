@@ -2,6 +2,8 @@ Package: R.matlab
 =================
 
 Version: 2.0.1 [2013-07-11]
+o Updated all documentation and messages to use 'MATLAB' instead 
+  of 'Matlab'.
 o Now the 'INTERNAL ERROR' message that people forward to the package
   maintainer also includes the version of the R.matlab package.
 o Bumped up package dependencies.

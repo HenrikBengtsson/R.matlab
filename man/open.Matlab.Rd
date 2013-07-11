@@ -11,10 +11,10 @@
 \alias{Matlab.open}
 \alias{open,Matlab-method}
 
-\title{Tries to open a connection to the Matlab server}
+\title{Tries to open a connection to the MATLAB server}
 
 \description{
-  Tries to open a socket connection to the Matlab server. If the connection
+  Tries to open a socket connection to the MATLAB server. If the connection
   could not be opened it the first time it will try to open it every
   \code{interval} second up to \code{trials} times.
 }
@@ -30,7 +30,7 @@
 }
 
 \value{
-  Returns \code{\link[base:logical]{TRUE}} if a socket \code{\link[base:connections]{connection}} to the Matlab server was
+  Returns \code{\link[base:logical]{TRUE}} if a socket \code{\link[base:connections]{connection}} to the MATLAB server was
   successfully opened, otherwise \code{\link[base:logical]{FALSE}}.
 }
 

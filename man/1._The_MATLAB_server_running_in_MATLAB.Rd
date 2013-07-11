@@ -6,19 +6,19 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\name{1. The Matlab server running in Matlab}
-\alias{1. The Matlab server running in Matlab}
-\title{1. The Matlab server running in Matlab}
+\name{1. The MATLAB server running in MATLAB}
+\alias{1. The MATLAB server running in MATLAB}
+\title{1. The MATLAB server running in MATLAB}
 
 
 \description{
- This section gives addition details on the Matlab server.
+ This section gives addition details on the MATLAB server.
  At the end, the MatlabServer.m script and the
  InputStreamByteWrapper.java code is shown.
 }
 
-\section{Starting the Matlab server on Windows}{
- Note that you "cannot prevent Matlab from creating a window when
+\section{Starting the MATLAB server on Windows}{
+ Note that you "cannot prevent MATLAB from creating a window when
  starting on Windows systems, but you can force the window to be hidden,
  by using " the option -minimize.
  See \url{http://www.mathworks.com/support/solutions/data/1-16B8X.html}
@@ -31,19 +31,19 @@
 \%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%
 \% MatlabServer
 \%
-\% This scripts starts a minimalistic Matlab "server".
+\% This scripts starts a minimalistic MATLAB "server".
 \%
 \% When started, the server listens for connections at port 9999 or the
 \% port number specified by the environment variable 'MATLABSERVER_PORT'.
 \%
 \% Troubleshooting: If not working out of the box, add this will to the
-\% Matlab path. Make sure InputStreamByteWrapper.class is in the same
+\% MATLAB path. Make sure InputStreamByteWrapper.class is in the same
 \% directory as this file!
 \%
 \% Requirements:
-\% This requires Matlab with Java support, i.e. Matlab v6 or higher.
+\% This requires MATLAB with Java support, i.e. MATLAB v6 or higher.
 \%
-\% Author: Henrik Bengtsson, 2002-2010
+\% Author: Henrik Bengtsson, 2002-2013
 \%
 \% References:
 \% [1] http://www.mathworks.com/access/helpdesk/help/techdoc/
@@ -53,34 +53,34 @@
 \% [3] http://www.mathworks.com/access/helpdesk/help/toolbox/
 \%                                              modelsim/a1057689278b4.html
 \%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%
-disp('Running MatlabServer v1.3.4');
+disp('Running MatlabServer v1.3.5');
 
 \%  addpath R/R_LIBS/linux/library/R.matlab/misc/
 
 \% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-\% Matlab version-dependent setup
+\% MATLAB version-dependent setup
 \% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 isVersion7 = eval('length(regexp(version, ''^7'')) ~= 0', '0');
 if (~isVersion7)
-  disp('Matlab v6.x detected.');
+  disp('MATLAB v6.x detected.');
   \% Default save option
   saveOption = '';
-  \% In Matlab v6 only the static Java CLASSPATH is supported. It is
+  \% In MATLAB v6 only the static Java CLASSPATH is supported. It is
   \% specified by a 'classpath.txt' file. The default one can be found
   \% by which('classpath.txt'). If a 'classpath.txt' exists in the
-  \% current(!) directory (that Matlab is started from), it *replaces*
+  \% current(!) directory (that MATLAB is started from), it *replaces*
   \% the global one. Thus, it is not possible to add additional paths;
   \% the global ones has to be copied to the local 'classpath.txt' file.
   \%
   \% To do the above automatically from R, does not seem to be an option.
 else
-  disp('Matlab v7.x or higher detected.');
-  \% Matlab v7 saves compressed files, which is not recognized by
+  disp('MATLAB v7.x or higher detected.');
+  \% MATLAB v7 saves compressed files, which is not recognized by
   \% R.matlab's readMat(); force saving in old format.
   saveOption = '-V6';
   disp('Saving with option -V6.');
 
-  \% In Matlab v7 both static and dynamic Java CLASSPATH:s exist.
+  \% In MATLAB v7 both static and dynamic Java CLASSPATH:s exist.
   \% Using dynamic ones, it is possible to add the file
   \% InputStreamByteWrapper.class to CLASSPATH, given it is
   \% in the same directory as this script.
@@ -97,7 +97,7 @@ import java.net.*;
 
 
 \% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-\% If an old Matlab server is running, close it
+\% If an old MATLAB server is running, close it
 \% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \% If a server object exists from a previous run, close it.
 if (exist('server'))
@@ -118,7 +118,7 @@ if (exist('os'))
 end
 
 fprintf(1, '----------------------\n');
-fprintf(1, 'Matlab server started!\n');
+fprintf(1, 'MATLAB server started!\n');
 fprintf(1, '----------------------\n');
 
 
@@ -164,7 +164,7 @@ os = java.io.DataOutputStream(getOutputStream(clientSocket));
 
 
 \% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-\% The Matlab server state machine
+\% The MATLAB server state machine
 \% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \% Commands
 commands = {'eval', 'send', 'receive', 'send-remote', 'receive-remote', 'echo'};
@@ -337,11 +337,11 @@ end
 
 
 \% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-\% Shutting down the Matlab server
+\% Shutting down the MATLAB server
 \% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 fprintf(1, '-----------------------\n');
-fprintf(1, 'Matlab server shutdown!\n');
+fprintf(1, 'MATLAB server shutdown!\n');
 fprintf(1, '-----------------------\n');
 writeByte(os, 0);
 close(os);
@@ -351,6 +351,8 @@ close(server);
 
 \%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%
 \% HISTORY:
+\% 2013-07-11 [v1.3.5]
+\% o Updated messages to use 'MATLAB' instead of 'Matlab'.
 \% 2010-10-25 [v1.3.4]
 \% o BUG FIX: The MatlabServer.m script incorrectly referred to the
 \%   InputStreamByteWrapper class as java.io.InputStreamByteWrapper.
@@ -379,17 +381,17 @@ close(server);
 \% o Added option to specify the port number via the system environment
 \%   variable MATLABSERVER_PORT, after request by Wang Yu, Iowa State Univ.
 \% 2005-03-08
-\% o BUG FIX: substring() is not recognized by Matlab v7. Using regexp()
-\%   which works in Matlab 6.5 and 7. Workaround eval('try', 'catch').
+\% o BUG FIX: substring() is not recognized by MATLAB v7. Using regexp()
+\%   which works in MATLAB 6.5 and 7. Workaround eval('try', 'catch').
 \%   Thanks Patrick Drechsler, University of Wuerzburg for the bug report.
 \% 2005-02-24
-\% o Now the dynamic Java classpath is set for Matlab v7 or higher. This
-\%   will simplify life for Matlab v7 users.
+\% o Now the dynamic Java classpath is set for MATLAB v7 or higher. This
+\%   will simplify life for MATLAB v7 users.
 \% 2005-02-22
 \% o Added javaaddpath() to include InputStreamByteWrapper.class.
 \%   Thanks Yichun Wei for feedback and great suggestions.
 \% 2005-02-11
-\% o If Matlab v7 or higher is detected, all MAT structures are saved with
+\% o If MATLAB v7 or higher is detected, all MAT structures are saved with
 \%   option '-V6' so readMat() in R.matlab can read them.
 \% 2002-09-02 [or maybe a little bit earlier]
 \% o Created.
@@ -399,7 +401,7 @@ close(server);
 }
 
 \section{InputStreamByteWrapper.(class|java) script}{
- The Java class InputStreamByteWrapper is needed in order for Matlab to
+ The Java class InputStreamByteWrapper is needed in order for MATLAB to
  \emph{receive} \emph{data} via a data stream. \R sends data via a data
  stream if, and only if, the connection was setup for "remote"
  communication, that is, with argument \code{remote=TRUE}).
@@ -409,11 +411,11 @@ close(server);
 import java.io.*;
 
 /*********************************************************************
-\% Compile from within Matlab with:
+\% Compile from within MATLAB with:
 \% !javac InputStreamByteWrapper.java
 
-\% Matlab example that reads a file using Java code and writes it
-\% back to a temporary file using Matlab code. Finally the contents
+\% MATLAB example that reads a file using Java code and writes it
+\% back to a temporary file using MATLAB code. Finally the contents
 \% of the new file is displayed.
 
 reader = InputStreamByteWrapper;  \% Default buffer size is 4096 bytes.
@@ -425,7 +427,7 @@ len = 1;
 while (len > 0)
   len = reader.read(in, 16);  \% Read 16 bytes at the time (offset=0).
   if (len > 0)
-    bfr = [bfr; reader.bfr(1:len)];  \% Add bytes to my Matlab buffer.
+    bfr = [bfr; reader.bfr(1:len)];  \% Add bytes to my MATLAB buffer.
   end
 end
 
@@ -467,7 +469,9 @@ public class InputStreamByteWrapper {
 
 /*********************************************************************
  HISTORY:
- 2002-09-02 [or maybe a little bit earlier]
+2013-07-11
+ o Updated comments to use 'MATLAB' instead of 'Matlab'.
+2002-09-02 [or maybe a little bit earlier]
  o Created.
 *********************************************************************/
 

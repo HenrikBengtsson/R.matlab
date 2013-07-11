@@ -11,10 +11,10 @@
 \alias{Matlab.getVariable}
 \alias{getVariable,Matlab-method}
 
-\title{Gets one or several Matlab variables}
+\title{Gets one or several MATLAB variables}
 
 \description{
-  Gets one or several Matlab variables from the Matlab server.
+  Gets one or several MATLAB variables from the MATLAB server.
   The transfer of the data can be done locally via a temporary file
   (\code{remote=FALSE}) or through the socket \code{\link[base:connections]{connection}} (\code{remote=TRUE}),
   which is always available.
@@ -25,15 +25,15 @@
 }
 
 \arguments{
- \item{variables}{String vector of Matlab containing names of variable that
-  are to be retrieved from the Matlab server.}
+ \item{variables}{String vector of MATLAB containing names of variable that
+  are to be retrieved from the MATLAB server.}
  \item{remote}{If \code{\link[base:logical]{TRUE}} the variables are transferred on the
   socket \code{\link[base:connections]{connection}}, otherwise they are transferred via a temporary file.}
  \item{...}{Not used.}
 }
 
 \value{
-  Returns a \code{list} structure containing the Matlab variables as named
+  Returns a \code{list} structure containing the MATLAB variables as named
   values.
 }
 

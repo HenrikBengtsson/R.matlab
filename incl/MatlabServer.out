@@ -8,10 +8,10 @@
   To get started, type one of these: helpwin, helpdesk, or demo.
   For product information, visit www.mathworks.com.
  
-Matlab v7.x or higher detected.
+MATLAB v7.x or higher detected.
 Saving with option -V6.
 Added InputStreamByteWrapper to dynamic Java CLASSPATH.
 ----------------------
-Matlab server started!
+MATLAB server started!
 ----------------------
 Trying to open server socket (port 9999)...done.

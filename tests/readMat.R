@@ -2,11 +2,11 @@ library("R.matlab")
 
 path <- system.file("mat-files", package="R.matlab")
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Reading all example files
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 for (version in 4:5) {
-  cat("Loading all MAT v", version, " example files in ", 
+  cat("Loading all MAT v", version, " example files in ",
                                                 path, "...\n", sep="")
 
   pattern <- sprintf("-v%d[.]mat$", version)
@@ -23,21 +23,21 @@ for (version in 4:5) {
   }
 }
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Assert that signed and unsigned integers are read correctly
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bs <- readMat(file.path(path, "unsignedByte.mat"))
 if (!identical(as.vector(bs$A), as.double(126:255)))
-  stop("Error reading unsigned bytes saved by Matlab.")
+  stop("Error reading unsigned bytes saved by MATLAB.")
 
 is <- readMat(file.path(path, "unsignedInt.mat"))
 if (!identical(as.vector(is$B), as.double(127:256)))
-  stop("Error reading unsigned ints saved by Matlab.")
+  stop("Error reading unsigned ints saved by MATLAB.")
 
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Assert that sparse matrices are read identically in MAT v4 and v5
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 mat4 <- readMat(file.path(path, "SparseMatrix3-v4.mat"))
 mat5 <- readMat(file.path(path, "SparseMatrix3-v5.mat"))
 diff <- sum(abs(mat4$sparseM - mat5$sparseM))
@@ -45,9 +45,9 @@ if (diff > .Machine$double.eps)
   stop("Failed to read identical MAT v4 and MAT v5 sparse matrices.")
 
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Assert that sparse matrices can be read as 'Matrix' and 'SparseM'
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pathname <- file.path(path, "SparseMatrix3-v4.mat")
 mat4a <- readMat(pathname, sparseMatrixClass="matrix")
 
@@ -66,9 +66,9 @@ if (require("SparseM")) {
 }
 
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Assert that sparse logical matrices can be read
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pathname <- file.path(path, "SparseLogicalDouble-v5.mat")
 mat4c <- readMat(pathname, sparseMatrixClass="matrix")
 stopifnot(all(mat4c$L == mat4c$D));
@@ -84,9 +84,9 @@ if (require("SparseM")) {
 }
 
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Assert that compressed files can be read
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 if (getRversion() >= "2.10.0") {
   # A particular compressed file
   pathname <- file.path(path, "StructWithSparseMatrix-v4,compressed.mat")
@@ -107,9 +107,9 @@ if (getRversion() >= "2.10.0") {
 }
 
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-# Example of a Matlab struct
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Example of a MATLAB struct
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # File was created by
 # s = struct('type',{'big','little'},  'color','red',  'x',{3,4})
 #  1x2 struct array with fields:
@@ -135,7 +135,7 @@ print(s["type",,])
 print(s[,,2])
 
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Example of verbose output
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bs <- readMat(file.path(path, "unsignedByte.mat"), verbose=TRUE)

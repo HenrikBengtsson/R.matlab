@@ -7,8 +7,8 @@
 #  @get "title".
 #  Both the MAT version 4 and MAT version 5 file formats are
 #  supported. The implementation is based on [1-4].
-#  Note: Do not mix up version numbers for the Matlab software and
-#  the Matlab file formats.
+#  Note: Do not mix up version numbers for the MATLAB software and
+#  the MATLAB file formats.
 # }
 #
 # @synopsis
@@ -23,7 +23,7 @@
 #   \item{maxLength}{The maximum number of bytes to be read from the input
 #     stream, which should be equal to the length of the MAT file structure.
 #     If \code{NULL}, data will be read until End Of File has been reached.}
-#   \item{fixNames}{If @TRUE, underscores within names of Matlab variables
+#   \item{fixNames}{If @TRUE, underscores within names of MATLAB variables
 #     and fields are converted to periods.}
 #   \item{verbose}{Either a @logical, a @numeric, or a @see "R.utils::Verbose"
 #     object specifying how much verbose/debug information is written to
@@ -55,7 +55,7 @@
 #   objects, e.g. a large number of cell structures, there will be a
 #   signifant slowdown, because each of the small objects has to be
 #   parsed individually.
-#   In such cases, if possible, try to (re)save the data in Matlab
+#   In such cases, if possible, try to (re)save the data in MATLAB
 #   using larger ("more vectorized") objects.
 # }
 #
@@ -65,7 +65,7 @@
 # }
 #
 # \section{Unicode strings}{
-#  Recent versions of Matlab store some strings using Unicode
+#  Recent versions of MATLAB store some strings using Unicode
 #  encodings.  If the R installation supports \code{\link{iconv}},
 #  these strings will be read correctly.  Otherwise non-ASCII codes
 #  are converted to NA.  Saving to an earlier file format version
@@ -73,15 +73,15 @@
 # }
 #
 # \section{Reading compressed MAT files}{
-#  From Matlab v7, \emph{compressed} MAT version 5 files are used by
+#  From MATLAB v7, \emph{compressed} MAT version 5 files are used by
 #  default [3,4].  This function supports reading such files,
 #  if running R v2.10.0 or newer.
 #  For older versions of R, the \pkg{Rcompression} package is used.
 #  To install that package, please see instructions at
 #  \url{http://www.omegahat.org/cranRepository.html}.
 #
-#  As a last resort, use \code{save -V6} in Matlab to write MAT files
-#  that are compatible with Matlab v6, that is, to write
+#  As a last resort, use \code{save -V6} in MATLAB to write MAT files
+#  that are compatible with MATLAB v6, that is, to write
 #  non-compressed MAT version 5 files.
 # }
 #
@@ -110,10 +110,10 @@
 # }
 #
 # \references{
-#   [1] The MathWorks Inc., \emph{Matlab - MAT-File Format, version 5}, June 1999.\cr
-#   [2] The MathWorks Inc., \emph{Matlab - Application Program Interface Guide, version 5}, 1998.\cr
-#   [3] The MathWorks Inc., \emph{Matlab - MAT-File Format, version 7}, September 2009, \url{http://www.mathworks.com/access/helpdesk/help/pdf_doc/matlab/matfile_format.pdf}\cr
-#   [4] The MathWorks Inc., \emph{Matlab - MAT-File Format, version R2012a}, September 2012, \url{http://www.mathworks.com/help/pdf_doc/matlab/matfile_format.pdf}\cr
+#   [1] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version 5}, June 1999.\cr
+#   [2] The MathWorks Inc., \emph{MATLAB - Application Program Interface Guide, version 5}, 1998.\cr
+#   [3] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version 7}, September 2009, \url{http://www.mathworks.com/access/helpdesk/help/pdf_doc/matlab/matfile_format.pdf}\cr
+#   [4] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version R2012a}, September 2012, \url{http://www.mathworks.com/help/pdf_doc/matlab/matfile_format.pdf}\cr
 # }
 #
 # @keyword file
@@ -598,7 +598,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
     # TRICK: Hide 'Rcompression' from R CMD check
     pkgName <- "Rcompression";
     if (!require(pkgName, character.only=TRUE, quietly=TRUE)) {
-      throw("Cannot read compressed data.  Omegahat.org package 'Rcompression' could not be loaded.  Alternatively, save your data in a non-compressed format by specifying -V6 when calling save() in Matlab or Octave.");
+      throw("Cannot read compressed data.  Omegahat.org package 'Rcompression' could not be loaded.  Alternatively, save your data in a non-compressed format by specifying -V6 when calling save() in MATLAB or Octave.");
     }
 
     # Argument 'delta':
@@ -1124,7 +1124,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
         dim(data) <- c(header$mrows, header$ncols);
 
         if (header$matrixType == "sparse") {
-          # From help sparse in Matlab:
+          # From help sparse in MATLAB:
           # "S = SPARSE(i,j,s,m,n,nzmax) uses the rows of [i,j,s] to generate an
           #  m-by-n sparse matrix with space allocated for nzmax nonzeros.  The
           #  two integer index vectors, i and j, and the real or complex entries
@@ -1147,14 +1147,14 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
             str(verbose, level=-102, s);
           }
 
-          # When saving a sparse matrix, Matlab is making sure that one can infer
+          # When saving a sparse matrix, MATLAB is making sure that one can infer
           # the size of the m-by-n sparse matrix for the index matrix [i,j]. If
-          # there are no non-zero elements in the last row or last column, Matlab
+          # there are no non-zero elements in the last row or last column, MATLAB
           # saves a zero elements in such case.
           n <- max(i);
           m <- max(j);
 
-          # Note that it can be the case that Matlab save the above extra element
+          # Note that it can be the case that MATLAB save the above extra element
           # just in case, meaning it might actually contain an repeated element.
           # If so, remove it. /HB 2008-02-12
           last <- length(i);
@@ -2397,9 +2397,9 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 #   Thanks to Chris Sims, Princeton University, for the patch.
 # 2005-05-02
 # o Updated such that multidimensional (not only one and two dims)
-#   Matlab struct:s can be read.
+#   MATLAB struct:s can be read.
 # 2005-04-22
-# o Updated to read Matlab struct:s as R structure:s.
+# o Updated to read MATLAB struct:s as R structure:s.
 # o BUG FIX: Reading empty struct:s (and cells) tried to read one
 #   field because seq(0) and not seq(length=0) was used. Updated all
 #   occurances of this problem.
@@ -2424,8 +2424,8 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 # o Added support for sparse matrices for MAT v5. Wow, that was
 #   tricky, because the documention was sparse (ha!).
 # o Added support for sparse matrices for MAT v4, by generating
-#   sparse matrices in Matlab and saving the in MAT v4 format and
-#   looking at the 'help sparse' in Matlab.
+#   sparse matrices in MATLAB and saving the in MAT v4 format and
+#   looking at the 'help sparse' in MATLAB.
 # o BUG FIX: When reading the MOPT header before I was incorrectly
 #   assuming it consisted of four bytes [M,O,P,T], but it is as the
 #   documentation "hints" an integer that should be separated into

@@ -11,10 +11,10 @@
 \alias{Matlab.readResult}
 \alias{readResult,Matlab-method}
 
-\title{Reads results from the Matlab server}
+\title{Reads results from the MATLAB server}
 
 \description{
- Reads results from the Matlab server.
+ Reads results from the MATLAB server.
 
  This method is for internal use only.
 }

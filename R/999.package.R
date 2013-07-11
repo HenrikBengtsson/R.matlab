@@ -4,14 +4,14 @@
 # \description{
 #   @eval "getDescription(R.matlab)"
 #
-#   In brief, this package provides a one-directional interface from 
-#   \R to Matlab, with communication taking place via a TCP/IP connection 
-#   and with data transferred either through another connection or via 
-#   the file system. On the Matlab side, the TCP/IP connection is handled
+#   In brief, this package provides a one-directional interface from
+#   \R to MATLAB, with communication taking place via a TCP/IP connection
+#   and with data transferred either through another connection or via
+#   the file system. On the MATLAB side, the TCP/IP connection is handled
 #   by a small Java add-on.
 #
-#   The methods for reading and writing MAT files are stable. 
-#   The \R to Matlab interface, that is the Matlab class, is less 
+#   The methods for reading and writing MAT files are stable.
+#   The \R to MATLAB interface, that is the Matlab class, is less
 #   prioritized and should be considered a beta version.
 #
 #   For package history, see \code{showHistory(R.matlab)}.
@@ -21,18 +21,18 @@
 #   This is a cross-platform package implemented in plain \R.
 #   This package depends on the \pkg{R.oo} package [1].
 #
-#   To use the Matlab class or requesting verbose output messages, the 
-#   \link[R.utils:R.utils-package]{R.utils} package is loaded 
+#   To use the Matlab class or requesting verbose output messages, the
+#   \link[R.utils:R.utils-package]{R.utils} package is loaded
 #   when needed (and therefore required in those cases).
 #
-#   The \code{readMat()} and \code{writeMat()} methods do \eqn{not} 
-#   require a Matlab installation neither do they depend on the 
+#   The \code{readMat()} and \code{writeMat()} methods do \eqn{not}
+#   require a MATLAB installation neither do they depend on the
 #   @see "Matlab" class.
 #
-#   To connect to Matlab, Matlab v6 or higher is required.
-#   It does \emph{not} work with Matlab v5 or before (because those 
+#   To connect to MATLAB, MATLAB v6 or higher is required.
+#   It does \emph{not} work with MATLAB v5 or before (because those
 #   versions do not support Java).
-#   For confirmed Matlab versions, see the @see "Matlab" class.
+#   For confirmed MATLAB versions, see the @see "Matlab" class.
 # }
 #
 # \section{Installation}{
@@ -46,21 +46,21 @@
 # \section{To get started}{
 #   To get started, see:
 #   \enumerate{
-#     \item @see "readMat" and @see "writeMat" - For reading and writing MAT files (Matlab is \emph{not} needed).
-#     \item @see "Matlab" - To start Matlab and communicate with it from \R.
+#     \item @see "readMat" and @see "writeMat" - For reading and writing MAT files (MATLAB is \emph{not} needed).
+#     \item @see "Matlab" - To start MATLAB and communicate with it from \R.
 #   }
 # }
 #
 # \section{Miscellaneous}{
 #   A related initiative is \emph{RMatlab} by Duncan Temple Lang
 #   and Omegahat.  It provides a bi-directional interface between the
-#   \R and Matlab languages. For more details, see 
-#   \url{http://www.omegahat.org/RMatlab/}. 
-#   To call R from Matlab on Windows (only), see \emph{MATLAB R-link} 
-#   by Robert Henson available at the Matlab Central File Exchange 
+#   \R and MATLAB languages. For more details, see
+#   \url{http://www.omegahat.org/RMatlab/}.
+#   To call R from MATLAB on Windows (only), see \emph{MATLAB R-link}
+#   by Robert Henson available at the MATLAB Central File Exchange
 #   (\url{http://www.mathworks.com/matlabcentral/fileexchange/loadFile.do?objectId=5051}).
 # }
-# 
+#
 # \section{How to cite this package}{
 #   Whenever using this package, please cite [2] as\cr
 #
@@ -71,27 +71,27 @@
 #   \bold{In general}:\cr
 #   For trouble shooting in general, rerun erroneous function with
 #   verbose/debug messages turned on. For \code{readMat()} and \code{writeMat()}
-#   see their help. For communication with a Matlab server, use
+#   see their help. For communication with a MATLAB server, use
 #   \preformatted{
 #    matlab <- Matlab()
 #    setVerbose(matlab, threshold=-2)
 #   }
 #   The lower the threshold is the more information you will see.\cr
 #
-#   \bold{Cannot connect to Matlab}:\cr
-#   If R fails to connect to Matlab, make sure to try the example in 
-#   help(Matlab) first.  Make sure that the Matlab server is running
-#   before trying to connect to it from R first.  If Matlab is running
-#   but \code{open()} times out, make sure Matlab is listening to the
+#   \bold{Cannot connect to MATLAB}:\cr
+#   If R fails to connect to MATLAB, make sure to try the example in
+#   help(Matlab) first.  Make sure that the MATLAB server is running
+#   before trying to connect to it from R first.  If MATLAB is running
+#   but \code{open()} times out, make sure MATLAB is listening to the
 #   same port that R is trying to connect to.  If that does not help,
 #   try to increase the time-out limit, see help(open.Matlab).\cr
-#   
-#   \bold{Expected an 'answer' from Matlab, but kept receiving nothing.}:\cr
-#     When launching a really long Matlab process by \code{evaluate()}, you
+#
+#   \bold{Expected an 'answer' from MATLAB, but kept receiving nothing.}:\cr
+#     When launching a really long MATLAB process by \code{evaluate()}, you
 #   may get the above error message.\cr
-#   \emph{Reason:} This happens because \code{evaluate()} expect a reply 
-#   from Matlab as soon as Matlab is done. The waiting should be "blocked",
-#   i.e. it should wait until it receives something. For unknown reasons, 
+#   \emph{Reason:} This happens because \code{evaluate()} expect a reply
+#   from MATLAB as soon as MATLAB is done. The waiting should be "blocked",
+#   i.e. it should wait until it receives something. For unknown reasons,
 #   this is not always happening. The workaround we have implemented is to
 #   try \code{readResult/maxTries} waiting \code{readResult/interval} seconds
 #   inbetween.\cr
@@ -108,28 +108,28 @@
 #  too little time to add myself. Contributions are appreciated.
 #  \itemize{
 #    \item Add a function, say, \code{Matlab$createShortcut()} which
-#          creates a Windows shortcut to start the Matlab server
+#          creates a Windows shortcut to start the MATLAB server
 #          by double clicking it. It should be possible to create
 #          it in the current directory or to the Desktop.
 #          Maybe it is possible to do this upon installation and
 #          even to a Start -> All Programs -> R menu.
 #    \item To improve security, update the MatlabServer.m script to
 #          allow the user to specify a "password" to be send upon
-#          connection from R in order for Matlab to accept the 
+#          connection from R in order for MATLAB to accept the
 #          connection. This password should be possible to specify
-#          from the command line when starting Matlab. If not given,
-#          no password is required. 
+#          from the command line when starting MATLAB. If not given,
+#          no password is required.
 #    \item Add additional methods to the Matlab class. For instance,
-#          inline function in Matlab could have its own method.
-#    \item Wrap up common Matlab commands as methods of the Matlab 
+#          inline function in MATLAB could have its own method.
+#    \item Wrap up common MATLAB commands as methods of the Matlab
 #          class, e.g. \code{who(matlab)}, \code{clear(matlab)} etc.
 #          Can this be done automatically using "reflection", so
 #          that required arguments are automatically detected?
-#    \item Add access to Matlab variables via \code{"$"} and 
-#          \code{"$<-"}, e.g. \code{matlab$A} and 
+#    \item Add access to MATLAB variables via \code{"$"} and
+#          \code{"$<-"}, e.g. \code{matlab$A} and
 #          \code{matlab$A <- 1234}. Is this wanted?
 #          Maybe the same for functions, e.g. \code{matlab$dice(1000)}.
-#          Is it possible to return multiple return values? 
+#          Is it possible to return multiple return values?
 #  }
 #
 #  If you consider implement some of the above, make sure it is not
@@ -140,13 +140,13 @@
 #   Thanks to the following people who contributed with valuable
 #   feedback, suggestions, code etc.:
 #   \itemize{
-#    \item Jason Riedy, Computer Science Division, 
+#    \item Jason Riedy, Computer Science Division,
 #          University of California, Berkeley.
-#    \item Patrick Drechsler, Biocenter, University of Wuerzburg. 
+#    \item Patrick Drechsler, Biocenter, University of Wuerzburg.
 #    \item Andy Jacobson, Atmospheric and Oceanic Sciences Program,
-#          Princeton University. 
+#          Princeton University.
 #    \item Chris Sims, Department of Economics, Princeton University.
-#    \item Yichun Wei, Department of Biological Sciences, 
+#    \item Yichun Wei, Department of Biological Sciences,
 #          University of Southern California.
 #    \item Spencer Graves.
 #    \item Wang Yu, ECE Department, Iowa State University.
@@ -154,13 +154,13 @@
 # }
 #
 # \section{License}{
-#   The releases of this package is licensed under 
+#   The releases of this package is licensed under
 #   LGPL version 2.1 or newer.
 #
-#   The development code of the packages is under a private licence 
+#   The development code of the packages is under a private licence
 #   (where applicable) and patches sent to the author fall under the
 #   latter license, but will be, if incorporated, released under the
-#   "release" license above. 
+#   "release" license above.
 # }
 #
 # @author
@@ -168,9 +168,9 @@
 # \section{References}{
 # [1] @include "../incl/BengtssonH_2003.bib.Rdoc" \cr
 #
-# [2] Henrik Bengtsson, 
-#     \emph{R.matlab - Local and remote Matlab connectivity in R},
-#     Mathematical Statistics, Centre for Mathematical Sciences, 
+# [2] Henrik Bengtsson,
+#     \emph{R.matlab - Local and remote MATLAB connectivity in R},
+#     Mathematical Statistics, Centre for Mathematical Sciences,
 #     Lund University, Sweden, 2005. (manuscript in progress).
 # }
-#*/#########################################################################  
+#*/#########################################################################

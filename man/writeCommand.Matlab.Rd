@@ -11,10 +11,10 @@
 \alias{Matlab.writeCommand}
 \alias{writeCommand,Matlab-method}
 
-\title{Writes (sends) a command to the Matlab server}
+\title{Writes (sends) a command to the MATLAB server}
 
 \description{
- Writes (sends) a command to the Matlab server.
+ Writes (sends) a command to the MATLAB server.
 
  This method is for internal use only.
 }

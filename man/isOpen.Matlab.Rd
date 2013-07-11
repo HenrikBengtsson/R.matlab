@@ -11,10 +11,10 @@
 \alias{Matlab.isOpen}
 \alias{isOpen,Matlab-method}
 
-\title{Checks if connection to the Matlab server is open}
+\title{Checks if connection to the MATLAB server is open}
 
 \description{
- Checks if connection to the Matlab server is open.
+ Checks if connection to the MATLAB server is open.
 }
 
 \usage{

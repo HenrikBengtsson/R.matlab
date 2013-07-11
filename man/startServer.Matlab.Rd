@@ -12,11 +12,11 @@
 \alias{Matlab.startServer}
 \alias{startServer,Matlab-method}
 
-\title{Static method which starts a Matlab server}
+\title{Static method which starts a MATLAB server}
 
 \description{
- Static method which starts a Matlab server on the local machine. Note
- that Matlab v6 or later is required, since the Matlab server relies on
+ Static method which starts a MATLAB server on the local machine. Note
+ that MATLAB v6 or later is required, since the MATLAB server relies on
  Java.
 }
 
@@ -36,14 +36,14 @@
    path are possible.}
  \item{port}{An optional \code{\link[base]{integer}} in [1023,65535].
    If given, the environment variable \code{MATLABSERVER_PORT} is
-   set specifying which port the Matlab server should listen to for
+   set specifying which port the MATLAB server should listen to for
    clients trying to connect.  The default port is 9999.}
- \item{minimize}{When starting Matlab on Windows, it is always opened
-   in a new window (see \code{\link{1. The Matlab server running in Matlab}}).
+ \item{minimize}{When starting MATLAB on Windows, it is always opened
+   in a new window (see \code{\link{1. The MATLAB server running in MATLAB}}).
    If this argument is \code{\link[base:logical]{TRUE}}, the new window is minimized, otherwise not.
    This argument is ignored on non-Windows systems.}
  \item{options}{A \code{\link[base]{character}} \code{\link[base]{vector}} of options used to call the
-   Matlab application.}
+   MATLAB application.}
  \item{...}{Not used.}
 }
 
@@ -57,17 +57,17 @@
 
   Note that this method will return immediately upon calling
   \code{system()} internally, i.e. you will not receive a return value
-  telling wether Matlab was successfully started or not.
+  telling wether MATLAB was successfully started or not.
 
   To specify the full path to the matlab software set the \code{matlab}
   option, e.g. \code{options(matlab="/opt/bin/matlab6.1")}. If no such
   option exists, the value \code{"matlab"} will be used.
 
-  The Matlab server relies on two files: 1) MatlabServer.m and
+  The MATLAB server relies on two files: 1) MatlabServer.m and
   2) InputStreamByteWrapper.class (from InputStreamByteWrapper.java).
   These files exists in the externals/ directory of this package. However,
   if they do not exist in the current directory, which is the directory
-  where Matlab is started, copies of them will automatically be made.
+  where MATLAB is started, copies of them will automatically be made.
 }
 
 \author{Henrik Bengtsson}

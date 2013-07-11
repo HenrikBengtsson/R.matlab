@@ -11,10 +11,10 @@
 \alias{Matlab.setVerbose}
 \alias{setVerbose,Matlab-method}
 
-\title{Sets the verbose level to get more details about the Matlab access}
+\title{Sets the verbose level to get more details about the MATLAB access}
 
 \description{
-  Sets the verbose level to get more details about the Matlab access.
+  Sets the verbose level to get more details about the MATLAB access.
 }
 
 \usage{
@@ -37,11 +37,11 @@
 
 \details{
   If the threshold is set to zero (default) general comments about the
-  Matlab access is given, such as the Matlab server is started etc.
+  MATLAB access is given, such as the MATLAB server is started etc.
   If the threshold is \code{-1}, details about the communication with the
-  Matlab server is given.
+  MATLAB server is given.
   If the threshold is \code{-2}, low-level details about the communication
-  with the Matlab server is given, such as what commands are sent etc.
+  with the MATLAB server is given, such as what commands are sent etc.
 }
 
 \author{Henrik Bengtsson}

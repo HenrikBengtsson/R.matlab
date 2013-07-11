@@ -11,10 +11,10 @@
 \alias{Matlab.close}
 \alias{close,Matlab-method}
 
-\title{Closes connection to Matlab server}
+\title{Closes connection to MATLAB server}
 
 \description{
- Closes connection to Matlab server. After closing the connection the Matlab
+ Closes connection to MATLAB server. After closing the connection the MATLAB
  server can never more be access again.
 }
 

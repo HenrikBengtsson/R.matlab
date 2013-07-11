@@ -35,14 +35,14 @@
 \section{Available options}{
  \itemize{
   \item{readResult/maxTries}{The maximum number of times the connection
-     is check for an answer from the Matlab server before giving up.
+     is check for an answer from the MATLAB server before giving up.
      Default values is 30 times.}
   \item{readResult/interval}{The interval in seconds between each poll
      for an answer.  Default interval is 1 (second).}
  }
 
- With default values of the above options, the \R Matlab client waits
- 30 seconds for a reply from the Matlab server before giving up.
+ With default values of the above options, the \R MATLAB client waits
+ 30 seconds for a reply from the MATLAB server before giving up.
 }
 
 \author{Henrik Bengtsson}

@@ -11,11 +11,11 @@
 \alias{Matlab.setFunction}
 \alias{setFunction,Matlab-method}
 
-\title{Defines a Matlab function}
+\title{Defines a MATLAB function}
 
 \description{
-  Creates an M-file on the Matlab server machine (in the working directory)
-  containing the specified Matlab function definition.
+  Creates an M-file on the MATLAB server machine (in the working directory)
+  containing the specified MATLAB function definition.
 }
 
 \usage{
@@ -23,7 +23,7 @@
 }
 
 \arguments{
- \item{code}{The Matlab function definition.}
+ \item{code}{The MATLAB function definition.}
  \item{name}{Optional name of the function, which will defined the
     name of the M-file where the function is stored. If \code{\link[base]{NULL}},
     the name is extracted from the code.}

@@ -2,11 +2,11 @@
 import java.io.*;
 
 /*********************************************************************
-% Compile from within Matlab with:
+% Compile from within MATLAB with:
 % !javac InputStreamByteWrapper.java
 
-% Matlab example that reads a file using Java code and writes it
-% back to a temporary file using Matlab code. Finally the contents
+% MATLAB example that reads a file using Java code and writes it
+% back to a temporary file using MATLAB code. Finally the contents
 % of the new file is displayed.
 
 reader = InputStreamByteWrapper;  % Default buffer size is 4096 bytes.
@@ -18,7 +18,7 @@ len = 1;
 while (len > 0)
   len = reader.read(in, 16);  % Read 16 bytes at the time (offset=0).
   if (len > 0)
-    bfr = [bfr; reader.bfr(1:len)];  % Add bytes to my Matlab buffer.
+    bfr = [bfr; reader.bfr(1:len)];  % Add bytes to my MATLAB buffer.
   end
 end
 
@@ -60,7 +60,9 @@ public class InputStreamByteWrapper {
 
 /*********************************************************************
  HISTORY:
- 2002-09-02 [or maybe a little bit earlier]
+2013-07-11
+ o Updated comments to use 'MATLAB' instead of 'Matlab'. 
+2002-09-02 [or maybe a little bit earlier]
  o Created.
 *********************************************************************/
 

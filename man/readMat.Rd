@@ -16,8 +16,8 @@
  Reads a MAT file structure from a connection or a file.
  Both the MAT version 4 and MAT version 5 file formats are
  supported. The implementation is based on [1-4].
- Note: Do not mix up version numbers for the Matlab software and
- the Matlab file formats.
+ Note: Do not mix up version numbers for the MATLAB software and
+ the MATLAB file formats.
 }
 
 \usage{
@@ -35,7 +35,7 @@
   \item{maxLength}{The maximum number of bytes to be read from the input
     stream, which should be equal to the length of the MAT file structure.
     If \code{NULL}, data will be read until End Of File has been reached.}
-  \item{fixNames}{If \code{\link[base:logical]{TRUE}}, underscores within names of Matlab variables
+  \item{fixNames}{If \code{\link[base:logical]{TRUE}}, underscores within names of MATLAB variables
     and fields are converted to periods.}
   \item{verbose}{Either a \code{\link[base]{logical}}, a \code{\link[base]{numeric}}, or a \code{\link[R.utils]{Verbose}}
     object specifying how much verbose/debug information is written to
@@ -67,7 +67,7 @@
   objects, e.g. a large number of cell structures, there will be a
   signifant slowdown, because each of the small objects has to be
   parsed individually.
-  In such cases, if possible, try to (re)save the data in Matlab
+  In such cases, if possible, try to (re)save the data in MATLAB
   using larger ("more vectorized") objects.
 }
 
@@ -77,7 +77,7 @@
 }
 
 \section{Unicode strings}{
- Recent versions of Matlab store some strings using Unicode
+ Recent versions of MATLAB store some strings using Unicode
  encodings.  If the R installation supports \code{\link{iconv}},
  these strings will be read correctly.  Otherwise non-ASCII codes
  are converted to NA.  Saving to an earlier file format version
@@ -85,15 +85,15 @@
 }
 
 \section{Reading compressed MAT files}{
- From Matlab v7, \emph{compressed} MAT version 5 files are used by
+ From MATLAB v7, \emph{compressed} MAT version 5 files are used by
  default [3,4].  This function supports reading such files,
  if running R v2.10.0 or newer.
  For older versions of R, the \pkg{Rcompression} package is used.
  To install that package, please see instructions at
  \url{http://www.omegahat.org/cranRepository.html}.
 
- As a last resort, use \code{save -V6} in Matlab to write MAT files
- that are compatible with Matlab v6, that is, to write
+ As a last resort, use \code{save -V6} in MATLAB to write MAT files
+ that are compatible with MATLAB v6, that is, to write
  non-compressed MAT version 5 files.
 }
 
@@ -127,10 +127,10 @@ print(data)
 }
 
 \references{
-  [1] The MathWorks Inc., \emph{Matlab - MAT-File Format, version 5}, June 1999.\cr
-  [2] The MathWorks Inc., \emph{Matlab - Application Program Interface Guide, version 5}, 1998.\cr
-  [3] The MathWorks Inc., \emph{Matlab - MAT-File Format, version 7}, September 2009, \url{http://www.mathworks.com/access/helpdesk/help/pdf_doc/matlab/matfile_format.pdf}\cr
-  [4] The MathWorks Inc., \emph{Matlab - MAT-File Format, version R2012a}, September 2012, \url{http://www.mathworks.com/help/pdf_doc/matlab/matfile_format.pdf}\cr
+  [1] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version 5}, June 1999.\cr
+  [2] The MathWorks Inc., \emph{MATLAB - Application Program Interface Guide, version 5}, 1998.\cr
+  [3] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version 7}, September 2009, \url{http://www.mathworks.com/access/helpdesk/help/pdf_doc/matlab/matfile_format.pdf}\cr
+  [4] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version R2012a}, September 2012, \url{http://www.mathworks.com/help/pdf_doc/matlab/matfile_format.pdf}\cr
 }
 
 

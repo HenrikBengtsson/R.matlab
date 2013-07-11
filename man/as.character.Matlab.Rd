@@ -11,10 +11,10 @@
 \alias{Matlab.as.character}
 \alias{as.character,Matlab-method}
 
-\title{Gets a string describing the current Matlab connection}
+\title{Gets a string describing the current MATLAB connection}
 
 \description{
-  Gets a string describing the current Matlab connection.
+  Gets a string describing the current MATLAB connection.
 }
 
 \usage{
