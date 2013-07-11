@@ -1,13 +1,14 @@
 
-                              < M A T L A B >
-                  Copyright 1984-2004 The MathWorks, Inc.
-                  Version 7.0.1.24704 (R14) Service Pack 1
-                             September 13, 2004
+                            < M A T L A B (R) >
+                  Copyright 1984-2012 The MathWorks, Inc.
+                    R2012a (7.14.0.739) 64-bit (glnxa64)
+                              February 9, 2012
 
- 
-  To get started, type one of these: helpwin, helpdesk, or demo.
-  For product information, visit www.mathworks.com.
- 
+
+To get started, type one of these: helpwin, helpdesk, or demo.
+For product information, visit www.mathworks.com.
+
+Running MatlabServer v1.3.5
 MATLAB v7.x or higher detected.
 Saving with option -V6.
 Added InputStreamByteWrapper to dynamic Java CLASSPATH.

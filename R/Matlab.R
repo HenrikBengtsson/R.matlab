@@ -122,17 +122,18 @@
 #
 # \section{Confirmed MATLAB versions}{
 #   This package has been confirmed to work \emph{successfully} out of
-#   the box together with:
+#   the box together with the following MATLAB versions:
 #   MATLAB v6.1.0.450 (R12.1),
 #   MATLAB v6.5.0.180913a (R13),
 #   MATLAB v7.0.0.19901 (R14),
 #   MATLAB v7.0.1.24704 (R14SP1),
 #   MATLAB v7.0.4.365 (R14SP2),
 #   MATLAB v7.2.0.232 (R2006a),
-#   MATLAB 7.4.0 (R2007a),
-#   MATLAB 7.7.0.471 (R2008b),
-#   MATLAB version 7.10.0.499 (R2010a), and
-#   MATLAB version 7.11.0.584 (R2010b).
+#   MATLAB v7.4.0 (R2007a),
+#   MATLAB v7.7.0.471 (R2008b),
+#   MATLAB v7.10.0.499 (R2010a),
+#   MATLAB v7.11.0.584 (R2010b), and
+#   MATLAB v7.14.0.739 (R2012a).
 #   If you successfully use a different/higher MATLAB version,
 #   please tell us, so we can share it here.
 #
