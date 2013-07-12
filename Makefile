@@ -28,7 +28,7 @@ FILES_VIGNETTES := $(wildcard vignettes/*)
 FILES_SRC := $(wildcard src/* src/*/* src/*/*/* src/*/*/*/* src/*/*/*/*/* src/*/*/*/*/*/* src/*/*/*/*/*/*/* src/*/*/*/*/*/*/*/*)
 FILES_TESTS := $(wildcard tests/*.R)
 FILES_NEWS := $(wildcard NEWS inst/NEWS)
-FILES_ROOT := DESCRIPTION NAMESPACE .Rbuildignore
+FILES_ROOT := DESCRIPTION NAMESPACE .Rbuildignore .Rinstignore
 PKG_FILES := $(FILES_ROOT) $(FILES_NEWS) $(FILES_R) $(FILES_DATA) $(FILES_MAN) $(FILES_INST) $(FILES_VIGNETTES) $(FILES_SRC) $(FILES_TESTS)
 FILES_MAKEFILE := $(wildcard ../../Makefile)
 
