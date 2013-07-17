@@ -97,6 +97,13 @@
  non-compressed MAT version 5 files.
 }
 
+\section{About MAT files saved in MATLAB using '-v7.3'}{
+ This function does not support MAT files saved in MATLAB as
+ \code{save('foo.mat', '-v7.3')}.
+ Such MAT files are of a completely different file format [5,6]
+ compared to those saved with, say, \code{'-v7'}.
+}
+
 \section{Reading MAT file structures input streams}{
  Reads a MAT file structure from an input stream, either until End of File
  is detected or until \code{maxLength} bytes has been read.
@@ -131,6 +138,8 @@ print(data)
   [2] The MathWorks Inc., \emph{MATLAB - Application Program Interface Guide, version 5}, 1998.\cr
   [3] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version 7}, September 2009, \url{http://www.mathworks.com/access/helpdesk/help/pdf_doc/matlab/matfile_format.pdf}\cr
   [4] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version R2012a}, September 2012, \url{http://www.mathworks.com/help/pdf_doc/matlab/matfile_format.pdf}\cr
+  [5] The MathWorks Inc., \emph{MATLAB - MAT-File Versions}, July 2013, \url{http://www.mathworks.com/help/matlab/import_export/mat-file-versions.html}\cr
+  [6] Undocumented Matlab, \emph{Improving save performance}, May 2013, \url{http://undocumentedmatlab.com/blog/improving-save-performance/}\cr
 }
 
 
