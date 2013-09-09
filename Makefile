@@ -45,6 +45,8 @@ R_VERSION := $(shell $(R_SCRIPT) -e "cat(as.character(getRversion()))")
 R_VERSION_FULL := $(R_VERSION)$(R_VERSION_STATUS)
 R_LIBS_USER_X := $(shell $(R_SCRIPT) -e "cat(.libPaths()[1])")
 R_OUTDIR := _R-$(R_VERSION_FULL)
+R_BUILD_OPTS := 
+## R_BUILD_OPTS := $(R_BUILD_OPTS) --no-build-vignettes
 R_CHECK_OUTDIR := $(R_OUTDIR)/$(PKG_NAME).Rcheck
 R_CHECK_OPTS = --as-cran --timings
 R_CRAN_OUTDIR := $(R_OUTDIR)/$(PKG_NAME)_$(PKG_VERSION).CRAN
@@ -109,7 +111,7 @@ setup:	update deps
 ../$(R_OUTDIR)/$(PKG_TARBALL): $(PKG_FILES)
 	$(MKDIR) ../$(R_OUTDIR)
 	$(CD) ../$(R_OUTDIR);\
-	$(R_CMD) build ../$(PKG_DIR)
+	$(R_CMD) build $(R_BUILD_OPTS) ../$(PKG_DIR)
 
 build: ../$(R_OUTDIR)/$(PKG_TARBALL)
 
@@ -134,10 +136,11 @@ install_force:
 ../$(R_CHECK_OUTDIR)/.check.complete: ../$(R_OUTDIR)/$(PKG_TARBALL)
 	$(CD) ../$(R_OUTDIR);\
 	$(RM) -r $(PKG_NAME).Rcheck;\
-        export _R_CHECK_CRAN_INCOMING_=0;\
+	export _R_CHECK_CRAN_INCOMING_=0;\
 	export _R_CHECK_DOT_INTERNAL_=1;\
 	export _R_CHECK_USE_CODETOOLS_=1;\
 	export _R_CHECK_CRAN_INCOMING_USE_ASPELL_=1;\
+	export _R_CHECK_FORCE_SUGGESTS_=0;\
 	export _R_CHECK_FULL_=1;\
 	$(R_CMD) check $(R_CHECK_OPTS) $(PKG_TARBALL);\
 	echo done > $(PKG_NAME).Rcheck/.check.complete
@@ -216,7 +219,10 @@ test: ../$(R_OUTDIR)/tests/%.R
 setup_RCmdCheckTools:
 	$(R_SCRIPT) -e "source('http://aroma-project.org/hbLite.R'); hbLite('RCmdCheckTools', devel=TRUE)"
 
-submit: setup_RCmdCheckTools ../$(R_CRAN_OUTDIR)/$(PKG_NAME),EmailToCRAN.txt
+cran: setup_RCmdCheckTools ../$(R_CRAN_OUTDIR)/$(PKG_NAME),EmailToCRAN.txt
+
+# Backward compatibilities
+submit: cran
 
 
 Makefile: $(FILES_MAKEFILE)
