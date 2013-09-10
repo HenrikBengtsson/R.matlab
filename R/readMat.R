@@ -558,6 +558,10 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
   # non-ASCII characters are replaced by NA.
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   matToCharArray <- function(ary, type) {
+    # AD HOC/special/illegal case?  /HB 2013-09-11
+    if (length(ary) == 0L) {
+      return(matrix(character(0L), nrow=0L, ncol=0L));
+    }
     fn <- charConverter(type);
     sapply0(ary, FUN=fn);
   }
@@ -1724,7 +1728,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 
       fields <- vector("list", length=length(names));
       for (kk in seq(along=names)) {
-        verbose && enter(verbose, level=-3, "Reading field: ", names[kk]);
+        verbose && enter(verbose, level=-3, "Reading field: ", sQuote(names[kk]));
         field <- readMat5DataElement(this);
         fields[[kk]] <- field;
         verbose && exit(verbose);
@@ -2278,6 +2282,11 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, v
 
 ###########################################################################
 # HISTORY:
+# 2013-09-11
+# o WORKAROUND/BUG FIX: readMat() would an error when parsing an empty
+#   'mxCHAR_CLASS' matrix with a 0x0 dimension.  It is not clear whether
+#   this is a valid MAT v5 structure or not, but I've added a workaround.
+#   Claudia Beleites at IPHT Jena, Germany for reporting on this.
 # 2013-07-17
 # o DOCUMENTATION: Added section of '-v7.3' MAT files to help("readMat").
 # 2013-07-11

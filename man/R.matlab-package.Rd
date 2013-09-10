@@ -77,7 +77,9 @@
 \section{How to cite this package}{
   Whenever using this package, please cite [2] as\cr
 
-  \emph{No citation information available.}
+  \preformatted{Henrik Bengtsson (2013). R.matlab: Read and write of MAT files together with
+R-to-MATLAB connectivity. R package version 2.0.3.}
+\emph{}
 
 }
 
