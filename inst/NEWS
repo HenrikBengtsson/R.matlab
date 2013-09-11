@@ -1,7 +1,15 @@
 Package: R.matlab
 =================
 
-Version: 2.0.3 [2013-09-11]
+Version: 2.0.4 [2013-09-11]
+o CONSISTENCY:  Added argument 'drop' to readMat() to control how
+  singleton dimensions of for instance nested lists are dropped or not.
+  The defaults are now such that R.matlab v2.0.4 is consistent with
+  R.matlab v1.7.1 (R.matlab v2.0.0-2.0.3 were not).  Thanks to
+  Claudia Beleites at IPHT Jena, Germany for reporting on this.
+
+
+Version: 2.0.3 [2013-09-10]
 o WORKAROUND/BUG FIX: readMat() would an error when parsing an empty
   'mxCHAR_CLASS' matrix with a 0x0 dimension.  It is not clear whether
   this is a valid MAT v5 structure or not, but I've added a workaround.

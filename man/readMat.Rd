@@ -21,8 +21,8 @@
 }
 
 \usage{
-\method{readMat}{default}(con, maxLength=NULL, fixNames=TRUE, verbose=FALSE,
-  sparseMatrixClass=c("Matrix", "SparseM", "matrix"), ...)
+\method{readMat}{default}(con, maxLength=NULL, fixNames=TRUE, drop=c("singletonLists"),
+  sparseMatrixClass=c("Matrix", "SparseM", "matrix"), verbose=FALSE, ...)
 }
 
 \arguments{
@@ -37,6 +37,13 @@
     If \code{NULL}, data will be read until End Of File has been reached.}
   \item{fixNames}{If \code{\link[base:logical]{TRUE}}, underscores within names of MATLAB variables
     and fields are converted to periods.}
+  \item{drop}{A \code{\link[base]{character}} \code{\link[base]{vector}} specifying cases when one or more dimensions
+    of elements should be dropped in order to decrease the amount of "nestedness"
+    of the returned data structure.  This only applies to the MAT v5 file format.}
+  \item{sparseMatrixClass}{If \code{"matrix"}, a sparse matrix is expanded to
+    a regular \code{\link[base]{matrix}}.  If either \code{"Matrix"} (default) or \code{"SparseM"},
+    the sparse matrix representation by the package of the same name will be used.
+    These packages are only loaded if the a sparse matrix is read.}
   \item{verbose}{Either a \code{\link[base]{logical}}, a \code{\link[base]{numeric}}, or a \code{\link[R.utils]{Verbose}}
     object specifying how much verbose/debug information is written to
     standard output. If a Verbose object, how detailed the information is
@@ -45,10 +52,6 @@
     the threshold is set to -1 (minimal). If \code{\link[base:logical]{FALSE}}, no output is written
     (and neither is the \link[R.utils:R.utils-package]{R.utils} package required).
   }
-  \item{sparseMatrixClass}{If \code{"matrix"}, a sparse matrix is expanded to
-    a regular \code{\link[base]{matrix}}.  If either \code{"Matrix"} (default) or \code{"SparseM"},
-    the sparse matrix representation by the package of the same name will be used.
-    These packages are only loaded if the a sparse matrix is read.}
   \item{...}{Not used.}
 }
 
