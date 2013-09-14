@@ -7,6 +7,7 @@ o CONSISTENCY:  Added argument 'drop' to readMat() to control how
   The defaults are now such that R.matlab v2.0.4 is consistent with
   R.matlab v1.7.1 (R.matlab v2.0.0-2.0.3 were not).  Thanks to
   Claudia Beleites at IPHT Jena, Germany for reporting on this.
+o Bumped up package dependencies.
 
 
 Version: 2.0.3 [2013-09-10]
