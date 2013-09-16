@@ -18,7 +18,7 @@ Version: 2.0.3 [2013-09-10]
 o WORKAROUND/BUG FIX: readMat() would an error when parsing an empty
   'mxCHAR_CLASS' matrix with a 0x0 dimension.  It is not clear whether
   this is a valid MAT v5 structure or not, but I've added a workaround.
-  Claudia Beleites at IPHT Jena, Germany for reporting on this.
+  Thanks Claudia Beleites at IPHT Jena, Germany for reporting on this.
 
 
 Version: 2.0.2 [2013-07-17]
