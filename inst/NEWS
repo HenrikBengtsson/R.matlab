@@ -1,6 +1,10 @@
 Package: R.matlab
 =================
 
+Version: 2.0.5 [2013-09-16]
+o ROBUSTNESS: Added one explicit import from the 'utils' package.
+
+
 Version: 2.0.4 [2013-09-11]
 o CONSISTENCY:  Added argument 'drop' to readMat() to control how
   singleton dimensions of for instance nested lists are dropped or not.
