@@ -24,7 +24,7 @@ FILES_DATA := $(wildcard data/*)
 FILES_MAN := $(wildcard man/*.Rd)
 FILES_INCL := $(wildcard incl/*)
 FILES_INST := $(wildcard inst/* inst/*/* inst/*/*/* inst/*/*/*/*)
-FILES_VIGNETTES := $(wildcard vignettes/*)
+FILES_VIGNETTES := $(wildcard vignettes/* vignettes/.install_extras)
 FILES_SRC := $(wildcard src/* src/*/* src/*/*/* src/*/*/*/* src/*/*/*/*/* src/*/*/*/*/*/* src/*/*/*/*/*/*/* src/*/*/*/*/*/*/*/*)
 FILES_TESTS := $(wildcard tests/*.R)
 FILES_NEWS := $(wildcard NEWS inst/NEWS)
@@ -36,21 +36,26 @@ FILES_MAKEFILE := $(wildcard ../../Makefile)
 DIR_VIGNS := $(wildcard vignettes inst/doc)
 
 # R MACROS
-R_HOME := $(shell echo "$(R_HOME)" | tr "\\\\" "/")
-R = R --no-init-file
-R_CMD = $(R) CMD
+R = R
 R_SCRIPT = Rscript
+R_HOME := $(shell echo "$(R_HOME)" | tr "\\\\" "/")
+## R_USE_CRAN := $(shell $(R_SCRIPT) -e "cat(Sys.getenv('R_USE_CRAN', 'FALSE'))")
+R_NO_INIT := --no-init-file
 R_VERSION_STATUS := $(shell $(R_SCRIPT) -e "status <- tolower(R.version[['status']]); if (regexpr('unstable', status) != -1L) status <- 'devel'; cat(status)")
 R_VERSION := $(shell $(R_SCRIPT) -e "cat(as.character(getRversion()))")
 R_VERSION_FULL := $(R_VERSION)$(R_VERSION_STATUS)
 R_LIBS_USER_X := $(shell $(R_SCRIPT) -e "cat(.libPaths()[1])")
 R_OUTDIR := _R-$(R_VERSION_FULL)
-R_BUILD_OPTS := 
+## R_BUILD_OPTS := 
 ## R_BUILD_OPTS := $(R_BUILD_OPTS) --no-build-vignettes
 R_CHECK_OUTDIR := $(R_OUTDIR)/$(PKG_NAME).Rcheck
+_R_CHECK_CRAN_INCOMING_ = $(shell $(R_SCRIPT) -e "cat(Sys.getenv('_R_CHECK_CRAN_INCOMING_', 'FALSE'))")
+_R_CHECK_XREFS_REPOSITORIES_ = $(shell if $(_R_CHECK_CRAN_INCOMING_) = "TRUE"; then echo ""; else echo "invalidURL"; fi)
+R_CHECK_FULL = $(shell $(R_SCRIPT) -e "cat(Sys.getenv('R_CHECK_FULL', ''))")
 R_CHECK_OPTS = --as-cran --timings
 R_CRAN_OUTDIR := $(R_OUTDIR)/$(PKG_NAME)_$(PKG_VERSION).CRAN
 
+HAS_ASPELL := $(shell $(R_SCRIPT) -e "cat(Sys.getenv('HAS_ASPELL', !is.na(utils:::aspell_find_program('aspell'))))")
 
 all: build install check
 
@@ -65,17 +70,30 @@ debug:
 	@echo PKG_VERSION=\'$(PKG_VERSION)\'
 	@echo PKG_TARBALL=\'$(PKG_TARBALL)\'
 	@echo
+	@echo HAS_ASPELL=\'$(HAS_ASPELL)\'
+	@echo
 	@echo R=\'$(R)\'
-	@echo R_CMD=\'$(R_CMD)\'
+##	@echo R_USE_CRAN=\'$(R_USE_CRAN)\'
+	@echo R_NO_INIT=\'$(R_NO_INIT)\'
 	@echo R_SCRIPT=\'$(R_SCRIPT)\'
 	@echo R_VERSION=\'$(R_VERSION)\'
 	@echo R_VERSION_STATUS=\'$(R_VERSION_STATUS)\'
 	@echo R_VERSION_FULL=\'$(R_VERSION_FULL)\'
 	@echo R_LIBS_USER_X=\'$(R_LIBS_USER_X)\'
 	@echo R_OUTDIR=\'$(R_OUTDIR)\'
+	@echo
+	@echo "Default packages:" $(shell $(R) --slave -e "cat(paste(getOption('defaultPackages'), collapse=', '))")
+	@echo
+	@echo R_BUILD_OPTS=\'$(R_BUILD_OPTS)\'
+	@echo
 	@echo R_CHECK_OUTDIR=\'$(R_CHECK_OUTDIR)\'
+	@echo _R_CHECK_CRAN_INCOMING_=\'$(_R_CHECK_CRAN_INCOMING_)\'
+	@echo _R_CHECK_XREFS_REPOSITORIES_=\'$(_R_CHECK_XREFS_REPOSITORIES_)\'
+	@echo R_CHECK_FULL=\'$(R_CHECK_FULL)\'
 	@echo R_CHECK_OPTS=\'$(R_CHECK_OPTS)\'
+	@echo
 	@echo R_CRAN_OUTDIR=\'$(R_CRAN_OUTDIR)\'
+
 
 debug_full: debug
 	@echo
@@ -96,22 +114,25 @@ debug_full: debug
 
 # Update existing packages
 update:
-	$(R_SCRIPT) -e "update.packages(ask=FALSE); source('http://bioconductor.org/biocLite.R'); biocLite(ask=FALSE);"
+	$(R_SCRIPT) -e "try(update.packages(ask=FALSE)); source('http://bioconductor.org/biocLite.R'); biocLite(ask=FALSE);"
 
 # Install missing dependencies
 deps: DESCRIPTION
 	$(MAKE) update
-	$(R_SCRIPT) -e "x <- unlist(strsplit(read.dcf('DESCRIPTION',fields=c('Depends', 'Imports', 'Suggests')),',')); x <- gsub('([[:space:]]*|[(].*[)])', '', x); libs <- .libPaths()[file.access(.libPaths(), mode=2) == 0]; x <- unique(setdiff(x, c('R', rownames(installed.packages(lib.loc=libs))))); if (length(x) > 0) { install.packages(x); x <- unique(setdiff(x, c('R', rownames(installed.packages(lib.loc=libs))))); source('http://bioconductor.org/biocLite.R'); biocLite(x); }"
+	$(R_SCRIPT) -e "x <- unlist(strsplit(read.dcf('DESCRIPTION',fields=c('Depends', 'Imports', 'Suggests')),',')); x <- gsub('([[:space:]]*|[(].*[)])', '', x); libs <- .libPaths()[file.access(.libPaths(), mode=2) == 0]; x <- unique(setdiff(x, c('R', rownames(installed.packages(lib.loc=libs))))); if (length(x) > 0) { try(install.packages(x)); x <- unique(setdiff(x, c('R', rownames(installed.packages(lib.loc=libs))))); source('http://bioconductor.org/biocLite.R'); biocLite(x); }"
 
 setup:	update deps
 	$(R_SCRIPT) -e "source('http://aroma-project.org/hbLite.R'); hbLite('R.oo')"
 
 
+ns:
+	$(R_SCRIPT) -e "library('$(PKG_NAME)'); source('X:/devtools/NAMESPACE.R'); writeNamespaceSection('$(PKG_NAME)'); writeNamespaceImports('$(PKG_NAME)');"
+
 # Build source tarball
 ../$(R_OUTDIR)/$(PKG_TARBALL): $(PKG_FILES)
 	$(MKDIR) ../$(R_OUTDIR)
 	$(CD) ../$(R_OUTDIR);\
-	$(R_CMD) build $(R_BUILD_OPTS) ../$(PKG_DIR)
+	$(R) $(R_NO_INIT) CMD build $(R_BUILD_OPTS) ../$(PKG_DIR)
 
 build: ../$(R_OUTDIR)/$(PKG_TARBALL)
 
@@ -123,7 +144,7 @@ build_force:
 # Install on current system
 $(R_LIBS_USER_X)/$(PKG_NAME)/DESCRIPTION: ../$(R_OUTDIR)/$(PKG_TARBALL)
 	$(CD) ../$(R_OUTDIR);\
-	$(R_CMD) INSTALL $(PKG_TARBALL)
+	$(R) --no-init-file CMD INSTALL $(PKG_TARBALL)
 
 install: $(R_LIBS_USER_X)/$(PKG_NAME)/DESCRIPTION
 
@@ -136,13 +157,14 @@ install_force:
 ../$(R_CHECK_OUTDIR)/.check.complete: ../$(R_OUTDIR)/$(PKG_TARBALL)
 	$(CD) ../$(R_OUTDIR);\
 	$(RM) -r $(PKG_NAME).Rcheck;\
-	export _R_CHECK_CRAN_INCOMING_=0;\
+	export _R_CHECK_CRAN_INCOMING_=$(_R_CHECK_CRAN_INCOMING_);\
+	export _R_CHECK_CRAN_INCOMING_USE_ASPELL_=$(HAS_ASPELL);\
+	export _R_CHECK_XREFS_REPOSITORIES_=$(_R_CHECK_XREFS_REPOSITORIES_);\
 	export _R_CHECK_DOT_INTERNAL_=1;\
 	export _R_CHECK_USE_CODETOOLS_=1;\
-	export _R_CHECK_CRAN_INCOMING_USE_ASPELL_=1;\
 	export _R_CHECK_FORCE_SUGGESTS_=0;\
-	export _R_CHECK_FULL_=1;\
-	$(R_CMD) check $(R_CHECK_OPTS) $(PKG_TARBALL);\
+	export _R_CHECK_FULL_=$(R_CHECK_FULL);\
+	$(R) --no-init-file CMD check $(R_CHECK_OPTS) $(PKG_TARBALL);\
 	echo done > $(PKG_NAME).Rcheck/.check.complete
 
 check: ../$(R_CHECK_OUTDIR)/.check.complete
@@ -156,7 +178,7 @@ check_force:
 # Install and build binaries
 binary: ../$(R_OUTDIR)/$(PKG_TARBALL)
 	$(CD) ../$(R_OUTDIR);\
-	$(R_CMD) INSTALL --build --merge-multiarch $(PKG_TARBALL)
+	$(R) --no-init-file CMD INSTALL --build --merge-multiarch $(PKG_TARBALL)
 
 
 # Check the line width of incl/*.(R|Rex) files [max 100 chars in R devel]
@@ -171,6 +193,8 @@ Rd: check_Rex
 %.Rd:
 	$(R_SCRIPT) -e "setwd('..'); Sys.setlocale(locale='C'); R.oo::compileRdoc('$(PKG_NAME)', path='$(PKG_DIR)', '$*.R')"
 
+missing_Rd:
+	$(R_SCRIPT) -e "x <- readLines('../$(R_CHECK_OUTDIR)/00check.log'); from <- grep('Undocumented code objects:', x)+1; if (length(from) > 0L) { to <- grep('All user-level objects', x)-1; x <- x[from:to]; x <- gsub('^[ ]*', '', x); x <- gsub('[\']', '', x); cat(x, sep='\n', file='999.missingdocs.txt'); }"
 
 spell_Rd:
 	$(R_SCRIPT) -e "f <- list.files('man', pattern='[.]Rd$$', full.names=TRUE); utils::aspell(f, filter='Rd')"
@@ -214,12 +238,12 @@ test: ../$(R_OUTDIR)/tests/%.R
 
 ../$(R_CRAN_OUTDIR)/$(PKG_NAME),EmailToCRAN.txt: ../$(R_CRAN_OUTDIR)/$(PKG_TARBALL)
 	$(CD) ../$(R_CRAN_OUTDIR);\
-	$(R_SCRIPT) -e "RCmdCheckTools::testPkgsToSubmit()"
+	$(R_SCRIPT) -e "RCmdCheckTools::testPkgsToSubmit(delta=2/3)"
 
-setup_RCmdCheckTools:
-	$(R_SCRIPT) -e "source('http://aroma-project.org/hbLite.R'); hbLite('RCmdCheckTools', devel=TRUE)"
+cran_setup: ../$(R_CRAN_OUTDIR)/$(PKG_TARBALL)
+	$(R_SCRIPT) -e "if (!nzchar(system.file(package='RCmdCheckTools'))) { source('http://aroma-project.org/hbLite.R'); hbLite('RCmdCheckTools', devel=TRUE); }"
 
-cran: setup_RCmdCheckTools ../$(R_CRAN_OUTDIR)/$(PKG_NAME),EmailToCRAN.txt
+cran: cran_setup ../$(R_CRAN_OUTDIR)/$(PKG_NAME),EmailToCRAN.txt
 
 # Backward compatibilities
 submit: cran

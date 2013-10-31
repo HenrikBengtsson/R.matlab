@@ -334,7 +334,7 @@ o Added more details on available options in setOption() and how
 
 Version: 1.1.2 [2006-05-08]
 o BUG FIX: When the port for the Matlab server (MATLABSERVER_PORT) was
-  out of range, a Matlab syntax error occured, i.e "... Line: 109
+  out of range, a Matlab syntax error occurred, i.e "... Line: 109
   Column: 45 ")" expected, "identifier" found.'.  Thanks Alexander
   Nervedi for reporting this.
 
@@ -351,7 +351,7 @@ o Another version has been added to the list of Matlab versions that
 
 Version: 1.1.0 [2005-06-29]
 o BUG FIX: Forgot to "implement" miSINGLE, i.e. to set 'knownTypes'
-  and 'knowWhats' for this. Thanks to Craig Aumann for the report.
+  and 'knownWhats' for this. Thanks to Craig Aumann for the report.
 o BUG FIX: readMat() did not read 'complex' matrices in MAT v5
   correctly.  Thanks again to Chris Sims for the bug report.
 o BUG FIX: readMat() did not read 'text' matrices in MAT v4
@@ -360,7 +360,7 @@ o BUG FIX: readMat() did not read 'text' matrices in MAT v4
 o If using the Matlab class, the package requires the R.utils
   where the classes Java and Verbose was moved. The methods for
   dealing with user options in the Matlab class are provided by
-  the Options class also in R.utils. Similarily, if verbose != FALSE
+  the Options class also in R.utils. Similarly, if verbose != FALSE
   in readMat() or writeMat(), then the R.utils package is required.
 
 
@@ -378,7 +378,7 @@ Version: 1.0.2 [2005-05-03]
 o Now Matlab struct's are read into an R structure.
 o BUG FIX: Reading empty struct:s (and cells) tried to read one
   field because seq(0) and not seq(length=0) was used. Updated all
-  occurances of this problem.
+  occurrences of this problem.
 o Replaces package directory misc/ with two new directories
   mat-files/ and externals/.
 
@@ -387,7 +387,7 @@ Version: 1.0.1 [2005-04-08]
 o BUG FIX: readMat() failed to read some Matlab struct's because
   of a parsing error.
 o BUG FIX: Internally in readMat() - in readMat5DataStructure() it
-  might be data readTag() returns a tag referering to a data block
+  might be data readTag() returns a tag referring to a data block
   of zero length (nbrOfBytes == 0). Now list(NULL) is returned in
   this case.
 o BUG FIX: The MatlabServer script did (indeed) not work with
@@ -467,7 +467,7 @@ o Created an readMat() that can read both MAT v4 and MAT v5 files.
   Princeton University.
 o writeMat() was created for consistency, but it does only support
   MAT version 5.
-o Note that I have now choosen to rename readMAT() and writeMAT()
+o Note that I have now chosen to rename readMAT() and writeMAT()
   to readMat() and writeMat(), respectively. This is in line with
   the RCC, cf. readHtml() instead of readHTML(). If you really need
   readMAT() and writeMAT() you can easily write your own wrappers.
@@ -475,7 +475,7 @@ o Note that I have now choosen to rename readMAT() and writeMAT()
 
 Version: 0.5 [2003-04-04]
 o I forgot to remove some debug code that outputs information about
-  the Description comment everytime a MAT file is read. Removed.
+  the Description comment every time a MAT file is read. Removed.
 
 
 Version: 0.4 [2003-01-16]
