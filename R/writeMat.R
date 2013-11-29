@@ -691,20 +691,12 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Argument 'verbose':
     if (inherits(verbose, "Verbose")) {
-      # Use cat() of R.utils here (and not the one in 'base')
-      cat <- R.utils::cat;
     } else if (is.numeric(verbose)) {
-      require("R.utils") || throw("Package not available: R.utils");
       verbose <<- Verbose(threshold=verbose);
-      # Use cat() of R.utils here (and not the one in 'base')
-      cat <- R.utils::cat;
     } else {
       verbose <- as.logical(verbose);
       if (verbose) {
-        require("R.utils") || throw("Package not available: R.utils");
         verbose <<- Verbose(threshold=-1);
-        # Use cat() of R.utils here (and not the one in 'base')
-        cat <- R.utils::cat;
       }
     }
 

@@ -1,3 +1,4 @@
 ^Makefile$
 ^incl
+^NAMESPACE,.*.txt$
 ^inst/doc/[.].*[.]rsp$

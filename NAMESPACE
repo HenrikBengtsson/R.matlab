@@ -5,16 +5,37 @@ importFrom("R.methodsS3", "throw")
 importFrom("R.methodsS3", "setMethodS3")
 importFrom("R.methodsS3", "appendVarArgs")
 importFrom("R.oo", "setConstructorS3")
+importFrom("R.oo", "Object")
 importFrom("R.oo", "finalize")
+importFrom("R.oo", "Package")
+importFrom("R.oo", "getPosition")
+importFrom("R.oo", "getVersion")
+importFrom("R.oo", "getMaintainer")
+importFrom("R.oo", "startupMessage")
+importFrom("R.oo", "extend")
 importFrom("utils", "getFromNamespace")
+
+importFrom("R.utils", "isPackageInstalled")
+importFrom("R.utils", "cat") ## Multi-sources: R.utils, base
+importFrom("R.utils", "enter")
+importFrom("R.utils", "exit")
+importFrom("R.utils", "popState")
+importFrom("R.utils", "pushState")
+importFrom("R.utils", "printf")
+importFrom("R.utils", "Arguments")
+importFrom("R.utils", "getThreshold")
+importFrom("R.utils", "setThreshold")
+importFrom("R.oo", "isVisible")
+importFrom("R.utils", "NullVerbose")
+importFrom("R.utils", "Verbose")
+importFrom("R.utils", "Options")
+importFrom("R.utils", "Java")
+importFrom("R.utils", "hpaste")
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # EXPORTS
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Object that must exported explicitly
-export(.conflicts.OK)
-
 # Export all public methods, that is, those without a preceeding dot
 # in their names.
 exportPattern("^[^\\.]")

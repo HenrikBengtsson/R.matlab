@@ -79,7 +79,7 @@
 
   \preformatted{
 Henrik Bengtsson (2013). R.matlab: Read and write of MAT files together with
-R-to-MATLAB connectivity. R package version 2.0.6.
+R-to-MATLAB connectivity. R package version 2.1.0.
 }
 \emph{}
 

@@ -1,6 +1,17 @@
 Package: R.matlab
 =================
 
+Version: 2.1.0 [2013-11-29]
+o CLEANUP: Now package only imports R.oo (no longer attaches it).
+  Also, the package now imports R.utils (used to suggest and attach
+  it when needed).  These updates make the package more "silent".
+o CLEANUP: Dropped obsolete autoload():s.
+o Now the 'R.matlab' Package object is also available when the
+  package is only loaded (but not attached).
+o ROBUSTNESS: Added package system test asserting that readMat()
+  can be called without attaching the package.
+
+
 Version: 2.0.7 [2013-11-28]
 o Now the 'INTERNAL ERROR' message readMat() throws on failed
   decompression also includes the first and last bytes of the data

@@ -176,9 +176,6 @@
 # @visibility public
 #*/###########################################################################
 setConstructorS3("Matlab", function(host="localhost", port=9999, remote=!(host %in% c("localhost", "127.0.0.1"))) {
-  # By loading R.utils here, it is not required if only readMat() is used.
-  require("R.utils") || throw("Package not available: R.utils");
-
   # Argument 'port':
   if (!is.null(port)) {
     port <- Arguments$getInteger(port, range=c(1023,65535));
@@ -459,7 +456,7 @@ setMethodS3("finalize", "Matlab", function(this, ...) {
   on.exit(exit(this$.verbose), add=TRUE);
 
   close(this);
-})
+}, createGeneric=FALSE)
 
 
 
@@ -713,9 +710,6 @@ setMethodS3("readResult", "Matlab", function(this, ...) {
 # }
 #*/###########################################################################
 setMethodS3("startServer", "Matlab", function(this, matlab=getOption("matlab"), port=9999, minimize=TRUE, options=c("nodesktop", "nodisplay", "nosplash"), ...) {
-  # By loading R.utils here, it is not required if only readMat() is used.
-  require("R.utils") || throw("Package not available: R.utils");
-
   # Argument 'port':
   if (!is.null(port)) {
     port <- Arguments$getInteger(port, range=c(1023,65535));

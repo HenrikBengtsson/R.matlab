@@ -49,8 +49,7 @@
     standard output. If a Verbose object, how detailed the information is
     is specified by the threshold level of the object. If a numeric, the
     value is used to set the threshold of a new Verbose object. If \code{\link[base:logical]{TRUE}},
-    the threshold is set to -1 (minimal). If \code{\link[base:logical]{FALSE}}, no output is written
-    (and neither is the \link[R.utils:R.utils-package]{R.utils} package required).
+    the threshold is set to -1 (minimal). If \code{\link[base:logical]{FALSE}}, no output is written.
   }
   \item{...}{Not used.}
 }

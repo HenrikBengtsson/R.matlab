@@ -1,20 +1,18 @@
-# Allows conflicts. For more information, see library() and
-# conflicts() in [R] base.
-.conflicts.OK <- TRUE
-
-
-## .First.lib <- function(libname, pkgname) {
-.onAttach <- function(libname, pkgname) {
+.onLoad <- function(libname, pkgname) {
+  ns <- getNamespace(pkgname);
   pkg <- Package(pkgname);
-  pos <- getPosition(pkg);
-  assign(pkgname, pkg, pos=pos);
+  assign(pkgname, pkg, envir=ns);
+}
+
+.onAttach <- function(libname, pkgname) {
+  pkg <- get(pkgname, envir=getNamespace(pkgname));
 
   # Patch for Sys.setenv() and Sys.putenv()
   # Sys.setenv() replaces Sys.putenv() from R v2.5.0. Code for migration.
   if (!exists("Sys.setenv", mode="function", envir=baseenv())) {
     # To please R CMD check on R (>= 2.15.0)
     Sys.putenv <- NULL; rm(list="Sys.putenv");
-    assign("Sys.setenv", Sys.putenv, pos=pos);
+    assign("Sys.setenv", Sys.putenv, pos=getPosition(pkg));
   }
 
   startupMessage(pkg);
