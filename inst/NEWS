@@ -1,6 +1,13 @@
 Package: R.matlab
 =================
 
+Version: 2.0.7 [2013-11-28]
+o Now the 'INTERNAL ERROR' message readMat() throws on failed
+  decompression also includes the first and last bytes of the data
+  block that it tried to decompress.  This will further help
+  troubleshooting.
+
+
 Version: 2.0.6 [2013-09-20]
 o ROBUSTNESS: Forgot to import R.methodsS3::appendVarArgs().
 

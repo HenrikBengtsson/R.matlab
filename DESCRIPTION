@@ -1,9 +1,9 @@
 Package: R.matlab
-Version: 2.0.6
-Depends: R (>= 2.5.0), R.oo (>= 1.15.1)
-Imports: utils, R.methodsS3 (>= 1.5.1)
-Suggests: R.utils (>= 1.27.1), Matrix, SparseM
-Date: 2013-09-20
+Version: 2.0.7
+Depends: R (>= 2.5.0), R.oo (>= 1.15.8)
+Imports: utils, R.methodsS3 (>= 1.5.2)
+Suggests: R.utils (>= 1.28.4), Matrix, SparseM
+Date: 2013-11-28
 Title: Read and write of MAT files together with R-to-MATLAB connectivity
 Authors@R: c(
   person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),

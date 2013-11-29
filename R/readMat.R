@@ -1505,7 +1505,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
             msg <- ex$message;
             env <- globalenv(); # To please 'R CMD check'
             assign("R.matlab.debug.zraw", zraw, envir=env);
-            msg <- sprintf("INTERNAL ERROR: Failed to decompress data (using '%s'). Please report to the R.matlab (v%s) package maintainer (%s). The reason was: %s", attr(uncompress, "label"), getVersion(R.matlab), getMaintainer(R.matlab), msg);
+            msg <- sprintf("INTERNAL ERROR: Failed to decompress data (%s [%d bytes]) using '%s'. Please report to the R.matlab (v%s) package maintainer (%s). The reason was: %s", hpaste(zraw, maxHead=8, maxTail=8), length(zraw), attr(uncompress, "label"), getVersion(R.matlab), getMaintainer(R.matlab), msg);
             onError <- getOption("R.matlab::readMat/onDecompressError", "error");
             if (identical(onError, "warning")) {
               warning(msg);
@@ -2332,6 +2332,11 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
 
 ###########################################################################
 # HISTORY:
+# 2013-11-28
+# o Now the 'INTERNAL ERROR' message readMat() throws on failed
+#   decompression also includes the first and last bytes of the data
+#   block that it tried to decompress.  This will further help
+#   troubleshooting.
 # 2013-09-11
 # o CONSISTENCY:  Added argument 'drop' to readMat() to control how
 #   singleton dimensions of for instance nested lists are dropped or not.
