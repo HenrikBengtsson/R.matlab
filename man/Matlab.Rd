@@ -169,7 +169,7 @@ $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCa
 To get started, type one of these: helpwin, helpdesk, or demo.
 For product information, visit www.mathworks.com.
 
-Running MatlabServer v1.3.5
+Running MatlabServer v2.2.0
 MATLAB v7.x or higher detected.
 Saving with option -V6.
 Added InputStreamByteWrapper to dynamic Java CLASSPATH.
