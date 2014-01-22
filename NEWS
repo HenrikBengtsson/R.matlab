@@ -7,6 +7,7 @@ o DOCUMENTATION: Updated list of Matlab versions for which the
 o BUG FIX: The MatlabServer.m script would incorrectly consider 
   Matlab v8 and above as Matlab v6.  Thanks to Frank Stephen at NREL
   for reporting on this and providing a patch.
+o Bumped up package dependencies.
 
 
 Version: 2.1.0 [2013-11-29]
