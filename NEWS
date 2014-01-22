@@ -1,6 +1,14 @@
 Package: R.matlab
 =================
 
+Version: 2.2.0 [2014-01-21]
+o DOCUMENTATION: Updated list of Matlab versions for which the 
+  package has been confirmed to work with.
+o BUG FIX: The MatlabServer.m script would incorrectly consider 
+  Matlab v8 and above as Matlab v6.  Thanks to Frank Stephen at NREL
+  for reporting on this and providing a patch.
+
+
 Version: 2.1.0 [2013-11-29]
 o CLEANUP: Now package only imports R.oo (no longer attaches it).
   Also, the package now imports R.utils (used to suggest and attach

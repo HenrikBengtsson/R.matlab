@@ -79,8 +79,8 @@ $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCa
 
   Also, the starting of the MatlabServer is simplier from MATLAB v7,
   although it is pretty straightforward for MATLAB v6 too.
-  It is easier in MATLAB v7, because the Java class required for
-  remote-data-transfer can be automatically/dynamically added to
+  It is easier in MATLAB v7 and above, because the Java class required
+  for remote-data-transfer can be automatically/dynamically added to
   the MATLAB Java classpath, whereas for MATLAB v6 it has to be
   added manually (see below).
 }
@@ -134,9 +134,9 @@ $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCa
   In R you can type \code{system.file("externals", package="R.matlab")}
   to find out the path to MatlabServer.m.
 
-  \bold{For MATLAB v6 only:} Contrary to MATLAB v7, MATLAB v6 cannot
-  find the InputStreamByteWrapper class automatically. Instead, the
-  so called Java classpath has to be set manually. In MATLAB, type
+  \bold{For MATLAB v6 only:} Contrary to MATLAB v7 and above, MATLAB v6
+  cannot find the InputStreamByteWrapper class automatically. Instead,
+  the so called Java classpath has to be set manually. In MATLAB, type
   \code{which('classpath.txt')} to find where the default
   MATLAB classpath.txt file is located. Copy this file to the
   \emph{current directory}, and append the \emph{path} (the directory)
@@ -198,8 +198,9 @@ Trying to open server socket (port 9999)...done.
   MATLAB v7.4.0 (R2007a),
   MATLAB v7.7.0.471 (R2008b),
   MATLAB v7.10.0.499 (R2010a),
-  MATLAB v7.11.0.584 (R2010b), and
-  MATLAB v7.14.0.739 (R2012a).
+  MATLAB v7.11.0.584 (R2010b),
+  MATLAB v7.14.0.739 (R2012a), and
+  MATLAB v8.2.0.701 (R2013b).
   If you successfully use a different/higher MATLAB version,
   please tell us, so we can share it here.
 

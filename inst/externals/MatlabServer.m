@@ -14,7 +14,7 @@
 % Requirements:
 % This requires MATLAB with Java support, i.e. MATLAB v6 or higher.
 %
-% Author: Henrik Bengtsson, 2002-2013
+% Author: Henrik Bengtsson, 2002-2014
 %
 % References:
 % [1] http://www.mathworks.com/access/helpdesk/help/techdoc/
@@ -24,15 +24,26 @@
 % [3] http://www.mathworks.com/access/helpdesk/help/toolbox/
 %                                              modelsim/a1057689278b4.html
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-disp('Running MatlabServer v1.3.5');
+disp('Running MatlabServer v2.2.0');
 
 %  addpath R/R_LIBS/linux/library/R.matlab/misc/
 
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 % MATLAB version-dependent setup
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-isVersion7 = eval('length(regexp(version, ''^7'')) ~= 0', '0');
-if (~isVersion7)
+% Identify major version of Matlab
+hasMajor = eval('length(regexp(version, ''^[0-9]'')) ~= 0', '0');
+if (hasMajor)
+  verParts = sscanf(version, '%d.');
+  verMajor = verParts(1);
+else 
+  verMajor = -1;
+end
+
+if (verMajor < 6)
+  % Java is not available/supported
+  error('MATLAB v5.x and below is not supported.');
+elseif (verMajor == 6)
   disp('MATLAB v6.x detected.');
   % Default save option
   saveOption = '';
@@ -46,12 +57,12 @@ if (~isVersion7)
   % To do the above automatically from R, does not seem to be an option.
 else
   disp('MATLAB v7.x or higher detected.');
-  % MATLAB v7 saves compressed files, which is not recognized by
-  % R.matlab's readMat(); force saving in old format.
+  % MATLAB v7 and above saves compressed files, which is not recognized
+  % by R.matlab's readMat(); force saving in old format.
   saveOption = '-V6';
   disp('Saving with option -V6.');
 
-  % In MATLAB v7 both static and dynamic Java CLASSPATH:s exist.
+  % In MATLAB v7 and above both static and dynamic Java CLASSPATH:s exist.
   % Using dynamic ones, it is possible to add the file
   % InputStreamByteWrapper.class to CLASSPATH, given it is
   % in the same directory as this script.
@@ -322,6 +333,10 @@ close(server);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % HISTORY:
+% 2014-01-21 [v2.2.0]
+% o BUG FIX: The MatlabServer.m script would incorrectly consider 
+%   Matlab v8 and above as Matlab v6.  Thanks to Frank Stephen at NREL
+%   for reporting on this and providing a patch.
 % 2013-07-11 [v1.3.5]
 % o Updated messages to use 'MATLAB' instead of 'Matlab'.
 % 2010-10-25 [v1.3.4]
@@ -329,7 +344,7 @@ close(server);
 %   InputStreamByteWrapper class as java.io.InputStreamByteWrapper.
 %   Thanks Kenvor Cothey at GMO LCC for reporting on this.
 % 2010-08-28
-% o Now the MatlabServer script reports it's version when started.
+% o Now the MatlabServer script reports its version when started.
 % 2010-08-27
 % o BUG FIX: Now MatlabServer.m saves variables using the function form,
 %   i.e. save().  This solves the problem of having single quotation marks

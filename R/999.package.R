@@ -62,7 +62,7 @@
 # }
 #
 # \section{How to cite this package}{
-#   Whenever using this package, please cite [2] as\cr
+#   Whenever using this package, please cite as\cr
 #
 #   @howtocite "R.matlab"
 # }
@@ -138,17 +138,18 @@
 #
 # \section{Acknowledgements}{
 #   Thanks to the following people who contributed with valuable
-#   feedback, suggestions, code etc.:
+#   feedback, suggestions, code and more:
 #   \itemize{
-#    \item Jason Riedy, Computer Science Division,
-#          University of California, Berkeley.
 #    \item Patrick Drechsler, Biocenter, University of Wuerzburg.
+#    \item Spencer Graves.
 #    \item Andy Jacobson, Atmospheric and Oceanic Sciences Program,
 #          Princeton University.
+#    \item Jason Riedy, Computer Science Division,
+#          University of California, Berkeley.
 #    \item Chris Sims, Department of Economics, Princeton University.
+#    \item Frank Stephen, National Renewable Energy Laboratory.
 #    \item Yichun Wei, Department of Biological Sciences,
 #          University of Southern California.
-#    \item Spencer Graves.
 #    \item Wang Yu, ECE Department, Iowa State University.
 #   }
 # }
@@ -167,10 +168,5 @@
 #
 # \section{References}{
 # [1] @include "../incl/BengtssonH_2003.bib.Rdoc" \cr
-#
-# [2] Henrik Bengtsson,
-#     \emph{R.matlab - Local and remote MATLAB connectivity in R},
-#     Mathematical Statistics, Centre for Mathematical Sciences,
-#     Lund University, Sweden, 2005. (manuscript in progress).
 # }
 #*/#########################################################################
