@@ -364,8 +364,8 @@ close(server);
 \% HISTORY:
 \% 2014-01-21 [v2.2.0]
 \% o BUG FIX: The MatlabServer.m script would incorrectly consider
-#   Matlab v8 and above as Matlab v6.  Thanks to Frank Stephen at NREL
-#   for reporting on this and providing a patch.
+\%   Matlab v8 and above as Matlab v6.  Thanks to Frank Stephen at NREL
+\%   for reporting on this and providing a patch.
 \% 2013-07-11 [v1.3.5]
 \% o Updated messages to use 'MATLAB' instead of 'Matlab'.
 \% 2010-10-25 [v1.3.4]
