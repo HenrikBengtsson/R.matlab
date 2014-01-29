@@ -4,6 +4,9 @@ Package: R.matlab
 Version: 2.2.1 [2014-01-28]
 o ROBUSTNESS: Now Matlab$startServer() asserts that all MATLAB server
   files that are indeed successfully copied, iff missing.
+o CLEANUP: open() for Matlab no longer generates warnings on
+  "socketConnection(...) ... cannot be opened", which occured while
+  waiting/polling for the Matlab server to startup and respond.
 
 
 Version: 2.2.0 [2014-01-21]

@@ -363,7 +363,9 @@ setMethodS3("open", "Matlab", function(con, trials=30, interval=1, ...) {
     ok <- FALSE;
     tryCatch({
       printf(this$.verbose, level=-1, "Try #%d.\n", as.integer(count));
-      this$con <- socketConnection(host=this$host, port=as.integer(this$port), open="a+b", blocking=TRUE);
+      suppressWarnings({
+        this$con <- socketConnection(host=this$host, port=as.integer(this$port), open="a+b", blocking=TRUE);
+      });
       ok <- TRUE;
       # It is not possible to return() from tryCatch()! /HB 050224
     }, error = function(ex) {
@@ -1131,6 +1133,9 @@ setMethodS3("setVerbose", "Matlab", function(this, threshold=0, ...) {
 ############################################################################
 # HISTORY:
 # 2014-01-28
+# o CLEANUP: open() for Matlab no longer generates warnings on
+#   "socketConnection(...) ... cannot be opened", which occured while
+#   waiting/polling for the Matlab server to startup and respond.
 # o ROBUSTNESS: Now Matlab$startServer() asserts that all MATLAB server
 #   files that are indeed successfully copied.
 # 2014-01-21
