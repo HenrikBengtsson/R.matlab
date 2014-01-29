@@ -1,6 +1,7 @@
 library("R.matlab")
 
 fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
+fullTest <- fullTest && nzchar(Sys.which("matlab"))
 if (fullTest) {
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
