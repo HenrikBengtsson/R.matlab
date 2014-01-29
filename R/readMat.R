@@ -1524,7 +1524,50 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
             msg <- ex$message;
             env <- globalenv(); # To please 'R CMD check'
             assign("R.matlab.debug.zraw", zraw, envir=env);
-            msg <- sprintf("INTERNAL ERROR: Failed to decompress data (%s [%d bytes]) using '%s'. Please report to the R.matlab (v%s) package maintainer (%s). The reason was: %s", hpaste(zraw, maxHead=8, maxTail=8), length(zraw), attr(uncompress, "label"), getVersion(R.matlab), getMaintainer(R.matlab), msg);
+            # Guess type of compression by inspecting the header bytes;
+            # Source: http://www.groupsrv.com/science/about474488.html
+            known <- list(
+              compress = "1f9d",
+              gzip     = "1f8b",
+              zip      = "504b",
+              bzip2    = "425a",
+              pack     = "1f1e",
+              LZH      = "1f50",
+              # zlib ("common")
+              zlib     = "7801, 785e, 789c, 78da",
+              # zlib ("rare")
+              zlib     = "081d, 085b, 0899, 08d7, 1819, 1857, 1895, 18d3,
+                          2815, 2853, 2891, 28cf, 3811, 384f, 388d, 38cb,
+                          480d, 484b, 4889, 48c7, 5809, 5847, 5885, 58c3,
+                          6805, 6843, 6881, 68de",
+              # zlib ("very rare")
+              zlib     = "083c, 087a, 08b8, 08f6, 1838, 1876, 18b4, 18f2,
+                          2834, 2872, 28b0, 28ee, 3830, 386e, 38ac, 38ea,
+                          482c, 486a, 48a8, 48e6, 5828, 5866, 58a4, 58e2,
+                          6824, 6862, 68bf, 68fd, 783f, 787d, 78bb, 78f9"
+            );
+
+            twobytes <- zraw[1:2];
+            what <- "<unknown>";
+            for (kk in seq_along(known)) {
+              bytes <- known[[kk]];
+              bytes <- gsub("[ \n]*", "", bytes);
+              bytes <- unlist(strsplit(bytes, split=",", fixed=TRUE));
+              bytes <- gsub("(..)(..)", "\\\\x\\1\\\\x\\2", bytes);
+              bytes <- sprintf("charToRaw('%s')", bytes);
+              bytes <- lapply(bytes, FUN=function(code) {
+                eval(parse(text=code, keep.source=FALSE));
+              })
+              for (jj in seq_along(bytes)) {
+                if (all(bytes[[jj]] == twobytes)) {
+                  what <- names(known)[kk];
+                  break;
+                }
+              }
+              if (what != "<unknown>") break;
+            }
+
+            msg <- sprintf("INTERNAL ERROR: Failed to decompress data (%s [%d bytes; first two bytes => '%s']) using '%s'. Please report to the R.matlab (v%s) package maintainer (%s). The reason was: %s", hpaste(zraw, maxHead=8, maxTail=8), length(zraw), what, attr(uncompress, "label"), getVersion(R.matlab), getMaintainer(R.matlab), msg);
             onError <- getOption("R.matlab::readMat/onDecompressError", "error");
             if (identical(onError, "warning")) {
               warning(msg);
@@ -2344,6 +2387,9 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
 ###########################################################################
 # HISTORY:
 # 2014-01-28
+# o Whenever there is an uncompress error in readMat(), it now tries to
+#   infer what type of compression the buffer has by inspecting the first
+#   two bytes and include the type in the error message.
 # o Added option 'R.matlab::readMat/v4/textMatrixCollapse' controlling
 #   whether MAT v4 text matrixes are collapsed into strings by row
 #  ("byrow"; default), by column ("bycolumn") or not at all ("none").
