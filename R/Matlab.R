@@ -720,35 +720,27 @@ setMethodS3("startServer", "Matlab", function(this, matlab=getOption("matlab"), 
   enter(this$.verbose, "Starting the MATLAB server");
   on.exit(exit(this$.verbose), add=TRUE);
 
-  # Make sure MatlabServer.m, InputStreamByteWrapper.class, and
-  # InputStreamByteWrapper.java exist in the current directory, otherwise
-  # create copies of them in the current directory.
-  filename <- "MatlabServer.m";
-  if (!file.exists(filename)) {
-    src <- system.file("externals", filename, package="R.matlab");
-    file.copy(src, filename, overwrite=FALSE);
-    printf(this$.verbose, level=-1, "MATLAB server file copied: '%s'\n", filename);
-  } else {
-    printf(this$.verbose, level=-1, "MATLAB server file found: '%s'\n", filename);
-  }
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Make MATLAB server files available in the current directory
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  srcPath <- system.file("externals", package="R.matlab");
+  filenames <- c("MatlabServer.m", "InputStreamByteWrapper.class",
+                 "InputStreamByteWrapper.java");
+  for (filename in filenames) {
+    enter(this$.verbose, level=-1, sprintf("MATLAB server file '%s'", filename));
+    if (isFile(filename)) {
+      cat(this$.verbose, level=-1, "Already exists. Skipping.");
+    } else {
+      src <- file.path(srcPath, filename);
+      copyFile(src, filename, verbose=less(this$.verbose, 50));
+    }
 
-  filename <- "InputStreamByteWrapper.class";
-  if (!file.exists(filename)) {
-    src <- system.file("externals", filename, package="R.matlab");
-    file.copy(src, filename, overwrite=FALSE);
-    printf(this$.verbose, level=-1, "MATLAB server file copied: '%s'\n", filename);
-  } else {
-    printf(this$.verbose, level=-1, "MATLAB server file found: '%s'\n", filename);
-  }
+    # Sanity check
+    filename <- Arguments$getReadablePathname(filename, mustExist=TRUE);
 
-  filename <- "InputStreamByteWrapper.java";
-  if (!file.exists(filename)) {
-    src <- system.file("externals", filename, package="R.matlab");
-    file.copy(src, filename, overwrite=FALSE);
-    printf(this$.verbose, level=-1, "MATLAB server file copied: '%s'\n", filename);
-  } else {
-    printf(this$.verbose, level=-1, "MATLAB server file found: '%s'\n", filename);
-  }
+    exit(this$.verbose);
+  } # for (filename ...)
+
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup call string to start MATLAB
@@ -782,7 +774,7 @@ setMethodS3("startServer", "Matlab", function(this, matlab=getOption("matlab"), 
   printf(this$.verbose, level=-1, "Return value: %d\n", as.integer(res));
 
   res;
-}, static=TRUE);
+}, static=TRUE)
 
 
 
@@ -1138,6 +1130,9 @@ setMethodS3("setVerbose", "Matlab", function(this, threshold=0, ...) {
 
 ############################################################################
 # HISTORY:
+# 2014-01-28
+# o ROBUSTNESS: Now Matlab$startServer() asserts that all MATLAB server
+#   files that are indeed successfully copied.
 # 2014-01-21
 # o TYPO: A closed Matlab connection would report that the "...MATLAB
 #   server is is closed (not opened)." - note "is is".

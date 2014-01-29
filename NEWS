@@ -1,10 +1,15 @@
 Package: R.matlab
 =================
 
+Version: 2.2.1 [2014-01-28]
+o ROBUSTNESS: Now Matlab$startServer() asserts that all MATLAB server
+  files that are indeed successfully copied, iff missing.
+
+
 Version: 2.2.0 [2014-01-21]
-o DOCUMENTATION: Updated list of Matlab versions for which the 
+o DOCUMENTATION: Updated list of Matlab versions for which the
   package has been confirmed to work with.
-o BUG FIX: The MatlabServer.m script would incorrectly consider 
+o BUG FIX: The MatlabServer.m script would incorrectly consider
   Matlab v8 and above as Matlab v6.  Thanks to Frank Stephen at NREL
   for reporting on this and providing a patch.
 o Bumped up package dependencies.

@@ -19,6 +19,7 @@ importFrom("R.utils", "isPackageInstalled")
 importFrom("R.utils", "cat") ## Multi-sources: R.utils, base
 importFrom("R.utils", "enter")
 importFrom("R.utils", "exit")
+importFrom("R.utils", "less")
 importFrom("R.utils", "popState")
 importFrom("R.utils", "pushState")
 importFrom("R.utils", "printf")
@@ -31,6 +32,8 @@ importFrom("R.utils", "Verbose")
 importFrom("R.utils", "Options")
 importFrom("R.utils", "Java")
 importFrom("R.utils", "hpaste")
+importFrom("R.utils", "isFile")
+importFrom("R.utils", "copyFile")
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
