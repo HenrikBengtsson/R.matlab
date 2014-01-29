@@ -1806,7 +1806,9 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
             field <- field[[1L]];
           }
         }
-        fields[[kk]] <- field;
+        if (!is.null(field)) {
+          fields[[kk]] <- field;
+        }
         verbose && exit(verbose);
       }
       names(fields) <- names;
@@ -2387,6 +2389,10 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
 ###########################################################################
 # HISTORY:
 # 2014-01-28
+# o BUG FIX: readMat(..., drop="singletonLists") would throw an error
+#   if the singleton list dropped contained NULL and that NULL was
+#   assigned to an element of an outer list, resulting in that element
+#   being dropped.
 # o Whenever there is an uncompress error in readMat(), it now tries to
 #   infer what type of compression the buffer has by inspecting the first
 #   two bytes and include the type in the error message.

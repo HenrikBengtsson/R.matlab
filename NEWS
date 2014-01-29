@@ -8,6 +8,10 @@ o Added option 'R.matlab::readMat/v4/textMatrixCollapse' controlling
 o Whenever there is an uncompress error in readMat(), it now tries to
   infer what type of compression the buffer has by inspecting the first
   two bytes and include the type in the error message.
+o BUG FIX: readMat(..., drop="singletonLists") would throw an error
+  if the singleton list dropped contained NULL and that NULL was
+  assigned to an element of an outer list, resulting in that element
+  being dropped.
 
 
 Version: 2.2.1 [2014-01-28]
