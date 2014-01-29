@@ -1,6 +1,12 @@
 Package: R.matlab
 =================
 
+Version: 2.2.2 [2014-01-28]
+o Added option 'R.matlab::readMat/v4/textMatrixCollapse' controlling
+  whether MAT v4 text matrixes are collapsed into strings by row
+ ("byrow"; default), by column ("bycolumn") or not at all ("none").
+
+
 Version: 2.2.1 [2014-01-28]
 o ROBUSTNESS: Now Matlab$startServer() asserts that all MATLAB server
   files that are indeed successfully copied, iff missing.

@@ -1088,6 +1088,20 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Function to read a MAT v4 Matrix Data Format
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    textMatrixCollapse <- getOption("R.matlab::readMat/v4/textMatrixCollapse", "byrow");
+    textMatrixCollapse <- match.arg(textMatrixCollapse, choices=c("byrow", "bycolumn", "none"));
+    if (textMatrixCollapse == "byrow") {
+      mat4TextMatrixToString <- function(data) {
+        apply(data, MARGIN=1L, FUN=paste, collapse="", sep="");
+      }
+    } else if (textMatrixCollapse == "bycolumn") {
+      mat4TextMatrixToString <- function(data) {
+        apply(data, MARGIN=2L, FUN=paste, collapse="", sep="");
+      }
+    } else {
+      mat4TextMatrixToString <- function(data) data;
+    }
+
     readMat4Data <- function(con, header) {
       # "Immediately following the fixed length header is the data whose length
       #  is dependent on the variables in the fixed length header:"
@@ -1121,7 +1135,9 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
 
         # Make into a matrix
         dim(data) <- c(header$mrows, header$ncols);
-        data <- apply(data, MARGIN=1L, FUN=paste, sep="", collapse="");
+
+        # Turn text matrix intro strings (if at all)
+        data <- mat4TextMatrixToString(data);
       } else if (header$matrixType %in% c("numeric", "sparse")) {
         real <- readBinMat(con, what=header$what, size=header$size, signed=header$signed, n=n);
         if (header$imagf != 0L) {
@@ -1204,7 +1220,13 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
       if (verbose) {
         cat(verbose, level=-60, "Matrix elements:\n");
         str(verbose, level=-60, data);
-      }
+        if (header$matrixType == "text") {
+          cat(verbose, level=-60, "Distribution of string lengths:");
+          t <- table(nchar(data));
+          names(t) <- paste("n=", names(t), sep="")
+          print(verbose, level=-60, t)
+        }
+    }
 
       data <- list(data);
       names(data) <- name;
@@ -2321,6 +2343,10 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
 
 ###########################################################################
 # HISTORY:
+# 2014-01-28
+# o Added option 'R.matlab::readMat/v4/textMatrixCollapse' controlling
+#   whether MAT v4 text matrixes are collapsed into strings by row
+#  ("byrow"; default), by column ("bycolumn") or not at all ("none").
 # 2013-11-28
 # o Now the 'INTERNAL ERROR' message readMat() throws on failed
 #   decompression also includes the first and last bytes of the data
