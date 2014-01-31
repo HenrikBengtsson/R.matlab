@@ -4,7 +4,7 @@ Package: R.matlab
 Version: 2.2.2 [2014-01-28]
 o Added option 'R.matlab::readMat/v4/textMatrixCollapse' controlling
   whether MAT v4 text matrixes are collapsed into strings by row
- ("byrow"; default), by column ("bycolumn") or not at all ("none").
+  ("byrow"; default), by column ("bycolumn") or not at all ("none").
 o Whenever there is an uncompress error in readMat(), it now tries to
   infer what type of compression the buffer has by inspecting the first
   two bytes and include the type in the error message.
