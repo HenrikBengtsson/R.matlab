@@ -1,6 +1,13 @@
 Package: R.matlab
 =================
 
+Version: 2.2.3 [2014-02-03]
+o BACKWARD COMPATIBILITY: The inference on the type of compression
+  used in the error message when uncompression failed would itself
+  generate an error on R (< 3.0.0).
+o Bumped up package dependencies.
+
+
 Version: 2.2.2 [2014-01-28]
 o Added option 'R.matlab::readMat/v4/textMatrixCollapse' controlling
   whether MAT v4 text matrixes are collapsed into strings by row

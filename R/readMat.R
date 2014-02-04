@@ -140,6 +140,18 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
   # General functions to read both MAT v4 and MAT v5 files.              BEGIN
   #===========================================================================
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Emulate support for argument 'keep.source' in older versions of R
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (getRversion() < "3.0.0") {
+    parse <- function(..., keep.source=getOption("keep.source")) {
+      oopts <- options(keep.source=keep.source);
+      on.exit(options(oopts));
+      base::parse(...);
+    } # parse()
+  }
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # willRead(), hasHead() and isDone() operators keep count on the number of
   # bytes actually read and compares it with 'maxLength'.
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2388,6 +2400,9 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
 
 ###########################################################################
 # HISTORY:
+# 2014-02-03
+# o BACKWARD COMPATIBILITY: For R (< 3.0.0), readMat() now defines a
+#   local parse() function that supports argument 'keep.source'.
 # 2014-01-28
 # o BUG FIX: readMat(..., drop="singletonLists") would throw an error
 #   if the singleton list dropped contained NULL and that NULL was
