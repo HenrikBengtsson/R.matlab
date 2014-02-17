@@ -1,6 +1,13 @@
 Package: R.matlab
 =================
 
+Version: 2.2.4 [2014-02-17]
+o BUG FIX: setOption() for Matlab gave ''Error in UseMethod("setOption") :
+  no applicable method for 'setOption' applied to an object of class
+  "c('Options', 'Object')"''.  Added a package system test for this.
+  Thanks to Griet Laenen at KU Leuven for reporting on this.
+
+
 Version: 2.2.3 [2014-02-03]
 o BACKWARD COMPATIBILITY: The inference on the type of compression
   used in the error message when uncompression failed would itself

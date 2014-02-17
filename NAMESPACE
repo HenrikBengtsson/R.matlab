@@ -34,6 +34,8 @@ importFrom("R.utils", "Java")
 importFrom("R.utils", "hpaste")
 importFrom("R.utils", "isFile")
 importFrom("R.utils", "copyFile")
+importFrom("R.utils", "getOption")
+importFrom("R.utils", "setOption")
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -42,6 +44,8 @@ importFrom("R.utils", "copyFile")
 # Export all public methods, that is, those without a preceeding dot
 # in their names.
 exportPattern("^[^\\.]")
+
+export("setOption") # Re-export from R.utils::setOption()
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

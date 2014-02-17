@@ -1,5 +1,4 @@
-##############################################################################
-# This code has to come first in a library. To do this make sure this file
-# is named "000.R" (zeros).
-##############################################################################
-
+## Look for existing generic functions also in imported namespaces.
+## This will affect whether setGenericS3() creates a generic function
+## or not.
+options("R.methodsS3:checkImports:setGenericS3"=TRUE)
