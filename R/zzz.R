@@ -1,3 +1,8 @@
+.onUnload <- function(libpath) {
+  # Force finalize() on Matlab objects
+  base::gc();
+} # .onUnload()
+
 .onLoad <- function(libname, pkgname) {
   ns <- getNamespace(pkgname);
   pkg <- Package(pkgname);
@@ -21,6 +26,8 @@
 
 ############################################################################
 # HISTORY:
+# 2014-02-21
+# o Added .onUnload() which calls the garbage collector.
 # 2013-04-15
 # o Now utilizing startupMessage() of Package in R.oo.
 # 2010-11-02
