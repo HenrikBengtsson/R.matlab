@@ -1,6 +1,6 @@
 .onUnload <- function(libpath) {
   # Force finalize() on Matlab objects
-  base::gc();
+  gc();
 } # .onUnload()
 
 .onLoad <- function(libname, pkgname) {

@@ -143,10 +143,12 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
   # Emulate support for argument 'keep.source' in older versions of R
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (getRversion() < "3.0.0") {
+    # Look up base::parse() once; '::' is very expensive
+    base_parse <- base::parse;
     parse <- function(..., keep.source=getOption("keep.source")) {
       oopts <- options(keep.source=keep.source);
       on.exit(options(oopts));
-      base::parse(...);
+      base_parse(...);
     } # parse()
   }
 
@@ -213,17 +215,6 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
     ASCII[1L] <- eval(parse(text="\"\\000\""));
   }
 
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # sapply(X, ...) function that treats length(X) == 0 specially
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  sapply0 <- function(X, FUN, ...) {
-    if (length(X) == 0L) {
-      FUN(X, ...);
-    } else {
-      base::sapply(X, FUN=FUN, ...);
-    }
-  } # sapply0()
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Function to convert a vector of integers into a vector of ASCII chars.
@@ -571,6 +562,15 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
   # implementations will convert the charset correctly.  Otherwise
   # non-ASCII characters are replaced by NA.
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # sapply(X, ...) function that treats length(X) == 0 specially
+  sapply0 <- function(X, FUN, ...) {
+    if (length(X) == 0L) {
+      FUN(X, ...);
+    } else {
+      sapply(X, FUN=FUN, ...);
+    }
+  } # sapply0()
+
   matToCharArray <- function(ary, type) {
     # AD HOC/special/illegal case?  /HB 2013-09-11
     if (length(ary) == 0L) {
@@ -2400,6 +2400,8 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
 
 ###########################################################################
 # HISTORY:
+# 2014-04-26
+# o SPEEDUP: MAT5 mxCHAR_CLASS structures are now read slighly faster.
 # 2014-02-03
 # o BACKWARD COMPATIBILITY: For R (< 3.0.0), readMat() now defines a
 #   local parse() function that supports argument 'keep.source'.

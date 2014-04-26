@@ -3,11 +3,12 @@ Package: R.matlab
 
 Version: 2.3.1 [2014-04-26]
 o Now package is byte-compiled by default.
+o SPEEDUP: MAT5 mxCHAR_CLASS structures are now read slighly faster.
 
 
 Version: 2.3.0 [2014-02-21]
 o ROBUSTNESS: Now the package runs the garbage collector if unloaded
-  in order to make sure finalize() is called on any deleted Matlab 
+  in order to make sure finalize() is called on any deleted Matlab
   objects.
 
 
