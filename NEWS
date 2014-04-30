@@ -1,6 +1,18 @@
 Package: R.matlab
 =================
 
+Version: 2.4.0 [2014-04-29]
+o BUG FIX: When reading non-UTF-encoded strings (e.g. miUINT32), readMat()
+  would drop any characters that were not in the ASCII set (0,32-127).
+  This was overly conservative as it should at least have kept 7-bit ASCII
+  characters (in 0-127), e.g. newline characters were dropped. This bug
+  was introduced in R.matlab v1.2.0 (2008-02-12) when adding support for
+  UTF-* strings via iconv().  Now we keep all 8-bit ASCII characters,
+  which is also what the Matlab file format documentation suggests are
+  used in non-UTF-encoded text matrices.
+  Thanks to Steven Pav (San Francisco, CA) for reporting on this.
+
+
 Version: 2.3.1 [2014-04-26]
 o Now package is byte-compiled by default.
 o SPEEDUP: MAT5 mxCHAR_CLASS structures are now read slighly faster.

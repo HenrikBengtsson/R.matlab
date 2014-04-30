@@ -501,49 +501,68 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
 ##     ary;
 ##   }
 
-  convertGeneric <- function(ary) {
+  convertASCII <- function(ary) {
+    ## WAS: The below would also drop newlines etc. /HB 2014-04-29
     ## Set entires outside the ASCII range to NA except for NUL.
-    ary[ary > 127L | (ary != 0L & ary < 32L)] <- NA_integer_;
+    # ary[ary > 127L | (ary != 0L & ary < 32L)] <- NA_integer_;
+
+    ## (a) From http://www.wikipedia.org/wiki/UTF-8:
+    ## "The first 128 characters of Unicode, which correspond
+    ##  one-to-one with ASCII, are encoded using a single octet
+    ##  with the same binary value as ASCII, making valid ASCII
+    ##  text valid UTF-8-encoded Unicode as well.".
+    ## (b) From [4]:
+    ## "Note that the elements of a text matrix are stored as
+    ##  floating-point numbers between 0 and 255 representing
+    ##  ASCII-encoded characters."
+    ## From (a) + (b), we infer that we can keep characters in
+    ## Matlab text that is non-UTF encoded (when this function
+    ## is used/called) as 8-bit ASCII characters (0-255).  So,
+    ## if we for some odd reason get symbols outside this range,
+    ## we drop them, because they cannot be interpreted as ASCII
+    ## and our ASCII-to-UTF8 converted does not know how to
+    ## interpret/translate such symbols). /HB 2014-04-29
+    ary[ary > 255L] <- NA_integer_;
+
+    # Can't we use base::intToUtf8(ary) here? /HB 2014-04-29
     convertUTF8(ary);
-  }
+  } # convertASCII()
 
-  ## By default, just pick out the ASCII range.
-  convertUTF16 <- convertUTF32 <- convertGeneric;
+  ## By default, just pick out the ASCII range, ...
+  convertUTF16 <- convertUTF32 <- convertASCII;
 
+  ## However, if there's support for more on the current system,
+  ## use that instead.
   if (capabilities("iconv")) {
     utfs <- grep("UTF", iconvlist(), value=TRUE);
     ## The convertUTF{16,32} routines below work in big-endian, so
     ## look for UTF-16BE or UTF16BE, etc..
-    has.utf16 <- utils::head(grep("UTF-?16BE", utfs, value=TRUE), n=1L);
-    has.utf32 <- utils::head(grep("UTF-?32BE", utfs, value=TRUE), n=1L);
-    if (length(has.utf16) > 0L) {
+    utf16 <- utils::head(grep("UTF-?16BE", utfs, value=TRUE), n=1L);
+    if (length(utf16) > 0L) {
       convertUTF16 <- function(ary) {
-        n <- length(ary);
-        ary16 <- paste(intToChar(c(sapply(ary,
-                                          function(x) { c(x%/%256,
-                                                          x%%256); }))),
-                       collapse="");
-        iconv(ary16, has.utf16, "UTF-8");
-      }
-      convertUTF32 <- function(ary) {
-        n <- length(ary);
-        ary32 <- paste(intToChar(c(sapply(ary,
-                                          function(x) { c((x%/%16777216)%%256,
-                                                          (x%/%65536)%%256,
-                                                          (x%/%256)%%256,
-                                                          x%%256); }))),
-                       collapse="");
-        iconv(ary32, has.utf32, "UTF-8");
+        ary16 <- paste(intToChar(c(sapply(ary, FUN=function(x) {
+          c(x%/%256, x%%256);
+        }))), collapse="");
+        iconv(ary16, from=utf16, to="UTF-8");
       }
     }
-  }
+    utf32 <- utils::head(grep("UTF-?32BE", utfs, value=TRUE), n=1L);
+    if (length(utf32) > 0L) {
+      convertUTF32 <- function(ary) {
+        ary32 <- paste(intToChar(c(sapply(ary, FUN=function(x) {
+          c((x%/%16777216)%%256, (x%/%65536)%%256, (x%/%256)%%256, x%%256);
+        }))), collapse="");
+        iconv(ary32, from=utf32, to="UTF-8");
+      }
+    }
+  } # if (capabilities("iconv"))
 
   charConverter <- function(type) {
     switch(type,
            miUTF8 = convertUTF8,
            miUTF16 = convertUTF16,
            miUTF32 = convertUTF32,
-           convertGeneric);
+           convertASCII);
   }
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2186,6 +2205,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
           matrix <- as.integer(matrix);
           dim(matrix) <- dimensionsArray$dim;
         } else if (arrayFlags$class == "mxCHAR_CLASS") {
+          verbose && cat(verbose, level=-5, "Encoding type: ", tag$type)
           matrix <- matToCharArray(matrix, tag$type);
           dim <- dimensionsArray$dim;
           # AD HOC/special/illegal case?  /HB 2010-09-18
@@ -2400,6 +2420,12 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
 
 ###########################################################################
 # HISTORY:
+# 2014-04-28
+# o Renamed convertGeneric() to convertASCII(), which now convert
+#   all 8-bit ASCII characters.
+# o BUG FIX: Local function convertGeneric() of readMat() only preserved
+#   ASCII character in (0,32-127), which for instance meant that newlines
+#   were dropped.  Reported by Steven Pav (San Francisco, CA).
 # 2014-04-26
 # o SPEEDUP: MAT5 mxCHAR_CLASS structures are now read slighly faster.
 # 2014-02-03

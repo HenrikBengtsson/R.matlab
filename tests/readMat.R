@@ -139,3 +139,12 @@ print(s[,,2])
 # Example of verbose output
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bs <- readMat(file.path(path, "unsignedByte.mat"), verbose=TRUE)
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Assert that newlines are preserved in text strings
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+mat <- readMat(file.path(path, "TextWithNewlines.mat"), verbose=TRUE)
+mystr <- mat$mystr[1,1]
+print(mystr)
+stopifnot(mystr == "hello\nworld\n\nEOM")
