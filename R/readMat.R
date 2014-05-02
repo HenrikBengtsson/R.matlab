@@ -1598,6 +1598,25 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
               if (what != "<unknown>") break;
             }
 
+            # Translate the integer error code in error messages such as
+            # "internal error -3 in memDecompress(2)".
+            pattern <- "(.*internal error )([-0-9]*)( in memDecompress[(])([0-9])([)].*)";
+            if (regexpr(pattern, msg) != -1L) {
+              zCode <- gsub(pattern, "\\2", msg);
+              tCode <- gsub(pattern, "\\4", msg);
+
+              zCodes <- c(Z_OK=0, Z_STREAM_END=1, Z_NEED_DICT=2,
+                          Z_ERRNO=-1, Z_STREAM_ERROR=-2, Z_DATA_ERROR=-3,
+                          Z_MEM_ERROR=-4, Z_BUF_ERROR=-5, Z_VERSION_ERROR=-6);
+              zLabel <- names(zCodes)[match(zCode, zCodes)];
+
+              tCodes <- c(none=1, gzip=2, bzip2=3, xz=4, unknown=5)
+              tLabel <- names(tCodes)[match(tCode, tCodes)];
+
+              msgT <- gsub(pattern, sprintf("\\1%s\\3%s\\5", zLabel, tLabel), msg)
+              msg <- sprintf("'%s' (translated from '%s')", msgT, msg);
+            }
+
             msg <- sprintf("INTERNAL ERROR: Failed to decompress data (%s [%d bytes; first two bytes => '%s']) using '%s'. Please report to the R.matlab (v%s) package maintainer (%s). The reason was: %s", hpaste(zraw, maxHead=8, maxTail=8), length(zraw), what, attr(uncompress, "label"), getVersion(R.matlab), getMaintainer(R.matlab), msg);
             onError <- getOption("R.matlab::readMat/onDecompressError", "error");
             if (identical(onError, "warning")) {
@@ -2420,6 +2439,10 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
 
 ###########################################################################
 # HISTORY:
+# 2014-05-01
+# o Now the error messages on memDemprocess are slightly more informative:
+#   'internal error Z_DATA_ERROR in memDecompress(gzip)' instead of only
+#   'internal error -3 in memDecompress(2)'.
 # 2014-04-28
 # o Renamed convertGeneric() to convertASCII(), which now convert
 #   all 8-bit ASCII characters.
