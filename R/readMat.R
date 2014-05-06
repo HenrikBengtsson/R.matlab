@@ -629,10 +629,96 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
   #   Returns a @raw @vector (or a @character string if 'asText' is TRUE).
   # }
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  uncompressMemDecompress <- function(zraw, asText=TRUE, type="gzip", ...) {
-    # To please R CMD check for R versions before R v2.10.0
-    memDecompress <- NULL; rm(list="memDecompress");
-    unzraw <- memDecompress(zraw, type=type, asChar=asText, ...);
+  uncompressZlib <- function(zraw, ..., addGzip=TRUE, BFR.SIZE=1e7) {
+    # From a few runs, it looks like memDecompress(..., type="gzip") can be
+    # emulated by the follow.  The idea of adding a GZIP header comes from
+    # http://unix.stackexchange.com/questions/22834/how-to-uncompress-zlib-data-in-unix
+    # /HB 2014-04-06
+    if (addGzip) {
+      crc <- function(x) {
+        tail <- tail(x, n=4L)
+        truth <- rev(tail)
+        crcTruth <- paste(truth, collapse="")
+
+        n <- length(x)
+        x2 <- x[1:(n-4)]
+
+        message(sprintf("CRC in: (tail=%s, calc=%s)", crcTruth, digest::digest(x2, algo="crc32")))
+
+        # FIXME: If we can figure out how to calculate the checksum
+        # then returning it here and replacing the 4-byte tail below
+        # is the correct way to update the checksum. /HB 2014-05-06
+        ## Ex: rawCRC <- rev(as.raw(c(0xf3, 0x53, 0x5e, 0x68)))
+
+        # For now, we don't return anything
+        rawCRC <- raw(0L);
+
+        rawCRC;
+      } # crc()
+
+      rawCRC <- crc(zraw) # reqs digest()
+      rawH <- as.raw(c(0x1F, 0x8B, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00));
+      zraw <- c(rawH, zraw);
+
+      rawCRC <- crc(zraw) # reqs digest()
+
+      # Update checksum
+      if (length(rawCRC) == 4L) zraw[length(zraw)-c(3:0)] <- rawCRC;
+
+      # NOTE: It won't fix the problem to just drop the checksum
+      ## zraw <- zraw[1:(length(zraw)-4)]
+    } # if (addGzip)
+
+    con <- gzcon(rawConnection(zraw, open="rb"));
+    on.exit(close(con));
+
+    res <- raw(0L);
+    repeat {
+#      message("vvvvvvvvvvvvvv")
+#      str(list(zraw=zraw, head=head(zraw), tail=tail(zraw)), vec.len=8);
+      bfr <- readBin(con, what="raw", n=BFR.SIZE);
+      n <- length(bfr);
+##      str(list(bfr=bfr, head=head(bfr), tail=tail(bfr)), vec.len=8);
+#      message("^^^^^^^^^^^^^^")
+
+      res <- c(res, bfr);
+      bfr <- NULL;  # Not needed anymore
+
+      # Done?
+      if (n < BFR.SIZE) break;
+
+      # ...and just in case (should not happen)
+      if (n == 0L) break;
+    }
+
+     message(sprintf("CRC out: (calc=%s)", digest::digest(res, algo="crc32")))
+
+    res;
+  } # uncompressZlib()
+
+
+  uncompressMemDecompress <- function(zraw, asText=TRUE, type="gzip", method=c("internal", "emulated")[2], ...) {
+    # Argument 'method':
+    method <- match.arg(method);
+
+    if (type == "zlib") {
+      unzraw <- uncompressZlib(zraw, addGzip=TRUE);
+      if (asText) unzraw <- rawToChar(unzrawZ);
+    } else if (type == "gzip") {
+      if (method == "internal") {
+        # To please R CMD check for R versions before R v2.10.0
+        memDecompress <- NULL; rm(list="memDecompress");
+        unzraw <- memDecompress(zraw, type=type, asChar=asText, ...);
+      } else if (method == "emulated") {
+        unzraw <- uncompressZlib(zraw, addGzip=TRUE);
+        if (asText) unzraw <- rawToChar(unzrawZ);
+      }
+    } else {
+      # To please R CMD check for R versions before R v2.10.0
+      memDecompress <- NULL; rm(list="memDecompress");
+      unzraw <- memDecompress(zraw, type=type, asChar=asText, ...);
+    }
+
     unzraw;
   } # uncompressMemDecompress()
 
@@ -2439,6 +2525,10 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
 
 ###########################################################################
 # HISTORY:
+# 2014-05-06
+# o Added internal uncompressZlib(), which seems to be able to uncompress
+#   zlib streams via gzcon() but currently gives non-interruptive
+#   "crc error 9153d47f f3535e68" messages from gzcon().
 # 2014-05-01
 # o Now the error messages on memDemprocess are slightly more informative:
 #   'internal error Z_DATA_ERROR in memDecompress(gzip)' instead of only

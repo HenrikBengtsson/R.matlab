@@ -1,6 +1,10 @@
 Package: R.matlab
 =================
 
+Version: 2.4.x [2014-05-06]
+o MAJOR: readMat() can now read all (zlib) compressed MAT files.
+
+
 Version: 2.4.0 [2014-04-29]
 o BUG FIX: When reading non-UTF-encoded strings (e.g. miUINT32), readMat()
   would drop any characters that were not in the ASCII set (0,32-127).
