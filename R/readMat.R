@@ -629,6 +629,40 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
   #   Returns a @raw @vector (or a @character string if 'asText' is TRUE).
   # }
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  typeOfCompression <- function(zraw, ...) {
+    # Guess type of compression by inspecting the header bytes;
+    # Source: http://www.groupsrv.com/science/about474488.html
+    known <- list(
+      compress = matrix(c(c(0x1f, 0x9d)), nrow=2L),
+      gzip     = matrix(c(c(0x1f, 0x8b)), nrow=2L),
+      zip      = matrix(c(c(0x50, 0x4b)), nrow=2L),
+      bzip2    = matrix(c(c(0x42, 0x5a)), nrow=2L),
+      pack     = matrix(c(c(0x1f, 0x1e)), nrow=2L),
+      LZH      = matrix(c(c(0x1f, 0x50)), nrow=2L),
+      zlib     = matrix(c(
+        # zlib ("common")
+        c(0x78, 0x01), c(0x78, 0x5e), c(0x78, 0x9c), c(0x78, 0xda),
+        # zlib ("rare"),
+        c(0x08, 0x1d), c(0x08, 0x5b), c(0x08, 0x99), c(0x08, 0xd7), c(0x18, 0x19), c(0x18, 0x57), c(0x18, 0x95), c(0x18, 0xd3), c(0x28, 0x15), c(0x28, 0x53), c(0x28, 0x91), c(0x28, 0xcf), c(0x38, 0x11), c(0x38, 0x4f), c(0x38, 0x8d), c(0x38, 0xcb), c(0x48, 0x0d), c(0x48, 0x4b), c(0x48, 0x89), c(0x48, 0xc7), c(0x58, 0x09), c(0x58, 0x47), c(0x58, 0x85), c(0x58, 0xc3), c(0x68, 0x05), c(0x68, 0x43), c(0x68, 0x81), c(0x68, 0xde),
+        # zlib ("very rare")
+        c(0x08, 0x3c), c(0x08, 0x7a), c(0x08, 0xb8), c(0x08, 0xf6), c(0x18, 0x38), c(0x18, 0x76), c(0x18, 0xb4), c(0x18, 0xf2), c(0x28, 0x34), c(0x28, 0x72), c(0x28, 0xb0), c(0x28, 0xee), c(0x38, 0x30), c(0x38, 0x6e), c(0x38, 0xac), c(0x38, 0xea), c(0x48, 0x2c), c(0x48, 0x6a), c(0x48, 0xa8), c(0x48, 0xe6), c(0x58, 0x28), c(0x58, 0x66), c(0x58, 0xa4), c(0x58, 0xe2), c(0x68, 0x24), c(0x68, 0x62), c(0x68, 0xbf), c(0x68, 0xfd), c(0x78, 0x3f), c(0x78, 0x7d), c(0x78, 0xbb), c(0x78, 0xf9)
+      ), nrow=2L) # zlib
+    );
+
+    byte1 <- zraw[1L];
+    byte2 <- zraw[2L];
+    for (type in names(known)) {
+      bytes <- known[[type]];
+      a <- (byte1 == bytes[1L,])
+      b <- (byte2 == bytes[2L,])
+      if (any((byte1 == bytes[1L,] & byte2 == bytes[2L,])))
+        return(type);
+    } # for (type ...)
+
+    # Nothing found
+    NA_character_;
+  } # typeOfCompression()
+
   uncompressZlib <- function(zraw, ..., addGzip=TRUE, BFR.SIZE=1e7) {
     # From a few runs, it looks like memDecompress(..., type="gzip") can be
     # emulated by the follow.  The idea of adding a GZIP header comes from
@@ -643,7 +677,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
         n <- length(x)
         x2 <- x[1:(n-4)]
 
-        message(sprintf("CRC in: (tail=%s, calc=%s)", crcTruth, digest::digest(x2, algo="crc32")))
+###        message(sprintf("CRC in: (tail=%s, calc=%s)", crcTruth, digest::digest(x2, algo="crc32")))
 
         # FIXME: If we can figure out how to calculate the checksum
         # then returning it here and replacing the 4-byte tail below
@@ -674,13 +708,16 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
 
     res <- raw(0L);
     repeat {
-#      message("vvvvvvvvvvvvvv")
-#      str(list(zraw=zraw, head=head(zraw), tail=tail(zraw)), vec.len=8);
+      # Call readBin() while capturing standard error, because gzcon()
+      # in uncompressZlip() will output "crc error nnnnnn mmmmmm" until
+      # we figure out how to regenerate the crc32 checksum. /HB 2014-05-06
+      conT <- rawConnection(raw(0L), open="wb");
+      sink(conT, type="message");
       bfr <- readBin(con, what="raw", n=BFR.SIZE);
-      n <- length(bfr);
-##      str(list(bfr=bfr, head=head(bfr), tail=tail(bfr)), vec.len=8);
-#      message("^^^^^^^^^^^^^^")
+      sink(type="message");
+      conT <- NULL;
 
+      n <- length(bfr);
       res <- c(res, bfr);
       bfr <- NULL;  # Not needed anymore
 
@@ -691,19 +728,22 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
       if (n == 0L) break;
     }
 
-     message(sprintf("CRC out: (calc=%s)", digest::digest(res, algo="crc32")))
+###    message(sprintf("CRC out: (calc=%s)", digest::digest(res, algo="crc32")))
 
     res;
   } # uncompressZlib()
 
 
-  uncompressMemDecompress <- function(zraw, asText=TRUE, type="gzip", method=c("internal", "emulated")[2], ...) {
+  uncompressMemDecompress <- function(zraw, type="gzip", asText=TRUE, method=c("internal", "emulated"), ...) {
+    # Argument 'type':
+    if (is.na(type)) type <- "gzip";
+
     # Argument 'method':
     method <- match.arg(method);
 
     if (type == "zlib") {
       unzraw <- uncompressZlib(zraw, addGzip=TRUE);
-      if (asText) unzraw <- rawToChar(unzrawZ);
+      if (asText) unzraw <- rawToChar(unzraw);
     } else if (type == "gzip") {
       if (method == "internal") {
         # To please R CMD check for R versions before R v2.10.0
@@ -711,7 +751,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
         unzraw <- memDecompress(zraw, type=type, asChar=asText, ...);
       } else if (method == "emulated") {
         unzraw <- uncompressZlib(zraw, addGzip=TRUE);
-        if (asText) unzraw <- rawToChar(unzrawZ);
+        if (asText) unzraw <- rawToChar(unzraw);
       }
     } else {
       # To please R CMD check for R versions before R v2.10.0
@@ -726,7 +766,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
   # This is a smart wrapper function around Rcompression::uncompress(),
   # which in order to avoid lack-of-memory allocation errors will via
   # trial and error find a reasonably sized internal inflation buffer.
-  uncompressRcompression <- function(zraw, asText=TRUE, sizeRatio=3, delta=0.9, ...) {
+  uncompressRcompression <- function(zraw, type=NA_character_, asText=TRUE, sizeRatio=3, delta=0.9, ...) {
     # TRICK: Hide 'Rcompression' from R CMD check
     pkgName <- "Rcompression";
     if (!require(pkgName, character.only=TRUE, quietly=TRUE)) {
@@ -790,8 +830,8 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
   # Decompression method
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Default decompress function
-  uncompress <- function(...) {
-    throw("Cannot decompress compressed MAT file because none of the decompression methods are available: ", hpaste(decompressWith0, maxHead=Inf));
+  uncompress <- function(..., type=NA_character_) {
+    throw(sprintf("Cannot decompress (%s) compressed MAT file because none of the decompression methods are available: %s", type, hpaste(decompressWith0, maxHead=Inf)));
   } # uncompress()
   attr(uncompress, "label") <- "N/A";
 
@@ -1622,14 +1662,19 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
         if (tag$type == "miCOMPRESSED") {
           n <- tag$nbrOfBytes;
           zraw <- readBinMat(con=con, what=raw(), n=n);
+
+          # Guess type of compression by inspecting the header bytes;
+          # Source: http://www.groupsrv.com/science/about474488.html
+          type <- typeOfCompression(zraw);
+
           if (verbose) {
             cat(verbose, level=-110, "Decompressing ", n, " bytes");
-            printf(verbose, level=-110, "zraw [%d bytes]: %s\n", length(zraw), hpaste(zraw, maxHead=8, maxTail=8));
+            printf(verbose, level=-110, "zraw [%d bytes; compression type: %s]: %s\n", length(zraw), type, hpaste(zraw, maxHead=8, maxTail=8));
           }
           # Sanity check
           stopifnot(identical(length(zraw), n));
           tryCatch({
-            unzraw <- uncompress(zraw, asText=FALSE);
+            unzraw <- uncompress(zraw, type=type, asText=FALSE);
 
             verbose && printf(verbose, level=-110,
                     "Inflated %.3f times from %d bytes to %d bytes.\n",
@@ -1641,48 +1686,10 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
             msg <- ex$message;
             env <- globalenv(); # To please 'R CMD check'
             assign("R.matlab.debug.zraw", zraw, envir=env);
+
             # Guess type of compression by inspecting the header bytes;
             # Source: http://www.groupsrv.com/science/about474488.html
-            known <- list(
-              compress = "1f9d",
-              gzip     = "1f8b",
-              zip      = "504b",
-              bzip2    = "425a",
-              pack     = "1f1e",
-              LZH      = "1f50",
-              # zlib ("common")
-              zlib     = "7801, 785e, 789c, 78da",
-              # zlib ("rare")
-              zlib     = "081d, 085b, 0899, 08d7, 1819, 1857, 1895, 18d3,
-                          2815, 2853, 2891, 28cf, 3811, 384f, 388d, 38cb,
-                          480d, 484b, 4889, 48c7, 5809, 5847, 5885, 58c3,
-                          6805, 6843, 6881, 68de",
-              # zlib ("very rare")
-              zlib     = "083c, 087a, 08b8, 08f6, 1838, 1876, 18b4, 18f2,
-                          2834, 2872, 28b0, 28ee, 3830, 386e, 38ac, 38ea,
-                          482c, 486a, 48a8, 48e6, 5828, 5866, 58a4, 58e2,
-                          6824, 6862, 68bf, 68fd, 783f, 787d, 78bb, 78f9"
-            );
-
-            twobytes <- zraw[1:2];
-            what <- "<unknown>";
-            for (kk in seq_along(known)) {
-              bytes <- known[[kk]];
-              bytes <- gsub("[ \n]*", "", bytes);
-              bytes <- unlist(strsplit(bytes, split=",", fixed=TRUE));
-              bytes <- gsub("(..)(..)", "\\\\x\\1\\\\x\\2", bytes);
-              bytes <- sprintf("charToRaw('%s')", bytes);
-              bytes <- lapply(bytes, FUN=function(code) {
-                eval(parse(text=code, keep.source=FALSE));
-              })
-              for (jj in seq_along(bytes)) {
-                if (all(bytes[[jj]] == twobytes)) {
-                  what <- names(known)[kk];
-                  break;
-                }
-              }
-              if (what != "<unknown>") break;
-            }
+            if (is.na(type)) type <- "<unknown>";
 
             # Translate the integer error code in error messages such as
             # "internal error -3 in memDecompress(2)".
@@ -1703,7 +1710,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
               msg <- sprintf("'%s' (translated from '%s')", msgT, msg);
             }
 
-            msg <- sprintf("INTERNAL ERROR: Failed to decompress data (%s [%d bytes; first two bytes => '%s']) using '%s'. Please report to the R.matlab (v%s) package maintainer (%s). The reason was: %s", hpaste(zraw, maxHead=8, maxTail=8), length(zraw), what, attr(uncompress, "label"), getVersion(R.matlab), getMaintainer(R.matlab), msg);
+            msg <- sprintf("INTERNAL ERROR: Failed to decompress data (%s [%d bytes; first two bytes => '%s']) using '%s'. Please report to the R.matlab (v%s) package maintainer (%s). The reason was: %s", hpaste(zraw, maxHead=8, maxTail=8), length(zraw), type, attr(uncompress, "label"), getVersion(R.matlab), getMaintainer(R.matlab), msg);
             onError <- getOption("R.matlab::readMat/onDecompressError", "error");
             if (identical(onError, "warning")) {
               warning(msg);
@@ -1715,7 +1722,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
             } else {
               throw(msg);
             }
-          });
+          }) # tryCatch()
           zraw <- NULL; # Not needed anymore
 
           tag <- mat5ReadTag(this);
@@ -2526,6 +2533,8 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
 ###########################################################################
 # HISTORY:
 # 2014-05-06
+# o Added internal typeOfCompression() that infers type of compression
+#   from the first two bytes.
 # o Added internal uncompressZlib(), which seems to be able to uncompress
 #   zlib streams via gzcon() but currently gives non-interruptive
 #   "crc error 9153d47f f3535e68" messages from gzcon().
