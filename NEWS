@@ -1,8 +1,10 @@
 Package: R.matlab
 =================
 
-Version: 2.4.x [2014-05-06]
-o MAJOR: readMat() can now read all (zlib) compressed MAT files.
+Version: 2.5.0 [2014-05-06]
+o MAJOR: readMat() can now read all (zlib) compressed MAT files where it
+  previously gave an error message on: "INTERNAL ERROR:  Failed to
+  decompress data [...] internal error -3 in memDecompress(2)".
 
 
 Version: 2.4.0 [2014-04-29]
