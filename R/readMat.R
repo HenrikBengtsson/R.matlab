@@ -711,11 +711,16 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
       # Call readBin() while capturing standard error, because gzcon()
       # in uncompressZlip() will output "crc error nnnnnn mmmmmm" until
       # we figure out how to regenerate the crc32 checksum. /HB 2014-05-06
-      conT <- rawConnection(raw(0L), open="wb");
-      sink(conT, type="message");
-      bfr <- readBin(con, what="raw", n=BFR.SIZE);
-      sink(type="message");
-      conT <- NULL;
+      bfr <- local({
+        conT <- rawConnection(raw(0L), open="wb");
+        sink(conT, type="message");
+        on.exit({
+          sink(type="message");
+          close(conT);
+          conT <- NULL;
+        });
+        readBin(con, what="raw", n=BFR.SIZE);
+      })
 
       n <- length(bfr);
       res <- c(res, bfr);
@@ -726,7 +731,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
 
       # ...and just in case (should not happen)
       if (n == 0L) break;
-    }
+    } # repeat()
 
 ###    message(sprintf("CRC out: (calc=%s)", digest::digest(res, algo="crc32")))
 
@@ -2532,6 +2537,9 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
 
 ###########################################################################
 # HISTORY:
+# 2014-05-18
+# o BUG FIX: Internal uncompressZlib() of readMat() opened several
+#   raw connections without closing them.
 # 2014-05-06
 # o Added internal typeOfCompression() that infers type of compression
 #   from the first two bytes.

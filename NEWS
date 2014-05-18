@@ -1,6 +1,12 @@
 Package: R.matlab
 =================
 
+Version: 3.0.1 [2014-05-18]
+o BUG FIX: Internal uncompressZlib() of readMat() opened several
+  raw connections without closing them.  Thanks Thilo Klein at
+  University of Cambridge, UK, for reporting on this.
+
+
 Version: 3.0.0 [2014-05-06]
 o MAJOR: readMat() can now read all (zlib) compressed MAT files where it
   previously gave an error message on: "INTERNAL ERROR:  Failed to
