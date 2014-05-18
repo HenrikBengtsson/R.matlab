@@ -3,8 +3,8 @@ Package: R.matlab
 
 Version: 3.0.1 [2014-05-18]
 o BUG FIX: Internal uncompressZlib() of readMat() opened several
-  raw connections without closing them.  Thanks Thilo Klein at
-  University of Cambridge, UK, for reporting on this.
+  raw connections without closing them.  Added system package test.
+  Thanks Thilo Klein at University of Cambridge, UK, for the report.
 
 
 Version: 3.0.0 [2014-05-06]
