@@ -8,5 +8,6 @@
 ^.travis.yml$
 ^.svn
 ^.git
-^.test
 ^.check
+^.test
+README.md
