@@ -55,7 +55,7 @@
 #
 #   On the other hand, for MAT files containing a large number of small
 #   objects, e.g. a large number of cell structures, there will be a
-#   signifant slowdown, because each of the small objects has to be
+#   significant slowdown, because each of the small objects has to be
 #   parsed individually.
 #   In such cases, if possible, try to (re)save the data in MATLAB
 #   using larger ("more vectorized") objects.

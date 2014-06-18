@@ -37,3 +37,38 @@ tryCatch({
 }, error = function(ex) {
   cat("ERROR:", ex$message, "\n")
 })
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Octave compatibility
+# [1] GNU Octave, bug #42562: 3.8.1 can't load mat file
+#     (>maltab r2010b), 2014-06-15
+#     https://savannah.gnu.org/bugs/?42562
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+value <- double(0L)
+filename <- "octave-bug42562-empty.mat"
+writeMat(filename, value=value)
+data <- readMat(filename, verbose=-100)
+value2 <- data$value
+str(value2)
+stopifnot(length(value2) == length(value))
+stopifnot(all(value2 == value))
+
+value <- 0
+filename <- "octave-bug42562-scalar.mat"
+writeMat(filename, value=value)
+data <- readMat(filename, verbose=-100)
+value2 <- data$value
+str(value2)
+stopifnot(length(value2) == length(value))
+stopifnot(all(value2 == value))
+
+value <- 1:5
+filename <- "octave-bug42562-vector.mat"
+writeMat(filename, value=value)
+data <- readMat(filename, verbose=-100)
+value2 <- data$value
+str(value2)
+stopifnot(length(value2) == length(value))
+stopifnot(all(value2 == value))
+
