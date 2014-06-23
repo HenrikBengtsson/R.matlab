@@ -5,6 +5,9 @@ Version: 3.0.2 [2014-06-22]
 o Added argument 'workdir' to Matlab$startServer() for setting the
   working directory of MATLAB.  Thanks to Steven Jaffe at Morgan
   Stanley for the suggestion.
+o ROBUSTNESS: Under certain circumstances the MATLAB server script
+  (MatlabServer.m) would try to access variables that were not yet
+  defined. Thanks to Steven Jaffe at Morgan Stanley for spotting this.
 
 
 Version: 3.0.1 [2014-05-18]
