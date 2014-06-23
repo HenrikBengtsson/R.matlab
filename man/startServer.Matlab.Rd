@@ -23,11 +23,11 @@
 \usage{
 ## Static method (use this):
 ## Matlab$startServer(matlab=getOption("matlab"), port=9999, minimize=TRUE,
-##   options=c("nodesktop", "nodisplay", "nosplash"), ...)
+##   options=c("nodesktop", "nodisplay", "nosplash"), workdir=".", ...)
 
 ## Don't use the below:
 \method{startServer}{Matlab}(this, matlab=getOption("matlab"), port=9999, minimize=TRUE,
-  options=c("nodesktop", "nodisplay", "nosplash"), ...)
+  options=c("nodesktop", "nodisplay", "nosplash"), workdir=".", ...)
 }
 
 \arguments{
@@ -44,6 +44,7 @@
    This argument is ignored on non-Windows systems.}
  \item{options}{A \code{\link[base]{character}} \code{\link[base]{vector}} of options used to call the
    MATLAB application.}
+ \item{workdir}{The working directory to be used by MATLAB.}
  \item{...}{Not used.}
 }
 

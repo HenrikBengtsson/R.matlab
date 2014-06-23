@@ -680,6 +680,7 @@ setMethodS3("readResult", "Matlab", function(this, ...) {
 #    This argument is ignored on non-Windows systems.}
 #  \item{options}{A @character @vector of options used to call the
 #    MATLAB application.}
+#  \item{workdir}{The working directory to be used by MATLAB.}
 #  \item{...}{Not used.}
 # }
 #
@@ -712,15 +713,32 @@ setMethodS3("readResult", "Matlab", function(this, ...) {
 #   @seeclass
 # }
 #*/###########################################################################
-setMethodS3("startServer", "Matlab", function(this, matlab=getOption("matlab"), port=9999, minimize=TRUE, options=c("nodesktop", "nodisplay", "nosplash"), ...) {
+setMethodS3("startServer", "Matlab", function(this, matlab=getOption("matlab"), port=9999, minimize=TRUE, options=c("nodesktop", "nodisplay", "nosplash"), workdir=".", ...) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'port':
   if (!is.null(port)) {
     port <- Arguments$getInteger(port, range=c(1023,65535));
     Sys.setenv("MATLABSERVER_PORT"=port);
   }
 
+  # Argument 'workdir':
+  workdir <- Arguments$getWritablePath(workdir);
+
+
   enter(this$.verbose, "Starting the MATLAB server");
   on.exit(exit(this$.verbose), add=TRUE);
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Set working directory
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (!is.null(workdir) && (workdir != ".")) {
+    opwd <- setwd(workdir);
+    on.exit(setwd(opwd), add=TRUE);
+    cat(this$.verbose, level=-1, "MATLAB working directory: ", getwd());
+  }
+
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Make MATLAB server files available in the current directory
@@ -1044,7 +1062,7 @@ setMethodS3("setFunction", "Matlab", function(this, code, name=NULL, collapse="\
 
   pos <- regexpr("^[ \t\n\r\v]*function[^=]*=[^ \t\n\r\v(]", code);
   if (pos == -1) {
-    throw("The code does not contain a proper MATLAB function defintion: ", substring(code, 1, 20), "...");
+    throw("The code does not contain a proper MATLAB function definition: ", substring(code, 1, 20), "...");
   }
 
   if (is.null(name)) {
@@ -1132,6 +1150,8 @@ setMethodS3("setVerbose", "Matlab", function(this, threshold=0, ...) {
 
 ############################################################################
 # HISTORY:
+# 2014-06-22
+# o Added argument 'workdir' to Matlab$startServer().
 # 2014-01-28
 # o CLEANUP: open() for Matlab no longer generates warnings on
 #   "socketConnection(...) ... cannot be opened", which occured while
