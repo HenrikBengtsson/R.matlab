@@ -132,6 +132,8 @@ fprintf(1, '----------------------\n');
 fprintf(1, 'MATLAB server started!\n');
 fprintf(1, '----------------------\n');
 
+fprintf(1, 'MATLAB working directory: \%s\n', pwd);
+
 
 \% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \% Initiate server socket to which clients may connect
@@ -370,7 +372,7 @@ close(server);
 \% 2014-06-23 [v3.0.2]
 \% o ROBUSTNESS: Variables 'lasterr' and 'variables' are now always
 \%   defined. Potential bug spotted by Steven Jaffe at Morgan Stanley.
-\% o Added more progress/verbose output.
+\% o Added more progress/verbose output, e.g. current working directory.
 \% 2014-01-21 [v2.2.0]
 \% o BUG FIX: The MatlabServer.m script would incorrectly consider
 \%   Matlab v8 and above as Matlab v6.  Thanks to Frank Stephen at NREL
