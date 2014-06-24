@@ -176,6 +176,7 @@ Added InputStreamByteWrapper to dynamic Java CLASSPATH.
 ----------------------
 MATLAB server started!
 ----------------------
+MATLAB working directory: /home/AwesomeUser/FabulousProject/
 Trying to open server socket (port 9999)...done.
 
   }
