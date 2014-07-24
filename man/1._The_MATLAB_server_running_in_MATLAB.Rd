@@ -204,7 +204,7 @@ while (state >= 0),
     bfr = char(readUTF(is));
     fprintf(1, '"eval" string: "\%s"\n', bfr);
     try
-      eval(bfr);,
+      eval(bfr);
       writeByte(os, 0);
       fprintf(1, 'Sent byte: \%d\n', 0);
       flush(os);

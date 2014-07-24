@@ -165,6 +165,32 @@
 #   be changed by modifying options, cf. @see "setOption".
 # }
 #
+# \section{Multiple parallel MATLAB instances}{
+#   You can launch multiple parallel MATLAB instance using this interface.
+#   This can be done in separate R sessions or in a single one.  As long
+#   as each MATLAB server/session is communicating on a separate port,
+#   there is no limitation in the number of parallel MATLAB instances
+#   that can be used.  Example:
+#
+#   \preformatted{
+#    > library('R.matlab')
+#    ## Start two seperate MATLAB servers
+#    > Matlab$startServer(port=9997)
+#    > Matlab$startServer(port=9999)
+#
+#    ## Connect to each of them
+#    > matlab1 <- Matlab(port=9997); open(matlab1)
+#    > matlab2 <- Matlab(port=9999); open(matlab2)
+#
+#    ## Evaluate expression in each of them
+#    > evaluate(matlab1, "x=1+2; x")
+#    > evaluate(matlab2, "y=1+2; y")
+#   }
+#
+#   Note that the two MATLAB instance neither communicate nor
+#   share variables.
+# }
+#
 # \examples{\dontrun{@include "../incl/Matlab.Rex"}}
 #
 # @author
@@ -1150,6 +1176,8 @@ setMethodS3("setVerbose", "Matlab", function(this, threshold=0, ...) {
 
 ############################################################################
 # HISTORY:
+# 2014-07-24
+# o Added section on parallel MATLAB instances to help('Matlab').
 # 2014-06-22
 # o Added argument 'workdir' to Matlab$startServer().
 # 2014-01-28

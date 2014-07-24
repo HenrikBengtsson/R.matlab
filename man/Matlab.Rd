@@ -232,6 +232,32 @@ Trying to open server socket (port 9999)...done.
   be changed by modifying options, cf. \code{\link{setOption}}().
 }
 
+\section{Multiple parallel MATLAB instances}{
+  You can launch multiple parallel MATLAB instance using this interface.
+  This can be done in separate R sessions or in a single one.  As long
+  as each MATLAB server/session is communicating on a separate port,
+  there is no limitation in the number of parallel MATLAB instances
+  that can be used.  Example:
+
+  \preformatted{
+   > library('R.matlab')
+   ## Start two seperate MATLAB servers
+   > Matlab$startServer(port=9997)
+   > Matlab$startServer(port=9999)
+
+   ## Connect to each of them
+   > matlab1 <- Matlab(port=9997); open(matlab1)
+   > matlab2 <- Matlab(port=9999); open(matlab2)
+
+   ## Evaluate expression in each of them
+   > evaluate(matlab1, "x=1+2; x")
+   > evaluate(matlab2, "y=1+2; y")
+  }
+
+  Note that the two MATLAB instance neither communicate nor
+  share variables.
+}
+
 \examples{\dontrun{
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # This example will try to start the MATLAB server on the local machine,
