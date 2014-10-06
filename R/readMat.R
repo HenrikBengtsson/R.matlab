@@ -1994,6 +1994,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
 
       value <- readBinMat(con, what=what, size=sizeOf, n=len, signed=tag$signed);
       verbose && str(verbose, level=-102, value);
+      verbose && str(verbose, level=-102, intToChar(value));
 
       left <<- left - sizeOf*len;
 
@@ -2013,6 +2014,11 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
         on.exit(exit(verbose));
         cat(verbose, level=-60, "Argument 'tag':");
         str(verbose, level=-60, tag);
+      }
+
+      # Sanity check
+      if (tag$nbrOfBytes == 0L) {
+        throw("INTERNAL ERROR: Zero bytes to read in miMATRIX.")
       }
 
       tag <- mat5ReadTag(this);
@@ -2053,22 +2059,25 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
       if (arrayFlags$class == "mxCELL_CLASS") {
         nbrOfCells <- prod(dimensionsArray$dim);
-        verbose && cat(verbose, level=-4, "Reading mxCELL_CLASS with ", nbrOfCells, " cells.");
-        matrix <- list();
+        verbose && enter(verbose, level=-4, "Reading mxCELL_CLASS with ", nbrOfCells, " cells.");
+        matrix <- vector("list", length=nbrOfCells);
         for (kk in seq(length=nbrOfCells)) {
           tag <- mat5ReadTag(this);
-          cell <- mat5ReadMiMATRIX(this, tag);
-          matrix <- c(matrix, cell);
+          if (tag$nbrOfBytes > 0L) {
+            matrix[[kk]] <- mat5ReadMiMATRIX(this, tag);
+          }
         }
+
         matrix <- list(matrix);
         names(matrix) <- arrayName$name;
+        verbose && exit(verbose);
       } # (a) mxCELL_CLASS
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
       # (b) mxSTRUCT_CLASS
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
       else if (arrayFlags$class == "mxSTRUCT_CLASS") {
         nbrOfCells <- prod(dimensionsArray$dim);
-        verbose && cat(verbose, level=-4, "Reading mxSTRUCT_CLASS with ", nbrOfCells, " cells in structure.");
+        verbose && enter(verbose, level=-4, "Reading mxSTRUCT_CLASS with ", nbrOfCells, " cells in structure.");
         maxLength <- mat5ReadFieldNameLength(this);
         names <- mat5ReadFieldNames(this, maxLength=maxLength$maxLength);
         verbose && cat(verbose, level=-100, "Field names: ", paste(names$names, collapse=", "));
@@ -2097,6 +2106,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
           cat(verbose, level=-60, "Read a 'struct':");
           str(verbose, level=-60, matrix);
         }
+        verbose && exit(verbose);
       } # (b) mxSTRUCT_CLASS
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
       # (c) mxOBJECT_CLASS
@@ -2104,7 +2114,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
       else if (arrayFlags$class == "mxOBJECT_CLASS") {
         className <- mat5ReadName(this)$name;
         maxLength <- mat5ReadFieldNameLength(this);
-        verbose && cat(verbose, level=-4, "Reading mxOBJECT_CLASS of class '", className, "' with ", maxLength, " fields.");
+        verbose && enter(verbose, level=-4, "Reading mxOBJECT_CLASS of class '", className, "' with ", maxLength, " fields.");
         names <- mat5ReadFieldNames(this, maxLength=maxLength$maxLength);
         fields <- mat5ReadFields(this, names=names$names);
         class(fields) <- className;
@@ -2131,6 +2141,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
         verbose && exit(verbose, suffix=paste("...done: '", names(matrix), "' [",
                  mode(matrix), ": ", paste(dim(matrix), collapse="x"),
                                                " elements]", sep=""));
+        verbose && exit(verbose);
       } # (c) mxOBJECT_CLASS
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
       # (d) mxSPARSE_CLASS
@@ -2140,7 +2151,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
         nrow <- dimensionsArray$dim[1L];
         ncol <- dimensionsArray$dim[2L];
 
-        verbose && cat(verbose, level=-4, "Reading mxSPARSE_CLASS ", nrow, "x", ncol, " matrix.");
+        verbose && enter(verbose, level=-4, "Reading mxSPARSE_CLASS ", nrow, "x", ncol, " matrix.");
 
         # From [2, page5-6]
         # "Sparse Matrices
@@ -2298,6 +2309,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
           matrix <- list(matrix);
           names(matrix) <- arrayName$name;
         }
+        verbose && exit(verbose);
       } # (d) mxSPARSE_CLASS
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
       # (e) Everything else but (a) mxCELL_CLASS, (b) mxSTRUCT_CLASS,
@@ -2537,6 +2549,9 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
 
 ###########################################################################
 # HISTORY:
+# 2014-10-05
+# o BUG FIX: readMat() parsed an mxCELL_CLASS structure in correctly if
+#   one of its names were empty.
 # 2014-05-18
 # o BUG FIX: Internal uncompressZlib() of readMat() opened several
 #   raw connections without closing them.
