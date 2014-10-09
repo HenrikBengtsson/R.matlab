@@ -1,6 +1,11 @@
 Package: R.matlab
 =================
 
+Version: 3.1.0 [2014-10-09]
+o Bumped up package dependencies.
+o Submitted to CRAN.
+
+
 Version: 3.0.4 [2014-10-05]
 o BUG FIX: readMat() parsed an mxCELL_CLASS structure incorrectly if
   one of its names was empty.  Thanks Dieter Menne at Menne Biomed
