@@ -1,6 +1,13 @@
 Package: R.matlab
 =================
 
+Version: 3.1.1 [2014-10-10]
+o CRAN POLICIES/CLEANUP: Source code file InputStreamByteWrapper.java
+  is no longer *installed* with this package.  It is only the
+  precompiled InputStreamByteWrapper.class file that is installed.
+  Updated documentation accordingly.
+
+
 Version: 3.1.0 [2014-10-09]
 o Bumped up package dependencies.
 o Submitted to CRAN.

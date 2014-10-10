@@ -71,9 +71,9 @@
 #   Moreover, on non-Windows systems, the above command will start MATLAB
 #   in the background making all MATLAB messages be sent to the \R output
 #   screen.
-#   In addition, the method will copy the MatlabServer and
-#   InputStreamByteWrapper files to the current directory and start
-#   MATLAB from there.
+#   In addition, the method will copy the MatlabServer.m and
+#   InputStreamByteWrapper.class files to the current directory
+#   and start MATLAB from there.
 # }
 #
 # \section{Starting the MATLAB server without \R}{
@@ -93,8 +93,8 @@
 #   MATLAB classpath.txt file is located. Copy this file to the
 #   \emph{current directory}, and append the \emph{path} (the directory)
 #   of InputStreamByteWrapper.class to the end of classpath.txt.
-#   The path of InputStreamByteWrapper.class should be the same as
-#   the path of the MatlabServer.m that you identified above.\cr
+#   The path of InputStreamByteWrapper.class can be identified by
+#   \code{system.file("java", package="R.matlab")} in R.\cr
 #
 #   \bold{Lazy alternative:} Instead of setting path and classpaths,
 #   you may try to copy the MatlabServer.m and InputStreamByteWrapper.class
@@ -726,11 +726,12 @@ setMethodS3("readResult", "Matlab", function(this, ...) {
 #   option, e.g. \code{options(matlab="/opt/bin/matlab6.1")}. If no such
 #   option exists, the value \code{"matlab"} will be used.
 #
-#   The MATLAB server relies on two files: 1) MatlabServer.m and
-#   2) InputStreamByteWrapper.class (from InputStreamByteWrapper.java).
-#   These files exists in the externals/ directory of this package. However,
-#   if they do not exist in the current directory, which is the directory
-#   where MATLAB is started, copies of them will automatically be made.
+#   The MATLAB server relies on two files:
+#   1) MatlabServer.m and 2) InputStreamByteWrapper.class
+#   These files exists in the externals/ and java/ directories of this
+#   package. However, if they do not exist in the current directory,
+#   which is the directory where MATLAB is started, copies of them will
+#   automatically be made.
 # }
 #
 # @author
@@ -769,15 +770,15 @@ setMethodS3("startServer", "Matlab", function(this, matlab=getOption("matlab"), 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Make MATLAB server files available in the current directory
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  srcPath <- system.file("externals", package="R.matlab");
-  filenames <- c("MatlabServer.m", "InputStreamByteWrapper.class",
-                 "InputStreamByteWrapper.java");
-  for (filename in filenames) {
+  src1 <- system.file(package="R.matlab", "externals", "MatlabServer.m");
+  src2 <- system.file(package="R.matlab", "java", "InputStreamByteWrapper.class");
+  srcs <- c(src1, src2);
+  for (src in srcs) {
+    filename <- basename(src);
     enter(this$.verbose, level=-1, sprintf("MATLAB server file '%s'", filename));
     if (isFile(filename)) {
       cat(this$.verbose, level=-1, "Already exists. Skipping.");
     } else {
-      src <- file.path(srcPath, filename);
       copyFile(src, filename, verbose=less(this$.verbose, 50));
     }
 
@@ -1176,6 +1177,10 @@ setMethodS3("setVerbose", "Matlab", function(this, threshold=0, ...) {
 
 ############################################################################
 # HISTORY:
+# 2014-10-10
+# o CRAN POLICIES/CLEANUP: Matlab$startServer() no longer copies the
+#   InputStreamByteWrapper.java, only the *.class file, which was moved
+#   to java/ of the *installed* package.
 # 2014-07-24
 # o Added section on parallel MATLAB instances to help('Matlab').
 # 2014-06-22

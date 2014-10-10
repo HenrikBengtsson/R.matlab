@@ -28,7 +28,7 @@
 #  communication, that is, with argument \code{remote=TRUE}).
 #
 #  \preformatted{
-#   @include "../inst/externals/InputStreamByteWrapper.java"
+#   @include "../java/InputStreamByteWrapper.java"
 #  }\emph{}
 # }
 #*/#########################################################################

@@ -119,9 +119,9 @@ $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCa
   Moreover, on non-Windows systems, the above command will start MATLAB
   in the background making all MATLAB messages be sent to the \R output
   screen.
-  In addition, the method will copy the MatlabServer and
-  InputStreamByteWrapper files to the current directory and start
-  MATLAB from there.
+  In addition, the method will copy the MatlabServer.m and
+  InputStreamByteWrapper.class files to the current directory
+  and start MATLAB from there.
 }
 
 \section{Starting the MATLAB server without \R}{
@@ -141,8 +141,8 @@ $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCa
   MATLAB classpath.txt file is located. Copy this file to the
   \emph{current directory}, and append the \emph{path} (the directory)
   of InputStreamByteWrapper.class to the end of classpath.txt.
-  The path of InputStreamByteWrapper.class should be the same as
-  the path of the MatlabServer.m that you identified above.\cr
+  The path of InputStreamByteWrapper.class can be identified by
+  \code{system.file("java", package="R.matlab")} in R.\cr
 
   \bold{Lazy alternative:} Instead of setting path and classpaths,
   you may try to copy the MatlabServer.m and InputStreamByteWrapper.class

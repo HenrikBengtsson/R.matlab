@@ -31,10 +31,11 @@ FILES_INCL := $(wildcard incl/*)
 FILES_INST := $(wildcard inst/* inst/*/* inst/*/*/* inst/*/*/*/*)
 FILES_VIGNETTES := $(wildcard vignettes/* vignettes/.install_extras)
 FILES_SRC := $(wildcard src/* src/*/* src/*/*/* src/*/*/*/* src/*/*/*/*/* src/*/*/*/*/*/* src/*/*/*/*/*/*/* src/*/*/*/*/*/*/*/*)
+FILES_JAVA := $(wildcard java/* java/*/* java/*/*/* java/*/*/*/* java/*/*/*/*/* java/*/*/*/*/*/* java/*/*/*/*/*/*/* java/*/*/*/*/*/*/*/*)
 FILES_TESTS := $(wildcard tests/*.R)
 FILES_NEWS := $(wildcard NEWS inst/NEWS)
 FILES_ROOT := DESCRIPTION NAMESPACE $(wildcard .Rbuildignore .Rinstignore)
-PKG_FILES := $(FILES_ROOT) $(FILES_NEWS) $(FILES_R) $(FILES_DATA) $(FILES_MAN) $(FILES_INST) $(FILES_VIGNETTES) $(FILES_SRC) $(FILES_TESTS)
+PKG_FILES := $(FILES_ROOT) $(FILES_NEWS) $(FILES_R) $(FILES_DATA) $(FILES_MAN) $(FILES_INST) $(FILES_VIGNETTES) $(FILES_SRC) $(FILES_JAVA) $(FILES_TESTS)
 FILES_MAKEFILE := $(wildcard ../../Makefile)
 
 # Has vignettes in 'vignettes/' or 'inst/doc/'?
@@ -121,6 +122,7 @@ debug_full: debug
 	@echo FILES_INST=\'$(FILES_INST)\'
 	@echo FILES_VIGNETTES=\'$(FILES_VIGNETTES)\'
 	@echo FILES_SRC=\'$(FILES_SRC)\'
+	@echo FILES_JAVA=\'$(FILES_JAVA)\'
 	@echo FILES_TESTS=\'$(FILES_TESTS)\'
 	@echo FILES_INCL=\'$(FILES_INCL)\'
 	@echo
