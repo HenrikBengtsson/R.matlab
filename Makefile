@@ -31,11 +31,10 @@ FILES_INCL := $(wildcard incl/*)
 FILES_INST := $(wildcard inst/* inst/*/* inst/*/*/* inst/*/*/*/*)
 FILES_VIGNETTES := $(wildcard vignettes/* vignettes/.install_extras)
 FILES_SRC := $(wildcard src/* src/*/* src/*/*/* src/*/*/*/* src/*/*/*/*/* src/*/*/*/*/*/* src/*/*/*/*/*/*/* src/*/*/*/*/*/*/*/*)
-FILES_JAVA := $(wildcard java/* java/*/* java/*/*/* java/*/*/*/* java/*/*/*/*/* java/*/*/*/*/*/* java/*/*/*/*/*/*/* java/*/*/*/*/*/*/*/*)
 FILES_TESTS := $(wildcard tests/*.R)
 FILES_NEWS := $(wildcard NEWS inst/NEWS)
 FILES_ROOT := DESCRIPTION NAMESPACE $(wildcard .Rbuildignore .Rinstignore)
-PKG_FILES := $(FILES_ROOT) $(FILES_NEWS) $(FILES_R) $(FILES_DATA) $(FILES_MAN) $(FILES_INST) $(FILES_VIGNETTES) $(FILES_SRC) $(FILES_JAVA) $(FILES_TESTS)
+PKG_FILES := $(FILES_ROOT) $(FILES_NEWS) $(FILES_R) $(FILES_DATA) $(FILES_MAN) $(FILES_INST) $(FILES_VIGNETTES) $(FILES_SRC) $(FILES_TESTS)
 FILES_MAKEFILE := $(wildcard ../../Makefile)
 
 # Has vignettes in 'vignettes/' or 'inst/doc/'?
@@ -44,7 +43,7 @@ DIR_VIGNS := $(wildcard vignettes inst/doc)
 # R MACROS
 R = R
 R_SCRIPT = Rscript
-R_HOME := $(shell echo "$(R_HOME)" | tr "\\\\" "/")
+R_HOME := $(shell $(R_SCRIPT) -e "cat(R.home())")
 
 ## R_USE_CRAN := $(shell $(R_SCRIPT) -e "cat(Sys.getenv('R_USE_CRAN', 'FALSE'))")
 R_NO_INIT := --no-init-file
@@ -54,29 +53,30 @@ R_VERSION := $(shell $(R_SCRIPT) -e "cat(as.character(getRversion()))")
 R_VERSION_FULL := $(R_VERSION)$(R_VERSION_STATUS)
 R_LIBS_USER_X := $(shell $(R_SCRIPT) -e "cat(.libPaths()[1])")
 R_OUTDIR := ../_R-$(R_VERSION_FULL)
-## R_BUILD_OPTS := 
+## R_BUILD_OPTS :=
 ## R_BUILD_OPTS := $(R_BUILD_OPTS) --no-build-vignettes
 R_CHECK_OUTDIR := $(R_OUTDIR)/$(PKG_NAME).Rcheck
 _R_CHECK_CRAN_INCOMING_ = $(shell $(R_SCRIPT) -e "cat(Sys.getenv('_R_CHECK_CRAN_INCOMING_', 'FALSE'))")
-_R_CHECK_XREFS_REPOSITORIES_ = $(shell if $(_R_CHECK_CRAN_INCOMING_) = "TRUE"; then echo ""; else echo "invalidURL"; fi)
+_R_CHECK_XREFS_REPOSITORIES_ = $(shell if test "$(_R_CHECK_CRAN_INCOMING_)" = "TRUE"; then echo ""; else echo "invalidURL"; fi)
 _R_CHECK_FULL_ = $(shell $(R_SCRIPT) -e "cat(Sys.getenv('_R_CHECK_FULL_', ''))")
-R_CHECK_OPTS = --as-cran --timings
+R_CHECK_OPTS = --as-cran --timings $(shell if test "$(_R_CHECK_USE_VALGRIND_)" = "TRUE"; then echo "--use-valgrind"; fi)
 R_RD4PDF = $(shell $(R_SCRIPT) -e "if (getRversion() < 3) cat('times,hyper')")
 R_CRAN_OUTDIR := $(R_OUTDIR)/$(PKG_NAME)_$(PKG_VERSION).CRAN
 
-HAS_ASPELL := $(shell $(R_SCRIPT) -e "cat(Sys.getenv('HAS_ASPELL', !is.na(utils:::aspell_find_program('aspell'))))")
+HAS_ASPELL := $(shell $(R_SCRIPT) -e "cat(Sys.getenv('HAS_ASPELL', !inherits(try(aspell('DESCRIPTION', control=c('--master=en_US', '--add-extra-dicts=en_GB'), dictionaries='en_stats', program='aspell'), silent=TRUE), 'try-error')))")
 
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Main
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 all: build install check
 
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Displays macros
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-debug: 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+debug:
 	@echo CURDIR=\'$(CURDIR)\'
 	@echo R_HOME=\'$(R_HOME)\'
 	@echo
@@ -122,7 +122,6 @@ debug_full: debug
 	@echo FILES_INST=\'$(FILES_INST)\'
 	@echo FILES_VIGNETTES=\'$(FILES_VIGNETTES)\'
 	@echo FILES_SRC=\'$(FILES_SRC)\'
-	@echo FILES_JAVA=\'$(FILES_JAVA)\'
 	@echo FILES_TESTS=\'$(FILES_TESTS)\'
 	@echo FILES_INCL=\'$(FILES_INCL)\'
 	@echo
@@ -131,9 +130,9 @@ debug_full: debug
 
 
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Update / install
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Update existing packages
 update:
 	$(R_SCRIPT) -e "try(update.packages(ask=FALSE)); source('http://bioconductor.org/biocLite.R'); biocLite(ask=FALSE);"
@@ -150,9 +149,9 @@ ns:
 	$(R_SCRIPT) -e "library('$(PKG_NAME)'); source('X:/devtools/NAMESPACE.R'); writeNamespaceSection('$(PKG_NAME)'); writeNamespaceImports('$(PKG_NAME)');"
 
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Build source tarball
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 $(R_OUTDIR)/$(PKG_TARBALL): $(PKG_FILES)
 	$(MKDIR) $(R_OUTDIR)
 	$(RM) $@
@@ -176,10 +175,18 @@ ifeq ($(OS), Windows_NT)
   endif
 endif
 
+build_fast: $(PKG_FILES)
+	$(MKDIR) $(R_OUTDIR)
+	$(RM) $@
+	$(CD) $(R_OUTDIR);\
+	$(R) $(R_NO_INIT) CMD build --keep-empty-dirs --no-build-vignettes --no-manual --no-resave-data --compact-vignettes="no" $(R_BUILD_OPTS) $(PKG_DIR)
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+build: $(R_OUTDIR)/$(PKG_TARBALL)
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Install on current system
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 $(R_LIBS_USER_X)/$(PKG_NAME)/DESCRIPTION: $(R_OUTDIR)/$(PKG_TARBALL) build_fix
 	$(CD) $(R_OUTDIR);\
 	$(R) --no-init-file CMD INSTALL $(PKG_TARBALL)
@@ -190,10 +197,14 @@ install_force:
 	$(RM) $(R_LIBS_USER_X)/$(PKG_NAME)/DESCRIPTION
 	$(MAKE) install
 
+install_fast:
+	$(CD) $(R_OUTDIR);\
+	$(R) --no-init-file CMD INSTALL --no-docs --no-multiarch --no-byte-compile --no-test-load $(PKG_TARBALL)
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Check source tarball
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 $(R_CHECK_OUTDIR)/.check.complete: $(R_OUTDIR)/$(PKG_TARBALL) build_fix
 	$(CD) $(R_OUTDIR);\
 	$(RM) -r $(PKG_NAME).Rcheck;\
@@ -210,20 +221,26 @@ $(R_CHECK_OUTDIR)/.check.complete: $(R_OUTDIR)/$(PKG_TARBALL) build_fix
 
 check: $(R_CHECK_OUTDIR)/.check.complete
 
-
 check_force:
 	$(RM) -r $(R_CHECK_OUTDIR)
 	$(MAKE) check
 
+clang:
+	clang -c -pedantic -I$(R_HOME)/include/ src/*.c
+	$(RM) *.o
+
+valgrind:
+	export _R_CHECK_USE_VALGRIND_=TRUE;\
+	$(MAKE) check_force
 
 # Check the line width of incl/*.(R|Rex) files [max 100 chars in R devel]
 check_Rex:
 	$(R_SCRIPT) -e "if (!file.exists('incl')) quit(status=0); setwd('incl/'); fs <- dir(pattern='[.](R|Rex)$$'); ns <- sapply(fs, function(f) max(nchar(readLines(f)))); ns <- ns[ns > 100]; print(ns); if (length(ns) > 0L) quit(status=1)"
 
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Install and build binaries
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 $(R_OUTDIR)/$(PKG_ZIP): $(R_OUTDIR)/$(PKG_TARBALL) build_fix
 	$(CD) $(R_OUTDIR);\
 	$(R) --no-init-file CMD INSTALL --build --merge-multiarch $(PKG_TARBALL)
@@ -231,9 +248,9 @@ $(R_OUTDIR)/$(PKG_ZIP): $(R_OUTDIR)/$(PKG_TARBALL) build_fix
 binary: $(R_OUTDIR)/$(PKG_ZIP)
 
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Build Rd help files from Rdoc comments
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Rd: check_Rex
 	$(R_SCRIPT) -e "setwd('..'); Sys.setlocale(locale='C'); R.oo::compileRdoc('$(PKG_NAME)', path='$(PKG_DIR)')"
 
@@ -254,9 +271,9 @@ spell:
 	$(R_SCRIPT) -e "utils::aspell('DESCRIPTION', filter='dcf')"
 
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Build package vignettes
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 $(R_OUTDIR)/vigns: install
 	$(MKDIR) $(R_OUTDIR)/vigns/$(shell dirname $(DIR_VIGNS))
 	$(CP) DESCRIPTION $(R_OUTDIR)/vigns/
@@ -267,9 +284,9 @@ $(R_OUTDIR)/vigns: install
 vignettes: $(R_OUTDIR)/vigns
 
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Run package tests
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 $(R_OUTDIR)/tests/%.R: $(FILES_TESTS)
 	$(RMDIR) $(R_OUTDIR)/tests
 	$(MKDIR) $(R_OUTDIR)/tests
@@ -287,9 +304,9 @@ test_full: $(R_OUTDIR)/tests/%.R
 	$(R_SCRIPT) -e "for (f in list.files(pattern='[.]R$$')) { print(f); source(f, echo=TRUE) }"
 
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Run extensive CRAN submission checks
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 $(R_CRAN_OUTDIR)/$(PKG_TARBALL): $(R_OUTDIR)/$(PKG_TARBALL) build_fix
 	$(MKDIR) $(R_CRAN_OUTDIR)
 	$(CP) $(R_OUTDIR)/$(PKG_TARBALL) $(R_CRAN_OUTDIR)
@@ -304,9 +321,9 @@ cran_setup: $(R_CRAN_OUTDIR)/$(PKG_TARBALL)
 cran: cran_setup $(R_CRAN_OUTDIR)/$(PKG_NAME),EmailToCRAN.txt
 
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Send to win-builder server
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 WIN_BUILDER = win-builder.r-project.org
 win-builder-devel: $(R_OUTDIR)/$(PKG_TARBALL)
 	curl -v -T $? ftp://anonymous@$(WIN_BUILDER)/R-devel/
@@ -317,9 +334,9 @@ win-builder-release: $(R_OUTDIR)/$(PKG_TARBALL)
 win-builder: win-builder-devel win-builder-release
 
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Local repositories
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ifeq ($(OS), Windows_NT)
 REPOS_PATH = T:/My\ Repositories/braju.com/R
 else
