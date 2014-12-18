@@ -776,11 +776,7 @@ setMethodS3("startServer", "Matlab", function(this, matlab=getOption("matlab"), 
   for (src in srcs) {
     filename <- basename(src);
     enter(this$.verbose, level=-1, sprintf("MATLAB server file '%s'", filename));
-    if (isFile(filename)) {
-      cat(this$.verbose, level=-1, "Already exists. Skipping.");
-    } else {
-      copyFile(src, filename, verbose=less(this$.verbose, 50));
-    }
+    copyFile(src, filename, overwrite=TRUE, verbose=less(this$.verbose, 50));
 
     # Sanity check
     filename <- Arguments$getReadablePathname(filename, mustExist=TRUE);
@@ -1177,6 +1173,10 @@ setMethodS3("setVerbose", "Matlab", function(this, threshold=0, ...) {
 
 ############################################################################
 # HISTORY:
+# 2014-12-17
+# o ROBUSTNESS: Now Matlab$startServer() always overwrites any existing
+#   'MatlabServer.m' and 'InputStreamByteWrapper.class' to make sure the
+#   most recent versions are used.
 # 2014-10-10
 # o CRAN POLICIES/CLEANUP: Matlab$startServer() no longer copies the
 #   InputStreamByteWrapper.java, only the *.class file, which was moved
