@@ -1355,13 +1355,13 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
             s <- s[-last];
           }
 
-          if (sparseMatrixClass == "Matrix" && require("Matrix", quietly=TRUE)) {
+          if (sparseMatrixClass == "Matrix" && requireNamespace("Matrix", quietly=TRUE)) {
             i <- i-1L;
             j <- j-1L;
             dim <- as.integer(c(n, m));
             data <- new("dgTMatrix", i=i, j=j, x=s, Dim=dim);
             data <- as(data, "dgCMatrix");
-          } else if (sparseMatrixClass == "SparseM" && require("SparseM", quietly=TRUE)) {
+          } else if (sparseMatrixClass == "SparseM" && requireNamespace("SparseM", quietly=TRUE)) {
             dim <- as.integer(c(n, m));
             data <- new("matrix.coo", ra=s, ia=i, ja=j, dimension=dim);
           } else {
@@ -2242,7 +2242,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
         } # if (nzmax > 0)
 
         if (sparseMatrixClass == "Matrix"
-            && require("Matrix", quietly=TRUE)) {
+            && requireNamespace("Matrix", quietly=TRUE)) {
           # Logical or numeric sparse Matrix?
           if (is.logical(pr)) {
             className <- "lgCMatrix";
@@ -2257,7 +2257,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
           names(matrix) <- arrayName$name;
         }
         else if (sparseMatrixClass == "SparseM"
-                 && require("SparseM", quietly=TRUE)) {
+                 && requireNamespace("SparseM", quietly=TRUE)) {
           if (is.logical(pr)) {
             # Sparse matrices of SparseM cannot hold logical values.
             pr <- as.double(pr);
