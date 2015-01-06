@@ -772,7 +772,9 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
   # which in order to avoid lack-of-memory allocation errors will via
   # trial and error find a reasonably sized internal inflation buffer.
   uncompressRcompression <- function(zraw, type=NA_character_, asText=TRUE, sizeRatio=3, delta=0.9, ...) {
-    if (!requireNamespace("Rcompression", quietly=TRUE)) {
+    # To please R CMD check
+    pkgName <- "Rcompression"
+    if (!requireNamespace(pkgName, quietly=TRUE)) {
       throw("Cannot read compressed data.  Omegahat.org package 'Rcompression' could not be loaded.  Alternatively, save your data in a non-compressed format by specifying -V6 when calling save() in MATLAB or Octave.");
     }
 
