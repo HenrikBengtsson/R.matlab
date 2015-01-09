@@ -4,7 +4,7 @@ Depends: R (>= 2.5.0)
 Imports: utils, R.methodsS3 (>= 1.6.1), R.oo (>= 1.18.0), R.utils (>= 1.34.0)
 Suggests: Matrix, SparseM
 Date: 2014-12-17
-Title: Read and write of MAT files together with R-to-MATLAB connectivity
+Title: Read and Write MAT files and call MATLAB from within R
 Authors@R: c(
   person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),
                                  email="henrikb@braju.com"),
