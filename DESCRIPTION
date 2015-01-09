@@ -17,5 +17,5 @@ Description: This package provides methods readMat() and writeMat() to read and 
 License: LGPL (>= 2.1)
 LazyLoad: TRUE
 ByteCompile: TRUE
-URL: https://github.com/HenrikBengtsson/R.matlab/
+URL: https://github.com/HenrikBengtsson/R.matlab
 BugReports: https://github.com/HenrikBengtsson/R.matlab/issues
