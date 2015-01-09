@@ -51,14 +51,14 @@ if (diff > .Machine$double.eps)
 pathname <- file.path(path, "SparseMatrix3-v4.mat")
 mat4a <- readMat(pathname, sparseMatrixClass="matrix")
 
-if (require("Matrix")) {
+if (requireNamespace("Matrix")) {
   mat4b <- readMat(pathname, sparseMatrixClass="Matrix")
   diff <- sum(abs(as.matrix(mat4b$sparseM) - mat4a$sparseM))
   if (diff > .Machine$double.eps)
     stop("Failed to read MAT v4 sparse matrix by class 'Matrix'.")
 }
 
-if (require("SparseM")) {
+if (requireNamespace("SparseM")) {
   mat4c <- readMat(pathname, sparseMatrixClass="SparseM");
   diff <- sum(abs(as.matrix(mat4c$sparseM) - mat4a$sparseM))
   if (diff > .Machine$double.eps)
@@ -73,12 +73,12 @@ pathname <- file.path(path, "SparseLogicalDouble-v5.mat")
 mat4c <- readMat(pathname, sparseMatrixClass="matrix")
 stopifnot(all(mat4c$L == mat4c$D));
 
-if (require("Matrix")) {
+if (requireNamespace("Matrix")) {
   mat4d <- readMat(pathname, sparseMatrixClass="Matrix")
   stopifnot(all(mat4d$L == mat4d$D));
 }
 
-if (require("SparseM")) {
+if (requireNamespace("SparseM")) {
   mat4e <- readMat(pathname, sparseMatrixClass="SparseM")
   stopifnot(all(as.matrix(mat4e$L) == as.matrix(mat4e$D)));
 }
