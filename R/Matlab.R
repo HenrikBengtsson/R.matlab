@@ -929,6 +929,11 @@ setMethodS3("getVariable", "Matlab", function(this, variables, remote=this$remot
     printf(this$.verbose, level=-1, "Asks the MATLAB server to send variables via the local file system...\n");
 
     writeCommand(this, "send");
+    result <- Java$readInt(this$con);
+    if (result == -1L) {
+      lasterr <- Java$readUTF(this$con);
+      throw("MatlabException: ", lasterr);
+    }
     filename <- Java$readUTF(this$con);
     printf(this$.verbose, level=-1, "Reading variables from the local MAT file '%s'...\n", filename);
 
@@ -1173,6 +1178,9 @@ setMethodS3("setVerbose", "Matlab", function(this, threshold=0, ...) {
 
 ############################################################################
 # HISTORY:
+# 2015-01-08
+# o BUG FIX: Matlab$getVariable() for a non-existing variable would
+#   crash the R-to-Matlab communication if remote=FALSE.
 # 2014-12-17
 # o ROBUSTNESS: Now Matlab$startServer() always overwrites any existing
 #   'MatlabServer.m' and 'InputStreamByteWrapper.class' to make sure the
