@@ -932,6 +932,7 @@ setMethodS3("getVariable", "Matlab", function(this, variables, remote=this$remot
     result <- Java$readInt(this$con);
     if (result == -1L) {
       lasterr <- Java$readUTF(this$con);
+      Java$writeByte(this$con, 0);  # Send ACK back to Matlab
       throw("MatlabException: ", lasterr);
     }
     filename <- Java$readUTF(this$con);
@@ -950,6 +951,7 @@ setMethodS3("getVariable", "Matlab", function(this, variables, remote=this$remot
 
     if (maxLength == -1) {
       lasterr <- Java$readUTF(this$con);
+      Java$writeByte(this$con, 0);  # Send ACK back to Matlab
       throw("MatlabException: ", lasterr);
     }
     data <- readMat(this$con, maxLength=maxLength);
