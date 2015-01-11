@@ -15,10 +15,6 @@ for (version in 4:5) {
   for (pathname in pathnames) {
     cat("Reading MAT file: ", basename(pathname), "\n", sep="")
     mat <- readMat(pathname)
-    if (interactive()) {
-      cat("Press ENTER to view data:")
-      readline()
-    }
     print(mat)
   }
 }
@@ -98,10 +94,6 @@ if (getRversion() >= "2.10.0") {
   for (pathname in pathnames) {
     cat("Reading MAT file: ", basename(pathname), "\n", sep="")
     mat <- readMat(pathname)
-    if (interactive()) {
-      cat("Press ENTER to view data:")
-      readline()
-    }
     print(mat)
   }
 }
