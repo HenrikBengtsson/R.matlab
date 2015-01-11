@@ -131,6 +131,9 @@
 # @keyword IO
 #*/###########################################################################
 setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, drop=c("singletonLists"), sparseMatrixClass=c("Matrix", "SparseM", "matrix"), verbose=FALSE, ...) {
+  # To please R CMD check
+  .require <- require;
+
   # The object 'this' is actually never used, but we might put 'con' or
   # similar in the structure some day, so we keep it for now. /HB 2007-06-10
   this <- list();
@@ -774,7 +777,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
   uncompressRcompression <- function(zraw, type=NA_character_, asText=TRUE, sizeRatio=3, delta=0.9, ...) {
     # To please R CMD check
     pkgName <- "Rcompression"
-    if (!requireNamespace(pkgName, quietly=TRUE)) {
+    if (!.require(pkgName, quietly=TRUE)) {
       throw("Cannot read compressed data.  Omegahat.org package 'Rcompression' could not be loaded.  Alternatively, save your data in a non-compressed format by specifying -V6 when calling save() in MATLAB or Octave.");
     }
 
@@ -1355,13 +1358,13 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
             s <- s[-last];
           }
 
-          if (sparseMatrixClass == "Matrix" && requireNamespace("Matrix", quietly=TRUE)) {
+          if (sparseMatrixClass == "Matrix" && .require("Matrix", quietly=TRUE)) {
             i <- i-1L;
             j <- j-1L;
             dim <- as.integer(c(n, m));
             data <- new("dgTMatrix", i=i, j=j, x=s, Dim=dim);
             data <- as(data, "dgCMatrix");
-          } else if (sparseMatrixClass == "SparseM" && requireNamespace("SparseM", quietly=TRUE)) {
+          } else if (sparseMatrixClass == "SparseM" && .require("SparseM", quietly=TRUE)) {
             dim <- as.integer(c(n, m));
             data <- new("matrix.coo", ra=s, ia=i, ja=j, dimension=dim);
           } else {
@@ -2242,7 +2245,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
         } # if (nzmax > 0)
 
         if (sparseMatrixClass == "Matrix"
-            && requireNamespace("Matrix", quietly=TRUE)) {
+            && .require("Matrix", quietly=TRUE)) {
           # Logical or numeric sparse Matrix?
           if (is.logical(pr)) {
             className <- "lgCMatrix";
@@ -2257,7 +2260,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
           names(matrix) <- arrayName$name;
         }
         else if (sparseMatrixClass == "SparseM"
-                 && requireNamespace("SparseM", quietly=TRUE)) {
+                 && .require("SparseM", quietly=TRUE)) {
           if (is.logical(pr)) {
             # Sparse matrices of SparseM cannot hold logical values.
             pr <- as.double(pr);

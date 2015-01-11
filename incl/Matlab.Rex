@@ -96,6 +96,20 @@ evaluate(matlab, "[w,a]=dice(1000);")
 res <- getVariable(matlab, c("w", "a"))
 print(res)
 
+# 4.8 Try to get non-existing MATLAB variable
+#     (will result in an informative error)
+tryCatch({
+  data <- getVariable(matlab, "unknown")
+  cat("Received variables:\n")
+  str(data)
+}, error = function(ex) {
+  print(ex)
+})
+# Confirm that things still work
+data <- getVariable(matlab, "A")
+cat("Received variables:\n")
+str(data)
+
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 # 5.  Done:  close the MATLAB client
