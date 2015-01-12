@@ -1,14 +1,18 @@
 Package: R.matlab
 =================
 
-Version: 3.1.x [2015-01-08]
+Version: 3.1.x [2015-01-11]
 o ROBUSTNESS: Now Matlab$startServer() always overwrites any existing
   'MatlabServer.m' and 'InputStreamByteWrapper.class' to make sure the
   most recent versions are always used.  Previously, existing files
   would be kept, requiring a manual removal in order to use more resent
   versions of these files.
-o BUG FIX: getVariable() (for Matlab) for a non-existing variable would
-  crash the R-to-Matlab communication if remote=FALSE.
+o BUG FIX: Trying to retrieve a non-existing MATLAB variable using
+  getVariable() would crash the R-to-MATLAB communication if remote=FALSE.
+  Similarly, Trying to evaluate() a MATLAB expression that is invalid or
+  by other means fails would also break the R-to-MATLAB bridge.  The only
+  solution is both cases was to restart R and MATLAB.  Thanks to GitHub
+  user badbye (yalei) for reporting on this.
 
 
 Version: 3.1.1 [2014-10-10]

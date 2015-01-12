@@ -209,6 +209,7 @@ while (state >= 0),
       fprintf(1, 'Sent byte: \%d\n', 0);
       flush(os);
     catch
+      lasterr = sprintf('Failed to evaluate expression ''\%s''.', bfr);
       fprintf(1, 'EvaluationException: \%s\n', lasterr);
       writeByte(os, -1);
       fprintf(1, 'Sent byte: \%d\n', -1);

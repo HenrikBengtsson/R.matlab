@@ -96,7 +96,11 @@ evaluate(matlab, "[w,a]=dice(1000);")
 res <- getVariable(matlab, c("w", "a"))
 print(res)
 
-# 4.8 Try to get non-existing MATLAB variable
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# 5. Exception handling
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# 5.1 Try to get non-existing MATLAB variable
 #     (will result in an informative error)
 tryCatch({
   data <- getVariable(matlab, "unknown")
@@ -111,12 +115,28 @@ cat("Received variables:\n")
 str(data)
 
 
+# 5.2 Try to evaluate a MATLAB expression that fails
+#     (will result in an informative error)
+tryCatch({
+  res <- evaluate(matlab, "C=1+unknown;")
+  res
+}, error = function(ex) {
+  print(ex)
+})
+# Confirm that things still work
+res <- evaluate(matlab, "C=1+2;")
+print(res)
+data <- getVariable(matlab, "C")
+cat("Received variables:\n")
+str(data)
+
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-# 5.  Done:  close the MATLAB client
+# 6.  Done:  close the MATLAB client
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 # When done, close the MATLAB client, which will also shutdown
 # the MATLAB server and the connection to it.
 close(matlab)
 
-# 3.5 Check status of MATLAB connection (now disconnected)
+# 6.1 Check status of MATLAB connection (now disconnected)
 print(matlab)
