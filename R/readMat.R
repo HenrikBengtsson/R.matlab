@@ -2254,12 +2254,19 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
             className <- "dgCMatrix";
           }
 
-          p <- as.integer(jc)
-          i <- as.integer(ir-1L)
-          Dim <- as.integer(c(nrow,ncol))
+          # The "sparse" values
+          # x = pr
 
+          # (from,to) indices for each column (=> length(p) == ncol+1)
+          p <- as.integer(jc)
+
+          # Row indices
+          i <- as.integer(ir-1L)
           # Special case
           if (length(pr) == 0L && i == 0L) i <- integer(0L)
+
+          # Matrix dimension
+          Dim <- as.integer(c(nrow,ncol))
 
           if (verbose && isVisible(verbose, level=-102)) {
             verbose && cat(verbose, "x=pr:");
@@ -2274,8 +2281,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
           matrix <- new(className, x=pr, p=p, i=i, Dim=Dim);
           matrix <- list(matrix);
           names(matrix) <- arrayName$name;
-        }
-        else if (sparseMatrixClass == "SparseM"
+        } else if (sparseMatrixClass == "SparseM"
                  && .require("SparseM", quietly=TRUE)) {
           if (is.logical(pr)) {
             # Sparse matrices of SparseM cannot hold logical values.
@@ -2288,9 +2294,8 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
                         dimension=as.integer(c(nrow, ncol)));
           matrix <- list(matrix);
           names(matrix) <- arrayName$name;
-        }
-        else {
-          # Create expanded matrix...
+        } else {
+          # Create an expanded plain R matrix...
           if (is.logical(pr)) {
             defValue <- FALSE;
           } else {

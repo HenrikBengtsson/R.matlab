@@ -55,7 +55,7 @@ if (requireNamespace("Matrix")) {
 }
 
 if (requireNamespace("SparseM")) {
-  mat4c <- readMat(pathname, sparseMatrixClass="SparseM");
+  mat4c <- readMat(pathname, sparseMatrixClass="SparseM")
   diff <- sum(abs(as.matrix(mat4c$sparseM) - mat4a$sparseM))
   if (diff > .Machine$double.eps)
     stop("Failed to read MAT v4 sparse matrix by class 'SparseM'.")
@@ -67,17 +67,43 @@ if (requireNamespace("SparseM")) {
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pathname <- file.path(path, "SparseLogicalDouble-v5.mat")
 mat4c <- readMat(pathname, sparseMatrixClass="matrix")
-stopifnot(all(mat4c$L == mat4c$D));
+stopifnot(all(mat4c$L == mat4c$D))
 
 if (requireNamespace("Matrix")) {
   mat4d <- readMat(pathname, sparseMatrixClass="Matrix")
-  stopifnot(all(mat4d$L == mat4d$D));
+  stopifnot(all(mat4d$L == mat4d$D))
 }
 
 if (requireNamespace("SparseM")) {
   mat4e <- readMat(pathname, sparseMatrixClass="SparseM")
-  stopifnot(all(as.matrix(mat4e$L) == as.matrix(mat4e$D)));
+  stopifnot(all(as.matrix(mat4e$L) == as.matrix(mat4e$D)))
 }
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Assert that sparse matrices with all zeros can be read
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pathname <- file.path(path, "SparseMatrix,all_zeros.mat")
+mat0 <- readMat(pathname, sparseMatrixClass="matrix")
+stopifnot(all(mat0$X == 0))
+
+if (requireNamespace("Matrix")) {
+  mat2 <- readMat(pathname, sparseMatrixClass="Matrix")
+  stopifnot(all(dim(mat2$X) == dim(mat0$X)))
+  stopifnot(all(dim(mat2$Y) == dim(mat0$Y)))
+  stopifnot(all(mat2$X == mat0$X))
+#  stopifnot(all(mat2$Y == mat0$Y))
+}
+
+if (requireNamespace("SparseM")) {
+  mat3 <- readMat(pathname, sparseMatrixClass="SparseM")
+  stopifnot(all(dim(mat3$X) == dim(mat0$X)))
+  stopifnot(all(dim(mat3$Y) == dim(mat0$Y)))
+#  stopifnot(all(as.matrix(mat3$X) == mat0$X))
+  stopifnot(all(as.matrix(mat3$Y) == mat2$Y))
+#  stopifnot(all(as.matrix(mat3$Y) == mat0$Y))
+}
+
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -116,7 +142,7 @@ s <- mat$s
 
 # Field names are always in the first dimension
 fields <- dimnames(s)[[1]]
-cat("Field names: ", paste(fields, collapse=", "), "\n", sep="");
+cat("Field names: ", paste(fields, collapse=", "), "\n", sep="")
 
 print(s)
 
