@@ -2253,9 +2253,25 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
             pr <- as.double(pr);
             className <- "dgCMatrix";
           }
-          matrix <- new(className,
-                        x=pr, p=as.integer(jc), i=as.integer(ir-1L),
-                        Dim=as.integer(c(nrow,ncol)));
+
+          p <- as.integer(jc)
+          i <- as.integer(ir-1L)
+          Dim <- as.integer(c(nrow,ncol))
+
+          # Special case
+          if (length(pr) == 0L && i == 0L) i <- integer(0L)
+
+          if (verbose && isVisible(verbose, level=-102)) {
+            verbose && cat(verbose, "x=pr:");
+            verbose && str(verbose, pr);
+            verbose && cat(verbose, "p:");
+            verbose && str(verbose, p);
+            verbose && cat(verbose, "i:");
+            verbose && str(verbose, i);
+            verbose && printf(verbose, "Dim=c(%d,%d)\n", Dim[1L], Dim[2L]);
+          }
+
+          matrix <- new(className, x=pr, p=p, i=i, Dim=Dim);
           matrix <- list(matrix);
           names(matrix) <- arrayName$name;
         }
@@ -2552,6 +2568,10 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
 
 ###########################################################################
 # HISTORY:
+# 2015-01-21
+# o BUG FIX: readMat(..., sparseMatrixClass='Matrix') would give "Error
+#   in validObject(.Object) : invalid class "dgCMatrix" object: lengths
+#   of slots 'i' and 'x' must match" if length(x) == 0 and i == 0.
 # 2014-10-05
 # o BUG FIX: readMat() parsed an mxCELL_CLASS structure in correctly if
 #   one of its names were empty.
