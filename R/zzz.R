@@ -1,3 +1,5 @@
+## covr: skip=all
+
 .onUnload <- function(libpath) {
   # Force finalize() on Matlab objects
   gc();

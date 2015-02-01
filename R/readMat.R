@@ -147,7 +147,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Emulate support for argument 'keep.source' in older versions of R
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  if (getRversion() < "3.0.0") {
+  if (getRversion() < "3.0.0") {  ## covr: skip=8
     # Look up base::parse() once; '::' is very expensive
     base_parse <- base::parse;
     parse <- function(..., keep.source=getOption("keep.source")) {
@@ -216,7 +216,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
   # a warning.  However, for backward compatibility we will still use it
   # for version prior to R v2.7.0.  See also email from Brian Ripley
   # on 2008-04-23 on this problem.
-  if (getRversion() < "2.7.0") {
+  if (getRversion() < "2.7.0") {  ## covr: skip=2
     ASCII[1L] <- eval(parse(text="\"\\000\""));
   }
 
@@ -2584,6 +2584,11 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
 
 ###########################################################################
 # HISTORY:
+# 2015-01-31
+# o BUG FIX: readMat(..., sparseMatrixClass='matrix') did not return
+#   the correct results in all cases.  Added more package tests.
+# o BUG FIX: readMat(..., sparseMatrixClass='SparseM') did not handle
+#   all-zero sparse matrices.  Added package test for this.
 # 2015-01-21
 # o BUG FIX: readMat(..., sparseMatrixClass='Matrix') would give "Error
 #   in validObject(.Object) : invalid class "dgCMatrix" object: lengths
