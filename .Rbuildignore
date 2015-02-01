@@ -1,3 +1,24 @@
+#----------------------------
+# Git and SVN related
+#----------------------------
+^.svn
+^.git
+README[.]md
+
+#----------------------------
+# Travis-CI et al.
+#----------------------------
+^[.]travis[.]yml$
+^travis-tool[.]sh$
+^pkg-build[.]sh$
+^appveyor[.]yml$
+^covr-utils.R$
+^[.]coveralls[.]R$
+
+#----------------------------
+# R related
+#----------------------------
+^cran-comments[.].*$
 ^vignettes/.*[.](pdf|PDF)$
 ^vignettes/.*[.](r|R)$
 ^vignettes/[.]install_extras$
@@ -5,9 +26,6 @@
 ^incl
 ^NAMESPACE,.*[.]txt$
 ^nohup.*$
-^.travis.yml$
-^.svn
-^.git
-^.check
-^.test
-README.md
+^[.]devel
+^[.]test
+^[.]check
