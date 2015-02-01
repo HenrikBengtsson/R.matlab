@@ -1,12 +1,16 @@
 Package: R.matlab
 =================
 
-Version: 3.1.x [2015-01-21]
+Version: 3.1.x [2015-01-31]
 o ROBUSTNESS: Now Matlab$startServer() always overwrites any existing
   'MatlabServer.m' and 'InputStreamByteWrapper.class' to make sure the
   most recent versions are always used.  Previously, existing files
   would be kept, requiring a manual removal in order to use more resent
   versions of these files.
+o BUG FIX: readMat(..., sparseMatrixClass='matrix') did not return
+  the correct results in all cases.  Added more package tests.
+o BUG FIX: readMat(..., sparseMatrixClass='SparseM') did not handle
+  all-zero sparse matrices.  Added package test for this.
 o BUG FIX: readMat(..., sparseMatrixClass='Matrix') would give "Error
   in validObject(.Object) : invalid class "dgCMatrix" object: lengths
   of slots 'i' and 'x' must match", whenever trying to read an sparse

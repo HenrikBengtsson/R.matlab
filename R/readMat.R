@@ -1,4 +1,4 @@
-###########################################################################/**
+##########################################################################/**
 # @RdocDefault readMat
 #
 # @title "Reads a MAT file structure from a connection or a file"
@@ -125,6 +125,8 @@
 #   [4] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version R2012a}, September 2012, \url{http://www.mathworks.com/help/pdf_doc/matlab/matfile_format.pdf}\cr
 #   [5] The MathWorks Inc., \emph{MATLAB - MAT-File Versions}, July 2013, \url{http://www.mathworks.com/help/matlab/import_export/mat-file-versions.html}\cr
 #   [6] Undocumented Matlab, \emph{Improving save performance}, May 2013, \url{http://undocumentedmatlab.com/blog/improving-save-performance/}\cr
+#   [7] J. Gilbert et al., {Sparse Matrices in MATLAB: Design and Implementation}, SIAM J. Matrix Anal. Appl., 1992, \url{https://www.mathworks.com/help/pdf_doc/otherdocs/simax.pdf}
+#   [8] J. Burkardt, \emph{HB Files: Harwell Boeing Sparse Matrix File Format}, Apr 2010, \url{http://people.sc.fsu.edu/~jburkardt/data/hb/hb.html}
 # }
 #
 # @keyword file
@@ -1328,7 +1330,6 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
 
           # The last entry in 'data' is (only) used to specify the size of the
           # matrix, i.e. to infer (m,n).
-
           i <- as.integer(data[,1L]);
           j <- as.integer(data[,2L]);
           s <- data[,3L];
@@ -2203,9 +2204,8 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
           ir <- mat5ReadValues(this)$value;
 
           # Note that the indices for MAT v5 sparse arrays start at 0 (not 1).
-          ir <- ir + 1L;
-          if (any(ir < 1L | ir > nrow)) {
-            stop("MAT v5 file format error: Some elements in row vector 'ir' (sparse arrays) are out of range [1,", nrow, "].");
+          if (any(ir < 0L | ir > nrow-1L)) {
+            stop("MAT v5 file format error: Some elements in row vector 'ir' (sparse arrays) are out of range [0,", nrow-1L, "].");
           }
 
           #  "* jc - points to an integer array of length N+1 that contains..."
@@ -2261,7 +2261,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
           p <- as.integer(jc)
 
           # Row indices
-          i <- as.integer(ir-1L)
+          i <- as.integer(ir)
           # Special case
           if (length(pr) == 0L && i == 0L) i <- integer(0L)
 
@@ -2283,25 +2283,32 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
           names(matrix) <- arrayName$name;
         } else if (sparseMatrixClass == "SparseM"
                  && .require("SparseM", quietly=TRUE)) {
+          # Special case
           if (is.logical(pr)) {
             # Sparse matrices of SparseM cannot hold logical values.
             pr <- as.double(pr);
           } else {
             pr <- as.double(pr);
           }
-          matrix <- new("matrix.csc",
-                        ra=pr, ja=as.integer(ir), ia=as.integer(jc+1L),
-                        dimension=as.integer(c(nrow, ncol)));
+
+          if (length(pr) == 0L) {
+            # Special case
+            matrix <- SparseM::as.matrix.csc(0, nrow=nrow, ncol=ncol)
+          } else {
+            matrix <- new("matrix.csc",
+                          ra=pr, ja=as.integer(ir)+1L, ia=as.integer(jc+1L),
+                          dimension=as.integer(c(nrow, ncol)));
+          }
           matrix <- list(matrix);
           names(matrix) <- arrayName$name;
         } else {
           # Create an expanded plain R matrix...
           if (is.logical(pr)) {
-            defValue <- FALSE;
+            zeroValue <- FALSE;
           } else {
-            defValue <- 0;
+            zeroValue <- 0;
           }
-          matrix <- matrix(defValue, nrow=nrow, ncol=ncol);
+          matrix <- matrix(zeroValue, nrow=nrow, ncol=ncol);
           attr(matrix, "name") <- arrayName$name;
 
           # Now, for each column insert the non-zero elements
@@ -2316,19 +2323,23 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
           #    array without allocating additional storage."
           #
           #    Note: This is *not* how MAT v4 works.
-          for (col in seq(length=length(jc)-1L)) {
-            first <- jc[col];
-            last  <- jc[col+1L]-1L;
-            idx <- seq(from=first, to=last);
-            value <- pr[idx];
-            row <- ir[idx];
-            ok <- is.finite(row);
-            row <- row[ok];
-            value <- value[ok];
-            matrix[row,col] <- value;
-          }
+
+          ## jc[N] = number of non-zero entries
+##          stopifnot(all(jc <= length(pr)))
+##          stopifnot(jc[length(jc)] == length(pr))
+
+          ## Infer column indices 'ic' from 'jc'
+          djc <- diff(jc)
+          cols <- which(djc > 0)
+          each <- djc[cols]
+          ic <- rep(cols, times=each)
+          djc <- cols <- each <- jc <- NULL
+          ## (ir,ic) -> ii matrix indices (column first)
+          ii <- (ic-1L)*nrow + ir + 1L
+          ir <- ic <- NULL
+          matrix[ii] <- pr;
           # Not needed anymore
-          ir <- jc <- first <- last <- idx <- value <- row <- NULL;
+          pr <- NULL;
 
           matrix <- list(matrix);
           names(matrix) <- arrayName$name;

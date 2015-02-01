@@ -92,14 +92,14 @@ if (requireNamespace("Matrix")) {
   stopifnot(all(dim(mat2$X) == dim(mat0$X)))
   stopifnot(all(dim(mat2$Y) == dim(mat0$Y)))
   stopifnot(all(mat2$X == mat0$X))
-#  stopifnot(all(mat2$Y == mat0$Y))
+  stopifnot(all(mat2$Y == mat0$Y))
 }
 
 if (requireNamespace("SparseM")) {
   mat3 <- readMat(pathname, sparseMatrixClass="SparseM")
   stopifnot(all(dim(mat3$X) == dim(mat0$X)))
   stopifnot(all(dim(mat3$Y) == dim(mat0$Y)))
-#  stopifnot(all(as.matrix(mat3$X) == mat0$X))
+  stopifnot(all(as.matrix(mat3$X) == mat0$X))
   stopifnot(all(as.matrix(mat3$Y) == mat2$Y))
 #  stopifnot(all(as.matrix(mat3$Y) == mat0$Y))
 }
