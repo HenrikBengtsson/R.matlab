@@ -79,7 +79,7 @@
 
   \preformatted{
 Henrik Bengtsson (2015). R.matlab: Read and Write MAT files and call MATLAB from
-within R. R package version 3.1.1-1. https://github.com/HenrikBengtsson/R.matlab
+within R. R package version 3.1.1-9000. https://github.com/HenrikBengtsson/R.matlab
 }
 \emph{}
 

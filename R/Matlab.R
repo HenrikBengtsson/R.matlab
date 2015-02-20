@@ -133,8 +133,9 @@
 #   MATLAB v7.7.0.471 (R2008b) [Oct 2008],
 #   MATLAB v7.10.0.499 (R2010a) [Mar 2010],
 #   MATLAB v7.11.0.584 (R2010b) [Sep 2010],
-#   MATLAB v7.14.0.739 (R2012a) [Mar 2012], and
-#   MATLAB v8.2.0.701 (R2013b) [Sep 2013].
+#   MATLAB v7.14.0.739 (R2012a) [Mar 2012],
+#   MATLAB v8.2.0.701 (R2013b) [Sep 2013], and
+#   MATLAB v8.4.0 (R2014b) [Oct 2014].
 #   If you successfully use a different/higher MATLAB version,
 #   please tell us, so we can share it here.
 #
