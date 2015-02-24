@@ -52,8 +52,6 @@
   To install this package do\cr
 
   \code{install.packages("R.matlab")}
-
-  To get the "devel" version, see \url{http://www.braju.com/R/}.
 }
 
 \section{To get started}{
@@ -78,7 +76,7 @@
   Whenever using this package, please cite as\cr
 
   \preformatted{
-Henrik Bengtsson (2015). R.matlab: Read and Write MAT files and call MATLAB from
+Henrik Bengtsson (2015). R.matlab: Read and Write MAT Files and Call MATLAB from
 within R. R package version 3.1.1-9000. https://github.com/HenrikBengtsson/R.matlab
 }
 \emph{}

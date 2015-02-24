@@ -39,8 +39,6 @@
 #   To install this package do\cr
 #
 #   \code{install.packages("R.matlab")}
-#
-#   To get the "devel" version, see \url{http://www.braju.com/R/}.
 # }
 #
 # \section{To get started}{
