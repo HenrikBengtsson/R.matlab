@@ -1281,7 +1281,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
       # The 'name' field
       #
       # "The matrix name consists of 'namlen' ASCII bytes, the last one of which
-      #  must be a null character (’\0’)."
+      #  must be a null character ('\0')."
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       name <- readCharMat(con, header$namlen);
 
