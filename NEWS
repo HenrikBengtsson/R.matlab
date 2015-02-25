@@ -1,7 +1,8 @@
 Package: R.matlab
 =================
 
-Version: 3.1.x [2015-01-31]
+Version: 3.2.0 [2015-02-24]
+o ROBUSTNESS: Package test coverage is 77%.
 o ROBUSTNESS: Now Matlab$startServer() always overwrites any existing
   'MatlabServer.m' and 'InputStreamByteWrapper.class' to make sure the
   most recent versions are always used.  Previously, existing files
