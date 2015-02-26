@@ -1,6 +1,31 @@
 Package: R.matlab
 =================
 
+Version: 3.2.0 [2015-02-24]
+o ROBUSTNESS: Package test coverage is 77%.
+o ROBUSTNESS: Now Matlab$startServer() always overwrites any existing
+  'MatlabServer.m' and 'InputStreamByteWrapper.class' to make sure the
+  most recent versions are always used.  Previously, existing files
+  would be kept, requiring a manual removal in order to use more resent
+  versions of these files.
+o BUG FIX: readMat(..., sparseMatrixClass='matrix') did not return
+  the correct results in all cases.  Added more package tests.
+o BUG FIX: readMat(..., sparseMatrixClass='SparseM') did not handle
+  all-zero sparse matrices.  Added package test for this.
+o BUG FIX: readMat(..., sparseMatrixClass='Matrix') would give "Error
+  in validObject(.Object) : invalid class "dgCMatrix" object: lengths
+  of slots 'i' and 'x' must match", whenever trying to read an sparse
+  matrix with all zeros.  Added package test for this case.
+  Thanks to Abhinav Jauhri at Carnegie Mellon University for reporting
+  on this and donating a test MAT file.
+o BUG FIX: Trying to retrieve a non-existing MATLAB variable using
+  getVariable() would crash the R-to-MATLAB communication if remote=FALSE.
+  Similarly, Trying to evaluate() a MATLAB expression that is invalid or
+  by other means fails would also break the R-to-MATLAB bridge.  The only
+  solution is both cases was to restart R and MATLAB.  Thanks to GitHub
+  user badbye (yalei) for reporting on this.
+
+
 Version: 3.1.1 [2014-10-10]
 o CRAN POLICIES/CLEANUP: Source code file InputStreamByteWrapper.java
   is no longer *installed* with this package.  It is only the

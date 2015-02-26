@@ -1,4 +1,4 @@
-###########################################################################/**
+##########################################################################/**
 # @RdocDefault readMat
 #
 # @title "Reads a MAT file structure from a connection or a file"
@@ -6,7 +6,7 @@
 # \description{
 #  @get "title".
 #  Both the MAT version 4 and MAT version 5 file formats are
-#  supported. The implementation is based on [1-4].
+#  supported. The implementation is based on [1-5].
 #  Note: Do not mix up version numbers for the MATLAB software and
 #  the MATLAB file formats.
 # }
@@ -121,16 +121,25 @@
 # \references{
 #   [1] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version 5}, June 1999.\cr
 #   [2] The MathWorks Inc., \emph{MATLAB - Application Program Interface Guide, version 5}, 1998.\cr
-#   [3] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version 7}, September 2009, \url{http://www.mathworks.com/access/helpdesk/help/pdf_doc/matlab/matfile_format.pdf}\cr
-#   [4] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version R2012a}, September 2012, \url{http://www.mathworks.com/help/pdf_doc/matlab/matfile_format.pdf}\cr
-#   [5] The MathWorks Inc., \emph{MATLAB - MAT-File Versions}, July 2013, \url{http://www.mathworks.com/help/matlab/import_export/mat-file-versions.html}\cr
-#   [6] Undocumented Matlab, \emph{Improving save performance}, May 2013, \url{http://undocumentedmatlab.com/blog/improving-save-performance/}\cr
+#   [3] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version 7}, September 2009.\cr
+#   [4] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version R2012a}, September 2012.\cr
+#   [5] The MathWorks Inc., \emph{MATLAB - MAT-File Versions}, July 2013.
+#       \url{http://www.mathworks.com/help/matlab/import_export/mat-file-versions.html}\cr
+#   [6] Undocumented Matlab, \emph{Improving save performance}, May 2013.
+#       \url{http://undocumentedmatlab.com/blog/improving-save-performance/}\cr
+#   [7] J. Gilbert et al., {Sparse Matrices in MATLAB: Design and Implementation}, SIAM J. Matrix Anal. Appl., 1992.
+#       \url{https://www.mathworks.com/help/pdf_doc/otherdocs/simax.pdf}\cr
+#   [8] J. Burkardt, \emph{HB Files: Harwell Boeing Sparse Matrix File Format}, Apr 2010.
+#       \url{http://people.sc.fsu.edu/~jburkardt/data/hb/hb.html}
 # }
 #
 # @keyword file
 # @keyword IO
 #*/###########################################################################
 setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, drop=c("singletonLists"), sparseMatrixClass=c("Matrix", "SparseM", "matrix"), verbose=FALSE, ...) {
+  # To please R CMD check
+  .require <- require;
+
   # The object 'this' is actually never used, but we might put 'con' or
   # similar in the structure some day, so we keep it for now. /HB 2007-06-10
   this <- list();
@@ -142,7 +151,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Emulate support for argument 'keep.source' in older versions of R
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  if (getRversion() < "3.0.0") {
+  if (getRversion() < "3.0.0") {  ## covr: skip=8
     # Look up base::parse() once; '::' is very expensive
     base_parse <- base::parse;
     parse <- function(..., keep.source=getOption("keep.source")) {
@@ -211,7 +220,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
   # a warning.  However, for backward compatibility we will still use it
   # for version prior to R v2.7.0.  See also email from Brian Ripley
   # on 2008-04-23 on this problem.
-  if (getRversion() < "2.7.0") {
+  if (getRversion() < "2.7.0") {  ## covr: skip=2
     ASCII[1L] <- eval(parse(text="\"\\000\""));
   }
 
@@ -772,9 +781,9 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
   # which in order to avoid lack-of-memory allocation errors will via
   # trial and error find a reasonably sized internal inflation buffer.
   uncompressRcompression <- function(zraw, type=NA_character_, asText=TRUE, sizeRatio=3, delta=0.9, ...) {
-    # TRICK: Hide 'Rcompression' from R CMD check
-    pkgName <- "Rcompression";
-    if (!require(pkgName, character.only=TRUE, quietly=TRUE)) {
+    # To please R CMD check
+    pkgName <- "Rcompression"
+    if (!.require(pkgName, quietly=TRUE)) {
       throw("Cannot read compressed data.  Omegahat.org package 'Rcompression' could not be loaded.  Alternatively, save your data in a non-compressed format by specifying -V6 when calling save() in MATLAB or Octave.");
     }
 
@@ -784,7 +793,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
     }
 
     # Get Rcompression::uncompress() without R CMD check noticing.
-    uncompress <- getFromNamespace("uncompress", ns=pkgName);
+    uncompress <- getFromNamespace("uncompress", ns="Rcompression");
 
     n <- length(zraw);
     unzraw <- NULL;
@@ -1272,7 +1281,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
       # The 'name' field
       #
       # "The matrix name consists of 'namlen' ASCII bytes, the last one of which
-      #  must be a null character (’\0’)."
+      #  must be a null character ('\0')."
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       name <- readCharMat(con, header$namlen);
 
@@ -1325,7 +1334,6 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
 
           # The last entry in 'data' is (only) used to specify the size of the
           # matrix, i.e. to infer (m,n).
-
           i <- as.integer(data[,1L]);
           j <- as.integer(data[,2L]);
           s <- data[,3L];
@@ -1355,13 +1363,13 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
             s <- s[-last];
           }
 
-          if (sparseMatrixClass == "Matrix" && require("Matrix", quietly=TRUE)) {
+          if (sparseMatrixClass == "Matrix" && .require("Matrix", quietly=TRUE)) {
             i <- i-1L;
             j <- j-1L;
             dim <- as.integer(c(n, m));
             data <- new("dgTMatrix", i=i, j=j, x=s, Dim=dim);
             data <- as(data, "dgCMatrix");
-          } else if (sparseMatrixClass == "SparseM" && require("SparseM", quietly=TRUE)) {
+          } else if (sparseMatrixClass == "SparseM" && .require("SparseM", quietly=TRUE)) {
             dim <- as.integer(c(n, m));
             data <- new("matrix.coo", ra=s, ia=i, ja=j, dimension=dim);
           } else {
@@ -2200,9 +2208,8 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
           ir <- mat5ReadValues(this)$value;
 
           # Note that the indices for MAT v5 sparse arrays start at 0 (not 1).
-          ir <- ir + 1L;
-          if (any(ir < 1L | ir > nrow)) {
-            stop("MAT v5 file format error: Some elements in row vector 'ir' (sparse arrays) are out of range [1,", nrow, "].");
+          if (any(ir < 0L | ir > nrow-1L)) {
+            stop("MAT v5 file format error: Some elements in row vector 'ir' (sparse arrays) are out of range [0,", nrow-1L, "].");
           }
 
           #  "* jc - points to an integer array of length N+1 that contains..."
@@ -2242,7 +2249,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
         } # if (nzmax > 0)
 
         if (sparseMatrixClass == "Matrix"
-            && require("Matrix", quietly=TRUE)) {
+            && .require("Matrix", quietly=TRUE)) {
           # Logical or numeric sparse Matrix?
           if (is.logical(pr)) {
             className <- "lgCMatrix";
@@ -2250,34 +2257,62 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
             pr <- as.double(pr);
             className <- "dgCMatrix";
           }
-          matrix <- new(className,
-                        x=pr, p=as.integer(jc), i=as.integer(ir-1L),
-                        Dim=as.integer(c(nrow,ncol)));
+
+          # The "sparse" values
+          # x = pr
+
+          # (from,to) indices for each column (=> length(p) == ncol+1)
+          p <- as.integer(jc)
+
+          # Row indices
+          i <- as.integer(ir)
+          # Special case
+          if (length(pr) == 0L && i == 0L) i <- integer(0L)
+
+          # Matrix dimension
+          Dim <- as.integer(c(nrow,ncol))
+
+          if (verbose && isVisible(verbose, level=-102)) {
+            verbose && cat(verbose, "x=pr:");
+            verbose && str(verbose, pr);
+            verbose && cat(verbose, "p:");
+            verbose && str(verbose, p);
+            verbose && cat(verbose, "i:");
+            verbose && str(verbose, i);
+            verbose && printf(verbose, "Dim=c(%d,%d)\n", Dim[1L], Dim[2L]);
+          }
+
+          matrix <- new(className, x=pr, p=p, i=i, Dim=Dim);
           matrix <- list(matrix);
           names(matrix) <- arrayName$name;
-        }
-        else if (sparseMatrixClass == "SparseM"
-                 && require("SparseM", quietly=TRUE)) {
+        } else if (sparseMatrixClass == "SparseM"
+                 && .require("SparseM", quietly=TRUE)) {
+          # Special case
           if (is.logical(pr)) {
             # Sparse matrices of SparseM cannot hold logical values.
             pr <- as.double(pr);
           } else {
             pr <- as.double(pr);
           }
-          matrix <- new("matrix.csc",
-                        ra=pr, ja=as.integer(ir), ia=as.integer(jc+1L),
-                        dimension=as.integer(c(nrow, ncol)));
+
+          if (length(pr) == 0L) {
+            # Special case
+            matrix <- SparseM::as.matrix.csc(0, nrow=nrow, ncol=ncol)
+          } else {
+            matrix <- new("matrix.csc",
+                          ra=pr, ja=as.integer(ir)+1L, ia=as.integer(jc+1L),
+                          dimension=as.integer(c(nrow, ncol)));
+          }
           matrix <- list(matrix);
           names(matrix) <- arrayName$name;
-        }
-        else {
-          # Create expanded matrix...
+        } else {
+          # Create an expanded plain R matrix...
           if (is.logical(pr)) {
-            defValue <- FALSE;
+            zeroValue <- FALSE;
           } else {
-            defValue <- 0;
+            zeroValue <- 0;
           }
-          matrix <- matrix(defValue, nrow=nrow, ncol=ncol);
+          matrix <- matrix(zeroValue, nrow=nrow, ncol=ncol);
           attr(matrix, "name") <- arrayName$name;
 
           # Now, for each column insert the non-zero elements
@@ -2292,19 +2327,23 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
           #    array without allocating additional storage."
           #
           #    Note: This is *not* how MAT v4 works.
-          for (col in seq(length=length(jc)-1L)) {
-            first <- jc[col];
-            last  <- jc[col+1L]-1L;
-            idx <- seq(from=first, to=last);
-            value <- pr[idx];
-            row <- ir[idx];
-            ok <- is.finite(row);
-            row <- row[ok];
-            value <- value[ok];
-            matrix[row,col] <- value;
-          }
+
+          ## jc[N] = number of non-zero entries
+##          stopifnot(all(jc <= length(pr)))
+##          stopifnot(jc[length(jc)] == length(pr))
+
+          ## Infer column indices 'ic' from 'jc'
+          djc <- diff(jc)
+          cols <- which(djc > 0)
+          each <- djc[cols]
+          ic <- rep(cols, times=each)
+          djc <- cols <- each <- jc <- NULL
+          ## (ir,ic) -> ii matrix indices (column first)
+          ii <- (ic-1L)*nrow + ir + 1L
+          ir <- ic <- NULL
+          matrix[ii] <- pr;
           # Not needed anymore
-          ir <- jc <- first <- last <- idx <- value <- row <- NULL;
+          pr <- NULL;
 
           matrix <- list(matrix);
           names(matrix) <- arrayName$name;
@@ -2549,6 +2588,15 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
 
 ###########################################################################
 # HISTORY:
+# 2015-01-31
+# o BUG FIX: readMat(..., sparseMatrixClass='matrix') did not return
+#   the correct results in all cases.  Added more package tests.
+# o BUG FIX: readMat(..., sparseMatrixClass='SparseM') did not handle
+#   all-zero sparse matrices.  Added package test for this.
+# 2015-01-21
+# o BUG FIX: readMat(..., sparseMatrixClass='Matrix') would give "Error
+#   in validObject(.Object) : invalid class "dgCMatrix" object: lengths
+#   of slots 'i' and 'x' must match" if length(x) == 0 and i == 0.
 # 2014-10-05
 # o BUG FIX: readMat() parsed an mxCELL_CLASS structure in correctly if
 #   one of its names were empty.

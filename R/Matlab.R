@@ -133,8 +133,9 @@
 #   MATLAB v7.7.0.471 (R2008b) [Oct 2008],
 #   MATLAB v7.10.0.499 (R2010a) [Mar 2010],
 #   MATLAB v7.11.0.584 (R2010b) [Sep 2010],
-#   MATLAB v7.14.0.739 (R2012a) [Mar 2012], and
-#   MATLAB v8.2.0.701 (R2013b) [Sep 2013].
+#   MATLAB v7.14.0.739 (R2012a) [Mar 2012],
+#   MATLAB v8.2.0.701 (R2013b) [Sep 2013], and
+#   MATLAB v8.4.0 (R2014b) [Oct 2014].
 #   If you successfully use a different/higher MATLAB version,
 #   please tell us, so we can share it here.
 #
@@ -776,11 +777,7 @@ setMethodS3("startServer", "Matlab", function(this, matlab=getOption("matlab"), 
   for (src in srcs) {
     filename <- basename(src);
     enter(this$.verbose, level=-1, sprintf("MATLAB server file '%s'", filename));
-    if (isFile(filename)) {
-      cat(this$.verbose, level=-1, "Already exists. Skipping.");
-    } else {
-      copyFile(src, filename, verbose=less(this$.verbose, 50));
-    }
+    copyFile(src, filename, overwrite=TRUE, verbose=less(this$.verbose, 50));
 
     # Sanity check
     filename <- Arguments$getReadablePathname(filename, mustExist=TRUE);
@@ -933,6 +930,12 @@ setMethodS3("getVariable", "Matlab", function(this, variables, remote=this$remot
     printf(this$.verbose, level=-1, "Asks the MATLAB server to send variables via the local file system...\n");
 
     writeCommand(this, "send");
+    result <- Java$readInt(this$con);
+    if (result == -1L) {
+      lasterr <- Java$readUTF(this$con);
+      Java$writeByte(this$con, 0);  # Send ACK back to Matlab
+      throw("MatlabException: ", lasterr);
+    }
     filename <- Java$readUTF(this$con);
     printf(this$.verbose, level=-1, "Reading variables from the local MAT file '%s'...\n", filename);
 
@@ -949,6 +952,7 @@ setMethodS3("getVariable", "Matlab", function(this, variables, remote=this$remot
 
     if (maxLength == -1) {
       lasterr <- Java$readUTF(this$con);
+      Java$writeByte(this$con, 0);  # Send ACK back to Matlab
       throw("MatlabException: ", lasterr);
     }
     data <- readMat(this$con, maxLength=maxLength);
@@ -1177,6 +1181,13 @@ setMethodS3("setVerbose", "Matlab", function(this, threshold=0, ...) {
 
 ############################################################################
 # HISTORY:
+# 2015-01-08
+# o BUG FIX: Matlab$getVariable() for a non-existing variable would
+#   crash the R-to-Matlab communication if remote=FALSE.
+# 2014-12-17
+# o ROBUSTNESS: Now Matlab$startServer() always overwrites any existing
+#   'MatlabServer.m' and 'InputStreamByteWrapper.class' to make sure the
+#   most recent versions are used.
 # 2014-10-10
 # o CRAN POLICIES/CLEANUP: Matlab$startServer() no longer copies the
 #   InputStreamByteWrapper.java, only the *.class file, which was moved

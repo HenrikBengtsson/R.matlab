@@ -53,7 +53,7 @@
 \% [3] http://www.mathworks.com/access/helpdesk/help/toolbox/
 \%                                              modelsim/a1057689278b4.html
 \%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%
-disp('Running MatlabServer v3.0.2');
+disp('Running MatlabServer v3.1.2');
 
 \%  addpath R/R_LIBS/linux/library/R.matlab/misc/
 
@@ -209,6 +209,7 @@ while (state >= 0),
       fprintf(1, 'Sent byte: \%d\n', 0);
       flush(os);
     catch
+      lasterr = sprintf('Failed to evaluate expression ''\%s''.', bfr);
       fprintf(1, 'EvaluationException: \%s\n', lasterr);
       writeByte(os, -1);
       fprintf(1, 'Sent byte: \%d\n', -1);
@@ -243,6 +244,7 @@ while (state >= 0),
     else
       disp(expr);
       eval(expr);
+      writeInt(os, 0); \% Here anything but -1 means "success"
       writeUTF(os, tmpname);
     end
    
@@ -278,7 +280,7 @@ while (state >= 0),
       file = java.io.File(tmpname);
       maxLength = length(file);
       clear file;
-      writeInt(os, maxLength);
+      writeInt(os, maxLength); \% Here anything but -1 means "success"
       fprintf(1, 'Send int: \%d (maxLength)\n', maxLength);
       fid = fopen(tmpname, 'r');
       count = 1;
@@ -369,6 +371,9 @@ close(server);
 
 \%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%
 \% HISTORY:
+\% 2015-01-08 [v3.1.2]
+\% o BUG FIX: Matlab$getVariable() for a non-existing variable would
+\%   crash the R-to-Matlab communication if remote=FALSE.
 \% 2014-06-23 [v3.0.2]
 \% o ROBUSTNESS: Variables 'lasterr' and 'variables' are now always
 \%   defined. Potential bug spotted by Steven Jaffe at Morgan Stanley.

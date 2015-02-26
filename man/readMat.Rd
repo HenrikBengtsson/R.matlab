@@ -15,7 +15,7 @@
 \description{
  Reads a MAT file structure from a connection or a file.
  Both the MAT version 4 and MAT version 5 file formats are
- supported. The implementation is based on [1-4].
+ supported. The implementation is based on [1-5].
  Note: Do not mix up version numbers for the MATLAB software and
  the MATLAB file formats.
 }
@@ -138,10 +138,16 @@ print(data)
 \references{
   [1] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version 5}, June 1999.\cr
   [2] The MathWorks Inc., \emph{MATLAB - Application Program Interface Guide, version 5}, 1998.\cr
-  [3] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version 7}, September 2009, \url{http://www.mathworks.com/access/helpdesk/help/pdf_doc/matlab/matfile_format.pdf}\cr
-  [4] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version R2012a}, September 2012, \url{http://www.mathworks.com/help/pdf_doc/matlab/matfile_format.pdf}\cr
-  [5] The MathWorks Inc., \emph{MATLAB - MAT-File Versions}, July 2013, \url{http://www.mathworks.com/help/matlab/import_export/mat-file-versions.html}\cr
-  [6] Undocumented Matlab, \emph{Improving save performance}, May 2013, \url{http://undocumentedmatlab.com/blog/improving-save-performance/}\cr
+  [3] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version 7}, September 2009.\cr
+  [4] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version R2012a}, September 2012.\cr
+  [5] The MathWorks Inc., \emph{MATLAB - MAT-File Versions}, July 2013.
+      \url{http://www.mathworks.com/help/matlab/import_export/mat-file-versions.html}\cr
+  [6] Undocumented Matlab, \emph{Improving save performance}, May 2013.
+      \url{http://undocumentedmatlab.com/blog/improving-save-performance/}\cr
+  [7] J. Gilbert et al., {Sparse Matrices in MATLAB: Design and Implementation}, SIAM J. Matrix Anal. Appl., 1992.
+      \url{https://www.mathworks.com/help/pdf_doc/otherdocs/simax.pdf}\cr
+  [8] J. Burkardt, \emph{HB Files: Harwell Boeing Sparse Matrix File Format}, Apr 2010.
+      \url{http://people.sc.fsu.edu/~jburkardt/data/hb/hb.html}
 }
 
 

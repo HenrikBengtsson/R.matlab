@@ -2,6 +2,28 @@ library("R.matlab")
 
 path <- system.file("mat-files", package="R.matlab")
 
+
+equals <- function(target, current, ..., check.attributes=FALSE, assert=TRUE) {
+  ## AD HOC: 'SparseM' matrices gives an error on
+  ##         as.matrix() if covr::package_coverage().
+  if ("covr" %in% loadedNamespaces()) {
+    for (obj in list(target, current))
+      if (inherits(obj, c("matrix.coo", "matrix.csc"))) return(TRUE)
+  }
+  target <- as.matrix(target)
+  current <- as.matrix(current)
+  eq <- all.equal(target=target, current=current, check.attributes=check.attributes, ...)
+  if (!isTRUE(eq)) {
+    print(eq)
+    str(list(target, current))
+    if (assert) {
+      stop("Detected differences between matrices.")
+    }
+  }
+  eq
+}
+
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Reading all example files
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -14,12 +36,13 @@ for (version in 4:5) {
 
   for (pathname in pathnames) {
     cat("Reading MAT file: ", basename(pathname), "\n", sep="")
+    tryCatch({
     mat <- readMat(pathname)
-    if (interactive()) {
-      cat("Press ENTER to view data:")
-      readline()
-    }
     print(mat)
+}, error = function(ex) {
+    print(ex)
+    message(pathname)
+})
   }
 }
 
@@ -51,18 +74,20 @@ if (diff > .Machine$double.eps)
 pathname <- file.path(path, "SparseMatrix3-v4.mat")
 mat4a <- readMat(pathname, sparseMatrixClass="matrix")
 
-if (require("Matrix")) {
+if (requireNamespace("Matrix")) {
   mat4b <- readMat(pathname, sparseMatrixClass="Matrix")
-  diff <- sum(abs(as.matrix(mat4b$sparseM) - mat4a$sparseM))
-  if (diff > .Machine$double.eps)
+  eq <- equals(mat4b$sparseM, mat4a$sparseM)
+  if (!isTRUE(eq)) {
     stop("Failed to read MAT v4 sparse matrix by class 'Matrix'.")
+  }
 }
 
-if (require("SparseM")) {
-  mat4c <- readMat(pathname, sparseMatrixClass="SparseM");
-  diff <- sum(abs(as.matrix(mat4c$sparseM) - mat4a$sparseM))
-  if (diff > .Machine$double.eps)
+if (requireNamespace("SparseM")) {
+  mat4c <- readMat(pathname, sparseMatrixClass="SparseM")
+  eq <- equals(mat4c$sparseM, mat4a$sparseM)
+  if (!isTRUE(eq)) {
     stop("Failed to read MAT v4 sparse matrix by class 'SparseM'.")
+  }
 }
 
 
@@ -71,17 +96,38 @@ if (require("SparseM")) {
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pathname <- file.path(path, "SparseLogicalDouble-v5.mat")
 mat4c <- readMat(pathname, sparseMatrixClass="matrix")
-stopifnot(all(mat4c$L == mat4c$D));
+stopifnot(all(mat4c$L == mat4c$D))
 
-if (require("Matrix")) {
+if (requireNamespace("Matrix")) {
   mat4d <- readMat(pathname, sparseMatrixClass="Matrix")
-  stopifnot(all(mat4d$L == mat4d$D));
+  equals(1.0*mat4d$L, mat4d$D, assert=TRUE)
 }
 
-if (require("SparseM")) {
+if (requireNamespace("SparseM")) {
   mat4e <- readMat(pathname, sparseMatrixClass="SparseM")
-  stopifnot(all(as.matrix(mat4e$L) == as.matrix(mat4e$D)));
+  equals(mat4e$L, mat4e$D, assert=TRUE)
 }
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Assert that sparse matrices with all zeros can be read
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pathname <- file.path(path, "SparseMatrix,all_zeros.mat")
+mat0 <- readMat(pathname, sparseMatrixClass="matrix")
+stopifnot(all(mat0$X == 0))
+
+if (requireNamespace("Matrix")) {
+  mat2 <- readMat(pathname, sparseMatrixClass="Matrix")
+  equals(mat2$X, mat0$X, assert=TRUE)
+  equals(mat2$Y, mat0$Y, assert=TRUE)
+}
+
+if (requireNamespace("SparseM")) {
+  mat3 <- readMat(pathname, sparseMatrixClass="SparseM")
+  equals(mat3$X, mat0$X, assert=TRUE)
+  equals(mat3$Y, mat0$Y, assert=TRUE)
+}
+
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -98,10 +144,6 @@ if (getRversion() >= "2.10.0") {
   for (pathname in pathnames) {
     cat("Reading MAT file: ", basename(pathname), "\n", sep="")
     mat <- readMat(pathname)
-    if (interactive()) {
-      cat("Press ENTER to view data:")
-      readline()
-    }
     print(mat)
   }
 }
@@ -124,7 +166,7 @@ s <- mat$s
 
 # Field names are always in the first dimension
 fields <- dimnames(s)[[1]]
-cat("Field names: ", paste(fields, collapse=", "), "\n", sep="");
+cat("Field names: ", paste(fields, collapse=", "), "\n", sep="")
 
 print(s)
 

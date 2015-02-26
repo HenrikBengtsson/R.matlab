@@ -200,8 +200,9 @@ Trying to open server socket (port 9999)...done.
   MATLAB v7.7.0.471 (R2008b) [Oct 2008],
   MATLAB v7.10.0.499 (R2010a) [Mar 2010],
   MATLAB v7.11.0.584 (R2010b) [Sep 2010],
-  MATLAB v7.14.0.739 (R2012a) [Mar 2012], and
-  MATLAB v8.2.0.701 (R2013b) [Sep 2013].
+  MATLAB v7.14.0.739 (R2012a) [Mar 2012],
+  MATLAB v8.2.0.701 (R2013b) [Sep 2013], and
+  MATLAB v8.4.0 (R2014b) [Oct 2014].
   If you successfully use a different/higher MATLAB version,
   please tell us, so we can share it here.
 
@@ -358,13 +359,47 @@ print(res)
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# 5.  Done:  close the MATLAB client
+# 5. Exception handling
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# 5.1 Try to get non-existing MATLAB variable
+#     (will result in an informative error)
+tryCatch({
+  data <- getVariable(matlab, "unknown")
+  cat("Received variables:\n")
+  str(data)
+}, error = function(ex) {
+  print(ex)
+})
+# Confirm that things still work
+data <- getVariable(matlab, "A")
+cat("Received variables:\n")
+str(data)
+
+
+# 5.2 Try to evaluate a MATLAB expression that fails
+#     (will result in an informative error)
+tryCatch({
+  res <- evaluate(matlab, "C=1+unknown;")
+  res
+}, error = function(ex) {
+  print(ex)
+})
+# Confirm that things still work
+res <- evaluate(matlab, "C=1+2;")
+print(res)
+data <- getVariable(matlab, "C")
+cat("Received variables:\n")
+str(data)
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# 6.  Done:  close the MATLAB client
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # When done, close the MATLAB client, which will also shutdown
 # the MATLAB server and the connection to it.
 close(matlab)
 
-# 3.5 Check status of MATLAB connection (now disconnected)
+# 6.1 Check status of MATLAB connection (now disconnected)
 print(matlab)
 }}
 
