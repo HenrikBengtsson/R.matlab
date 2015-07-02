@@ -1,6 +1,10 @@
 Package: R.matlab
 =================
 
+Version: 3.2.0-9000 [2015-07-01]
+o Explicit import of 'methods' and 'utils' functions.
+
+
 Version: 3.2.0 [2015-02-24]
 o ROBUSTNESS: Package test coverage is 77%.
 o ROBUSTNESS: Now Matlab$startServer() always overwrites any existing

@@ -3,6 +3,7 @@ Version: 3.2.0-9000
 Depends:
   R (>= 2.5.0)
 Imports:
+  methods,
   utils,
   R.methodsS3 (>= 1.7.0),
   R.oo (>= 1.19.0),

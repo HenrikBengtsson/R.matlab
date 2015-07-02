@@ -546,7 +546,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
     utfs <- grep("UTF", iconvlist(), value=TRUE);
     ## The convertUTF{16,32} routines below work in big-endian, so
     ## look for UTF-16BE or UTF16BE, etc..
-    utf16 <- utils::head(grep("UTF-?16BE", utfs, value=TRUE), n=1L);
+    utf16 <- head(grep("UTF-?16BE", utfs, value=TRUE), n=1L);
     if (length(utf16) > 0L) {
       convertUTF16 <- function(ary) {
         ary16 <- paste(intToChar(c(sapply(ary, FUN=function(x) {
@@ -555,7 +555,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
         iconv(ary16, from=utf16, to="UTF-8");
       }
     }
-    utf32 <- utils::head(grep("UTF-?32BE", utfs, value=TRUE), n=1L);
+    utf32 <- head(grep("UTF-?32BE", utfs, value=TRUE), n=1L);
     if (length(utf32) > 0L) {
       convertUTF32 <- function(ary) {
         ary32 <- paste(intToChar(c(sapply(ary, FUN=function(x) {
