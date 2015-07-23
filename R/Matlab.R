@@ -583,8 +583,8 @@ setMethodS3("writeCommand", "Matlab", function(this, cmd, ...) {
   getCommandByte <- function(this, cmd) {
     commands <- c("quit", "", "eval", "send", "receive", "send-remote", "receive-remote", "echo");
     if (!is.element(cmd, commands))
-      return(as.integer(0));
-    as.integer(which(commands == cmd) - 2);
+      return(0L);
+    as.integer(which(commands == cmd) - 2L);
   }
 
   b <- getCommandByte(this, cmd);
@@ -1097,12 +1097,12 @@ setMethodS3("setFunction", "Matlab", function(this, code, name=NULL, collapse="\
   }
 
   if (is.null(name)) {
-    nameStart = as.integer(pos + attr(pos, "match.length")-1);
+    nameStart = as.integer(pos + attr(pos, "match.length") - 1L);
     pos <- regexpr("^[ \t\n\r\v]*function[^=]*=[^( \t\n\r\v]*[( \t\n\r\v]", code);
     if (pos == -1) {
       throw("The code does not contain a open parentesis ('(') or a whitespace that defines the end of the function name: ", substring(code, 1, 20), "...");
     }
-    nameStop = as.integer(pos + attr(pos, "match.length")-2);
+    nameStop = as.integer(pos + attr(pos, "match.length") - 2L);
     name <- substring(code, nameStart, nameStop);
   }
 

@@ -160,9 +160,7 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
   # a warning.  However, for backward compatibility we will still use it
   # for version prior to R v2.7.0.  See also email from Brian Ripley
   # on 2008-04-23 on this problem.
-  if (compareVersion(as.character(getRversion()), "2.7.0") < 0) {
-    ASCII[1] <- eval(parse(text="\"\\000\""));
-  }
+  if (getRversion() < "2.7.0") ASCII[1] <- eval(parse(text="\"\\000\""))
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -196,7 +194,7 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
       nbrOfBytes <- writeBinMat(con, as.integer(bfr), size=1);
 
       # Write version
-      version <- as.integer(256);
+      version <- 256L;
       nbrOfBytes <- nbrOfBytes + writeBinMat(con, version, size=2, endian="little");
 
       # Write endian information
@@ -230,7 +228,7 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
 
         nbrOfBytesTag <- nbrOfBytes;
 
-        nbrOfBytes <- as.integer(0);
+        nbrOfBytes <- 0L;
   	if (compressed) {
   	  bfr <- nbrOfBytesTag * 256^2 + type;
   	  nbrOfBytes <- nbrOfBytes + writeBinMat(con, as.integer(bfr), size=4, endian="little");
@@ -253,7 +251,7 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
       writePadding <- function(padding, ...) {
         if (padding > 0) {
 ###          verbose && enter(verbose, "Padding with ", padding, " zeros");
-          writeBinMat(con, as.integer(rep(0,padding)), size=1);
+          writeBinMat(con, rep(0L, times=padding), size=1);
 ###          verbose && exit(verbose);
         }
         padding;
@@ -279,7 +277,7 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
   	nbrOfBytes <- nbrOfBytes + writeBinMat(con, as.integer(bfr), size=4, endian="little");
 
   	# Undefined
-  	nbrOfBytes <- nbrOfBytes + writeBinMat(con, as.integer(0), size=4);
+  	nbrOfBytes <- nbrOfBytes + writeBinMat(con, 0L, size=4);
 
   	verbose && exit(verbose);
 
@@ -359,13 +357,13 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
 
   	if (is.integer(values)) {
   	  dataType <- "miINT32"
-  	  sizeOf <- 4;
+  	  sizeOf <- 4L;
   	} else if (is.double(values)) {
   	  dataType <- "miDOUBLE"
-  	  sizeOf <- 8;
+  	  sizeOf <- 8L;
   	} else {
   	  dataType <- "miDOUBLE";
-  	  sizeOf <- 8;
+  	  sizeOf <- 8L;
         }
 
   	values <- as.vector(values);
@@ -401,7 +399,7 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
   	values <- charToInt(unlist(strsplit(values, "")));
   	values <- as.vector(values);
 
-  	sizeOf <- 2;
+  	sizeOf <- 2L;
   	nbrOfBytes <- length(values) * sizeOf;
 
         # Pad bytes?
@@ -492,16 +490,16 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
 
   	if (is.integer(data)) {
   	  class <- "mxINT32_CLASS"
-  	  sizeOf <- 4;
+  	  sizeOf <- 4L;
   	} else if (is.double(data)) {
   	  class <- "mxDOUBLE_CLASS"
-  	  sizeOf <- 8;
+  	  sizeOf <- 8L;
   	} else if (is.complex(data)) {
   	  class <- "mxDOUBLE_CLASS"
-  	  sizeOf <- 8;
+  	  sizeOf <- 8L;
   	} else {
   	  class <- "mxDOUBLE_CLASS";
-  	  sizeOf <- 8;
+  	  sizeOf <- 8L;
   	}
   	complex <- is.complex(data);
   	global  <- FALSE;
@@ -612,26 +610,26 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
 
       if (is.integer(value)) {
   	dataType <- "miINT32";
-  	sizeOf <- 4;
+  	sizeOf <- 4L;
       }
 
       if (is.double(value)) {
   	dataType <- "miDOUBLE";
-  	sizeOf <- 8;
+  	sizeOf <- 8L;
       }
 
       if (is.complex(value)) {
-  	sizeOf <- 2*8;
+  	sizeOf <- 2L*8L;
       }
 
       if (is.character(value)) {
   	dataType <- "miMATRIX";
-  	sizeOf <- 1;
+  	sizeOf <- 1L;
       }
 
       if (is.list(value)) {
   	dataType <- "miMATRIX";
-  	sizeOf <- 1;
+  	sizeOf <- 1L;
       }
 
       if (!is.null(dim(value))) {
@@ -646,7 +644,7 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
       # the total. For all other MAT-file data types, the value of the
       # Number of Bytes field does *not* include padding bytes."
       if (dataType == "miMATRIX") {
-  	padding <- 8 - ((nbrOfBytes-1) %% 8 + 1);
+  	padding <- 8L - ((nbrOfBytes-1) %% 8 + 1L);
   	if (padding < 0) {
           stop("Internal error: Negative padding: ", padding);
         }
