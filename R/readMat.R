@@ -2017,7 +2017,6 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
 
 
     mat5ReadMiMATRIX <- function(this, tag) {
-      # browser()
       if (verbose) {
         enter(verbose, level=-70, "Reading miMATRIX");
         on.exit(exit(verbose));
