@@ -129,6 +129,24 @@ if (requireNamespace("SparseM")) {
 }
 
 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Assert that empty sparse matrices can be read
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pathname <- file.path(path, "SparseMatrix,empty.mat")
+mat0 <- readMat(pathname, sparseMatrixClass="matrix")
+stopifnot(all(mat0$cyclicalEdges == 0))
+
+if (requireNamespace("Matrix")) {
+  mat2 <- readMat(pathname, sparseMatrixClass="Matrix")
+  equals(mat2$cyclicalEdges, mat0$cyclicalEdges, assert=TRUE)
+}
+
+if (requireNamespace("SparseM")) {
+  ## FIX ME: This gives an error
+#  mat3 <- readMat(pathname, sparseMatrixClass="SparseM")
+#  equals(mat3$cyclicalEdges, mat0$cyclicalEdges, assert=TRUE)
+}
+
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Assert that compressed files can be read

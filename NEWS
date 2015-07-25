@@ -1,8 +1,11 @@
 Package: R.matlab
 =================
 
-Version: 3.2.0-9000 [2015-07-01]
+Version: 3.2.0-9000 [2015-07-25]
 o Explicit import of 'methods' and 'utils' functions.
+o BUG FIX: readMat() gave an error when reading empty sparse matrices.
+  Thanks to Gregory Jefferis at University of Cambridge for the bug
+  report and bug fix.
 
 
 Version: 3.2.0 [2015-02-24]
