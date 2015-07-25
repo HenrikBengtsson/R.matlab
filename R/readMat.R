@@ -2208,7 +2208,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
           ir <- mat5ReadValues(this)$value;
 
           # Note that the indices for MAT v5 sparse arrays start at 0 (not 1).
-          if (any(ir < 0L | ir > nrow-1L)) {
+          if (any(ir < 0L) || (nrow>0 && any(ir > nrow-1L))) {
             stop("MAT v5 file format error: Some elements in row vector 'ir' (sparse arrays) are out of range [0,", nrow-1L, "].");
           }
 
