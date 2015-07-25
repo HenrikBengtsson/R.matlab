@@ -142,9 +142,8 @@ if (requireNamespace("Matrix")) {
 }
 
 if (requireNamespace("SparseM")) {
-  ## FIX ME: This gives an error
-#  mat3 <- readMat(pathname, sparseMatrixClass="SparseM")
-#  equals(mat3$cyclicalEdges, mat0$cyclicalEdges, assert=TRUE)
+  mat3 <- readMat(pathname, sparseMatrixClass="SparseM")
+  equals(mat3$cyclicalEdges, mat0$cyclicalEdges, assert=TRUE)
 }
 
 
