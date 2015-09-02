@@ -362,6 +362,7 @@ setMethodS3("setOption", "Matlab", function(this, ...) {
 # \arguments{
 #  \item{trials}{The number of trials before giving up.}
 #  \item{interval}{The interval in seconds between trials.}
+#  \item{timeout}{The timeout for the socket connection}
 #  \item{...}{Not used.}
 # }
 #
@@ -376,7 +377,7 @@ setMethodS3("setOption", "Matlab", function(this, ...) {
 #   @seeclass
 # }
 #*/###########################################################################
-setMethodS3("open", "Matlab", function(con, trials=30, interval=1, ...) {
+setMethodS3("open", "Matlab", function(con, trials=30, interval=1, timeout = getOption("timeout"), ...) {
   # To please R CMD check.
   # close() is already a generic function in 'base'.
   this <- con;
@@ -391,7 +392,7 @@ setMethodS3("open", "Matlab", function(con, trials=30, interval=1, ...) {
     tryCatch({
       printf(this$.verbose, level=-1, "Try #%d.\n", as.integer(count));
       suppressWarnings({
-        this$con <- socketConnection(host=this$host, port=as.integer(this$port), open="a+b", blocking=TRUE);
+        this$con <- socketConnection(host=this$host, port=as.integer(this$port), open="a+b", blocking=TRUE, timeout = timeout);
       });
       ok <- TRUE;
       # It is not possible to return() from tryCatch()! /HB 050224
@@ -581,7 +582,7 @@ setMethodS3("close", "Matlab", function(con, ...) {
 #*/###########################################################################
 setMethodS3("writeCommand", "Matlab", function(this, cmd, ...) {
   getCommandByte <- function(this, cmd) {
-    commands <- c("quit", "", "eval", "send", "receive", "send-remote", "receive-remote", "echo");
+    commands <- c("quit", "", "eval", "send", "receive", "send-remote", "receive-remote", "echo", "evalc");
     if (!is.element(cmd, commands))
       return(as.integer(0));
     as.integer(which(commands == cmd) - 2);
@@ -656,7 +657,7 @@ setMethodS3("readResult", "Matlab", function(this, ...) {
       if (count <= maxTries) {
         Sys.sleep(interval);
       } else {
-        throw("Excepted an 'answer' from MATLAB, but kept receiving nothing. Tried ", maxTries, " times at intervals of approximately ", interval, " seconds. To change this, see ?setOption.Matlab.");
+        throw("Expected an 'answer' from MATLAB, but kept receiving nothing. Tried ", maxTries, " times at intervals of approximately ", interval, " seconds. To change this, see ?setOption.Matlab.");
       }
     }
   }
@@ -833,10 +834,10 @@ setMethodS3("startServer", "Matlab", function(this, matlab=getOption("matlab"), 
 #  Evaluates one or several MATLAB expressions on the MATLAB server. This
 #  method will not return until the MATLAB server is done.
 #
-#  If an error occured in MATLAB an exception will be thrown. This expection
+#  If an error occurred in MATLAB an exception will be thrown. This exception
 #  can be caught by \code{\link[base:conditions]{tryCatch}()}.
 #
-#  If you receieve error message \emph{Excepted an 'answer' from MATLAB,
+#  If you receive error message \emph{Expected an 'answer' from MATLAB,
 #  but kept receiving nothing}, see "Troubleshooting" under ?R.matlab.
 # }
 #
@@ -878,6 +879,58 @@ setMethodS3("evaluate", "Matlab", function(this, ..., collapse=";") {
 
 
 
+###########################################################################/**
+# @RdocMethod evaluatec
+#
+# @title "Evaluates a MATLAB expression and returns result"
+#
+# \description{
+#  Evaluates one or several MATLAB expressions on the MATLAB server. This
+#  method will not return until the MATLAB server is done.
+#
+#  If an error occurred in MATLAB an exception will be thrown. This exception
+#  can be caught by \code{\link[base:conditions]{tryCatch}()}.
+#
+#  If you receive error message \emph{Expected an 'answer' from MATLAB,
+#  but kept receiving nothing}, see "Troubleshooting" under ?R.matlab.
+# }
+#
+# @synopsis
+#
+# \arguments{
+#   \item{...}{One or several string with MATLAB expressions. If several
+#     strings are given they will be concatenated with the separator
+#     \code{collapse}.}
+#   \item{collapse}{Separator to be used to concatenate expressions.}
+# }
+#
+# \value{
+#   Returns (invisibly) the result as a character string if evaluation was successful.
+#   An exception might also be thrown.
+# }
+#
+# @author
+#
+# \seealso{
+#   @seeclass
+# }
+#*/###########################################################################
+setMethodS3("evaluatec", "Matlab", function(this, ..., collapse=";") {
+  expr <- paste(..., collapse=collapse);
+
+  printf(this$.verbose, level=0, "Sending expression on the MATLAB server to be evaluated...: '%s'\n", expr);
+
+  writeCommand(this, "evalc");
+  Java$writeUTF(this$con, expr);
+
+  res <- readResult(this);
+
+  resStr <- if (is.null(res)) 0 else res;
+  printf(this$.verbose, level=0, "Evaluated expression on the MATLAB server with return code %d.\n", as.integer(resStr));
+
+  evaluationString <- Java$readUTF(this$con);
+  invisible(evaluationString);
+})
 
 
 

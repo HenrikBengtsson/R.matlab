@@ -151,7 +151,7 @@ os = java.io.DataOutputStream(getOutputStream(clientSocket));
 % The MATLAB server state machine
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 % Commands
-commands = {'eval', 'send', 'receive', 'send-remote', 'receive-remote', 'echo'};
+commands = {'eval', 'send', 'receive', 'send-remote', 'receive-remote', 'echo', 'evalc'};
 
 lasterr = [];
 variables = [];
@@ -168,6 +168,30 @@ while (state >= 0),
       state = cmd;
     end
     
+  %-------------------
+  % 'evalc'
+  %-------------------
+  elseif (state == strmatch('evalc', commands, 'exact'))
+    bfr = char(readUTF(is));
+    fprintf(1, '"evalc" string: "%s"\n', bfr);
+    try 
+      result = evalc(bfr); 
+      writeByte(os, 0);
+      fprintf(1, 'Sent byte: %d\n', 0);
+      writeUTF(os, result);
+      fprintf(1, 'Sent UTF: %s\n', result);
+      flush(os);
+    catch
+      lasterr = sprintf('Failed to evaluate expression ''%s''.', bfr);
+      fprintf(1, 'EvaluationException: %s\n', lasterr);
+      writeByte(os, -1);
+      fprintf(1, 'Sent byte: %d\n', -1);
+      writeUTF(os, lasterr);
+      fprintf(1, 'Sent UTF: %s\n', lasterr);
+      flush(os);
+    end
+    flush(os);
+    state = 0;
   %-------------------
   % 'eval'
   %-------------------
