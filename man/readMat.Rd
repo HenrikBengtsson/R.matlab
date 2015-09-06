@@ -100,10 +100,11 @@
 }
 
 \section{About MAT files saved in MATLAB using '-v7.3'}{
- This function does not support MAT files saved in MATLAB as
- \code{save('foo.mat', '-v7.3')}.
- Such MAT files are of a completely different file format [5,6]
- compared to those saved with, say, \code{'-v7'}.
+ MAT v7.3 files, saved using for instance \code{save('foo.mat', '-v7.3')},
+ are stored in the Hierarchical Data Format (HDF5) [5,6], which is a
+ completely different file format not supported by this function/package.
+ However, there exist other R package that can read HDF5 files, e.g.
+ CRAN package \pkg{h5} and Bioconductor package \pkg{rhdf5}.
 }
 
 \section{Reading MAT file structures input streams}{
