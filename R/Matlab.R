@@ -854,9 +854,8 @@ setMethodS3("startServer", "Matlab", function(this, matlab=getOption("matlab"), 
 #
 # \value{
 #   If \code{caputure} is @TRUE, then a @character string of MATLAB output
-#   is returned, where the MATLAB status code is returned as
-#   attribute \code{status}.
-#   If \code{caputure} is @FALSE, then the MATLAB status code as is.
+#   is returned, otherwise the MATLAB status code.
+#   The MATLAB status code is also/always returned as attribute \code{status}.
 # }
 #
 # @author
@@ -886,6 +885,8 @@ setMethodS3("evaluate", "Matlab", function(this, ..., collapse=";", capture=FALS
     statusT <- Java$readUTF(this$con)
     attr(statusT, "status") <- status
     status <- statusT
+  } else {
+    attr(status, "status") <- status
   }
 
   invisible(status)
