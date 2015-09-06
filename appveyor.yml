@@ -25,14 +25,15 @@ install:
 # Adapt as necessary starting from here
 
 build_script:
+  - echo Current directory=%CD%
 
 
 
 
 
- - travis-tool.sh install_r R.methodsS3 R.oo R.utils
+  - travis-tool.sh install_r R.methodsS3 R.oo R.utils
 
- - travis-tool.sh install_r Matrix SparseM
+  - travis-tool.sh install_r Matrix SparseM
 
 test_script:
   - travis-tool.sh run_tests
