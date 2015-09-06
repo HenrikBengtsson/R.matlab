@@ -17,15 +17,15 @@
  Evaluates one or several MATLAB expressions on the MATLAB server. This
  method will not return until the MATLAB server is done.
 
- If an error occured in MATLAB an exception will be thrown. This expection
- can be caught by \code{\link[base:conditions]{tryCatch}()}.
+ If an error occurred in MATLAB an exception will be thrown. This
+ exception can be caught by \code{\link[base:conditions]{tryCatch}()}.
 
- If you receieve error message \emph{Excepted an 'answer' from MATLAB,
+ If you receive error message \emph{Expected an 'answer' from MATLAB,
  but kept receiving nothing}, see "Troubleshooting" under ?R.matlab.
 }
 
 \usage{
-\method{evaluate}{Matlab}(this, ..., collapse=";")
+\method{evaluate}{Matlab}(this, ..., collapse=";", capture=FALSE)
 }
 
 \arguments{
@@ -33,11 +33,15 @@
     strings are given they will be concatenated with the separator
     \code{collapse}.}
   \item{collapse}{Separator to be used to concatenate expressions.}
+  \item{capture}{If \code{\link[base:logical]{TRUE}}, MATLAB output is captured into a string,
+    otherwise not.}
 }
 
 \value{
-  Returns (invisibly) \code{\link[base]{NULL}} if expressions were evaluated successfully.
-  An exception might also be thrown.
+  If \code{caputure} is \code{\link[base:logical]{TRUE}}, then a \code{\link[base]{character}} string of MATLAB output
+  is returned, where the MATLAB status code is returned as
+  attribute \code{status}.
+  If \code{caputure} is \code{\link[base:logical]{FALSE}}, then the MATLAB status code as is.
 }
 
 \author{Henrik Bengtsson}

@@ -834,8 +834,8 @@ setMethodS3("startServer", "Matlab", function(this, matlab=getOption("matlab"), 
 #  Evaluates one or several MATLAB expressions on the MATLAB server. This
 #  method will not return until the MATLAB server is done.
 #
-#  If an error occurred in MATLAB an exception will be thrown. This exception
-#  can be caught by \code{\link[base:conditions]{tryCatch}()}.
+#  If an error occurred in MATLAB an exception will be thrown. This
+#  exception can be caught by \code{\link[base:conditions]{tryCatch}()}.
 #
 #  If you receive error message \emph{Expected an 'answer' from MATLAB,
 #  but kept receiving nothing}, see "Troubleshooting" under ?R.matlab.
@@ -848,11 +848,15 @@ setMethodS3("startServer", "Matlab", function(this, matlab=getOption("matlab"), 
 #     strings are given they will be concatenated with the separator
 #     \code{collapse}.}
 #   \item{collapse}{Separator to be used to concatenate expressions.}
+#   \item{capture}{If @TRUE, MATLAB output is captured into a string,
+#     otherwise not.}
 # }
 #
 # \value{
-#   Returns (invisibly) @NULL if expressions were evaluated successfully.
-#   An exception might also be thrown.
+#   If \code{caputure} is @TRUE, then a @character string of MATLAB output
+#   is returned, where the MATLAB status code is returned as
+#   attribute \code{status}.
+#   If \code{caputure} is @FALSE, then the MATLAB status code as is.
 # }
 #
 # @author
@@ -861,75 +865,30 @@ setMethodS3("startServer", "Matlab", function(this, matlab=getOption("matlab"), 
 #   @seeclass
 # }
 #*/###########################################################################
-setMethodS3("evaluate", "Matlab", function(this, ..., collapse=";") {
-  expr <- paste(..., collapse=collapse);
+setMethodS3("evaluate", "Matlab", function(this, ..., collapse=";", capture=FALSE) {
+  capture <- Arguments$getLogical(capture)
 
-  printf(this$.verbose, level=0, "Sending expression on the MATLAB server to be evaluated...: '%s'\n", expr);
+  expr <- paste(..., collapse=collapse)
 
-  writeCommand(this, "eval");
-  Java$writeUTF(this$con, expr);
+  printf(this$.verbose, level=0, "Sending expression on the MATLAB server to be evaluated...: '%s'\n", expr)
 
-  res <- readResult(this);
+  cmd <- if (capture) "evalc" else "eval"
+  writeCommand(this, cmd)
+  Java$writeUTF(this$con, expr)
 
-  resStr <- if (is.null(res)) 0 else res;
-  printf(this$.verbose, level=0, "Evaluated expression on the MATLAB server with return code %d.\n", as.integer(resStr));
+  ## Retrieve result from MATLAB - throws exception if error
+  status <- readResult(this)
 
-  invisible(res);
-})
+  statusT <- if (is.null(status)) 0L else as.integer(status)
+  printf(this$.verbose, level=0, "Evaluated expression on the MATLAB server with return code %d.\n", statusT)
 
+  if (capture) {
+    statusT <- Java$readUTF(this$con)
+    attr(statusT, "status") <- status
+    status <- statusT
+  }
 
-
-###########################################################################/**
-# @RdocMethod evaluatec
-#
-# @title "Evaluates a MATLAB expression and returns result"
-#
-# \description{
-#  Evaluates one or several MATLAB expressions on the MATLAB server. This
-#  method will not return until the MATLAB server is done.
-#
-#  If an error occurred in MATLAB an exception will be thrown. This exception
-#  can be caught by \code{\link[base:conditions]{tryCatch}()}.
-#
-#  If you receive error message \emph{Expected an 'answer' from MATLAB,
-#  but kept receiving nothing}, see "Troubleshooting" under ?R.matlab.
-# }
-#
-# @synopsis
-#
-# \arguments{
-#   \item{...}{One or several string with MATLAB expressions. If several
-#     strings are given they will be concatenated with the separator
-#     \code{collapse}.}
-#   \item{collapse}{Separator to be used to concatenate expressions.}
-# }
-#
-# \value{
-#   Returns (invisibly) the result as a character string if evaluation was successful.
-#   An exception might also be thrown.
-# }
-#
-# @author
-#
-# \seealso{
-#   @seeclass
-# }
-#*/###########################################################################
-setMethodS3("evaluatec", "Matlab", function(this, ..., collapse=";") {
-  expr <- paste(..., collapse=collapse);
-
-  printf(this$.verbose, level=0, "Sending expression on the MATLAB server to be evaluated...: '%s'\n", expr);
-
-  writeCommand(this, "evalc");
-  Java$writeUTF(this$con, expr);
-
-  res <- readResult(this);
-
-  resStr <- if (is.null(res)) 0 else res;
-  printf(this$.verbose, level=0, "Evaluated expression on the MATLAB server with return code %d.\n", as.integer(resStr));
-
-  evaluationString <- Java$readUTF(this$con);
-  invisible(evaluationString);
+  invisible(status)
 })
 
 

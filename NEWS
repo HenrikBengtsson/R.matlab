@@ -1,10 +1,10 @@
 Package: R.matlab
 =================
 
-Version: 3.2.0-9000 [2015-09-02]
-o Add support for evaluating MATLAB expression using MATLAB's 
-  evalc function.  Thanks to Rohan Shah (GitHub user rohan-shah) for
-  contributing code for this.
+Version: 3.2.0-9000 [2015-09-06]
+o evaluate() gained argument 'capture' for capturing MATLAB output
+  while evaluating MATLAB expressions.  Thanks to Rohan Shah (GitHub
+  user rohan-shah) for contributing code for this.
 o Explicit import of 'methods' and 'utils' functions.
 o BUG FIX: readMat() gave an error when reading empty sparse matrices.
   Thanks to Gregory Jefferis at University of Cambridge for the bug
