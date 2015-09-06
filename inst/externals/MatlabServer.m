@@ -175,6 +175,7 @@ while (state >= 0),
     bfr = char(readUTF(is));
     fprintf(1, '"evalc" string: "%s"\n', bfr);
     try 
+      bfr = sprintf(bfr);
       result = evalc(bfr); 
       writeByte(os, 0);
       fprintf(1, 'Sent byte: %d\n', 0);
