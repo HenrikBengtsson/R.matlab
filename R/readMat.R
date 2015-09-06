@@ -90,8 +90,9 @@
 # \section{About MAT files saved in MATLAB using '-v7.3'}{
 #  This function does not support MAT files saved in MATLAB as
 #  \code{save('foo.mat', '-v7.3')}.
-#  Such MAT files are of a completely different file format [5,6]
-#  compared to those saved with, say, \code{'-v7'}.
+#  '-v7.3' MAT files are stored in a completely different format [5,6] named
+#  HDF5 and can be read with the package \code{rhdf5} available in 
+#  Bioconductor.
 # }
 #
 # \section{Reading MAT file structures input streams}{
