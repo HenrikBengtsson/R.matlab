@@ -2535,6 +2535,11 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
     # File in the R.io package to be used.
     con <- as.character(con);
 
+    # If it is a filename we can check if it is a v7.3 HDF5 Matlab file:
+    if (h5::is.h5file(con)) {
+        stop("Use the h5 package or the rhdf5 package to read new .mat files")
+    }
+
     # Now, assume that 'con' is a filename specifying a file to be opened.
     verbose && cat(verbose, level=-1, "Opens binary file: ", con);
     con <- file(con, open="rb");

@@ -7,7 +7,8 @@ Imports:
   utils,
   R.methodsS3 (>= 1.7.0),
   R.oo (>= 1.19.0),
-  R.utils (>= 2.1.0)
+  R.utils (>= 2.1.0),
+  h5
 Suggests:
   Matrix,
   SparseM
