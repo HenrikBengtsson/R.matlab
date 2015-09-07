@@ -13,6 +13,7 @@ importFrom("R.oo", "getVersion")
 importFrom("R.oo", "getMaintainer")
 importFrom("R.oo", "startupMessage")
 importFrom("R.oo", "extend")
+importFrom("h5", "is.h5file")
 
 importFrom("R.utils", "isPackageInstalled")
 importFrom("R.utils", "cat") ## Multi-sources: R.utils, base
