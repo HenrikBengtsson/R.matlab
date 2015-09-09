@@ -14,7 +14,7 @@
 % Requirements:
 % This requires MATLAB with Java support, i.e. MATLAB v6 or higher.
 %
-% Author: Henrik Bengtsson, 2002-2014
+% Author: Henrik Bengtsson, 2002-2015
 %
 % References:
 % [1] http://www.mathworks.com/access/helpdesk/help/techdoc/
@@ -24,7 +24,7 @@
 % [3] http://www.mathworks.com/access/helpdesk/help/toolbox/
 %                                              modelsim/a1057689278b4.html
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-disp('Running MatlabServer v3.1.2');
+disp('Running MatlabServer v3.2.0-9000');
 
 %  addpath R/R_LIBS/linux/library/R.matlab/misc/
 
@@ -367,6 +367,8 @@ quit;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % HISTORY:
+% 2015-09-08 [v3.2.0-9000]
+% o Add 'evalc' command.  Thanks to Rohan Shah for this.
 % 2015-01-08 [v3.1.2]
 % o BUG FIX: Matlab$getVariable() for a non-existing variable would
 %   crash the R-to-Matlab communication if remote=FALSE.
