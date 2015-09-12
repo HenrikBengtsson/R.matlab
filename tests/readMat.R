@@ -1,4 +1,5 @@
 library("R.matlab")
+library("methods")
 
 path <- system.file("mat-files", package="R.matlab")
 
