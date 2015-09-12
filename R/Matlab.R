@@ -933,7 +933,7 @@ setMethodS3("getVariable", "Matlab", function(this, variables, remote=this$remot
 
   printf(this$.verbose, level=0, "Retrieving variables from the MATLAB server: %s\n", vars);
 
-  expr <- paste("variables = {", vars, "};", sep="");
+  expr <- paste("MatlabServer_variables = {", vars, "};", sep="");
   answer <- evaluate(this, expr);
 
   if (remote == FALSE) {
