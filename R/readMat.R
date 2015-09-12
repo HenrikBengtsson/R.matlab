@@ -901,34 +901,34 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
   } # if (length(decompressWith) > 0L)
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Debug functions
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  debugIndent <- 0L;
-  debug <- function(..., sep="") {
-    if (debugIndent > 0L)
-      cat(paste(rep(" ", length.out=debugIndent), collapse=""));
-    cat(..., sep=sep);
-    cat("\n");
-  }
-
-  debugPrint <- function(...) {
-    print(...);
-  }
-
-  debugStr <- function(...) {
-    str(...);
-  }
-
-  debugEnter <- function(..., indent=+1L) {
-    debug(..., "...");
-    debugIndent <<- debugIndent + indent;
-  }
-
-  debugExit <- function(..., indent=-1L) {
-    debugIndent <<- debugIndent + indent;
-    debug(..., "...done\n");
-  }
+##  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+##  # Debug functions
+##  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+##  debugIndent <- 0L;
+##  debug <- function(..., sep="") {
+##    if (debugIndent > 0L)
+##      cat(paste(rep(" ", length.out=debugIndent), collapse=""));
+##    cat(..., sep=sep);
+##    cat("\n");
+##  }
+##
+##  debugPrint <- function(...) {
+##    print(...);
+##  }
+##
+##  debugStr <- function(...) {
+##    str(...);
+##  }
+##
+##  debugEnter <- function(..., indent=+1L) {
+##    debug(..., "...");
+##    debugIndent <<- debugIndent + indent;
+##  }
+##
+##  debugExit <- function(..., indent=-1L) {
+##    debugIndent <<- debugIndent + indent;
+##    debug(..., "...done\n");
+##  }
 
   #===========================================================================
   # General functions to read both MAT v4 and MAT v5 files.                END

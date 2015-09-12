@@ -50,11 +50,11 @@ for (version in 4:5) {
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Assert that signed and unsigned integers are read correctly
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bs <- readMat(file.path(path, "unsignedByte.mat"))
+bs <- readMat(file.path(path, "unsignedByte.mat"), verbose=-120)
 if (!identical(as.vector(bs$A), as.double(126:255)))
   stop("Error reading unsigned bytes saved by MATLAB.")
 
-is <- readMat(file.path(path, "unsignedInt.mat"))
+is <- readMat(file.path(path, "unsignedInt.mat"), verbose=-120)
 if (!identical(as.vector(is$B), as.double(127:256)))
   stop("Error reading unsigned ints saved by MATLAB.")
 
@@ -73,10 +73,10 @@ if (diff > .Machine$double.eps)
 # Assert that sparse matrices can be read as 'Matrix' and 'SparseM'
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pathname <- file.path(path, "SparseMatrix3-v4.mat")
-mat4a <- readMat(pathname, sparseMatrixClass="matrix")
+mat4a <- readMat(pathname, sparseMatrixClass="matrix", verbose=-120)
 
 if (requireNamespace("Matrix")) {
-  mat4b <- readMat(pathname, sparseMatrixClass="Matrix")
+  mat4b <- readMat(pathname, sparseMatrixClass="Matrix", verbose=-120)
   eq <- equals(mat4b$sparseM, mat4a$sparseM)
   if (!isTRUE(eq)) {
     stop("Failed to read MAT v4 sparse matrix by class 'Matrix'.")
@@ -84,7 +84,7 @@ if (requireNamespace("Matrix")) {
 }
 
 if (requireNamespace("SparseM")) {
-  mat4c <- readMat(pathname, sparseMatrixClass="SparseM")
+  mat4c <- readMat(pathname, sparseMatrixClass="SparseM", verbose=-120)
   eq <- equals(mat4c$sparseM, mat4a$sparseM)
   if (!isTRUE(eq)) {
     stop("Failed to read MAT v4 sparse matrix by class 'SparseM'.")
@@ -96,16 +96,16 @@ if (requireNamespace("SparseM")) {
 # Assert that sparse logical matrices can be read
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pathname <- file.path(path, "SparseLogicalDouble-v5.mat")
-mat4c <- readMat(pathname, sparseMatrixClass="matrix")
+mat4c <- readMat(pathname, sparseMatrixClass="matrix", verbose=-120)
 stopifnot(all(mat4c$L == mat4c$D))
 
 if (requireNamespace("Matrix")) {
-  mat4d <- readMat(pathname, sparseMatrixClass="Matrix")
+  mat4d <- readMat(pathname, sparseMatrixClass="Matrix", verbose=-120)
   equals(1.0*mat4d$L, mat4d$D, assert=TRUE)
 }
 
 if (requireNamespace("SparseM")) {
-  mat4e <- readMat(pathname, sparseMatrixClass="SparseM")
+  mat4e <- readMat(pathname, sparseMatrixClass="SparseM", verbose=-120)
   equals(mat4e$L, mat4e$D, assert=TRUE)
 }
 
@@ -154,7 +154,7 @@ if (requireNamespace("SparseM")) {
 if (getRversion() >= "2.10.0") {
   # A particular compressed file
   pathname <- file.path(path, "StructWithSparseMatrix-v4,compressed.mat")
-  mat4 <- readMat(pathname, sparseMatrixClass="matrix")
+  mat4 <- readMat(pathname, sparseMatrixClass="matrix", verbose=-120)
 
   # All compressed files
   pattern <- ",compressed[.]mat$"
@@ -177,7 +177,7 @@ if (getRversion() >= "2.10.0") {
 #      color
 #      x
 # save structLooped.mat s -v6
-mat <- readMat(file.path(path, "structLooped.mat"))
+mat <- readMat(file.path(path, "structLooped.mat"), verbose=-120)
 
 # Extract the structure
 s <- mat$s
@@ -204,7 +204,7 @@ bs <- readMat(file.path(path, "unsignedByte.mat"), verbose=TRUE)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Assert that newlines are preserved in text strings
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-mat <- readMat(file.path(path, "TextWithNewlines.mat"), verbose=TRUE)
+mat <- readMat(file.path(path, "TextWithNewlines.mat"))
 mystr <- mat$mystr[1,1]
 print(mystr)
 stopifnot(mystr == "hello\nworld\n\nEOM")
