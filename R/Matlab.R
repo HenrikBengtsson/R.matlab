@@ -1124,8 +1124,8 @@ setMethodS3("setFunction", "Matlab", function(this, code, name=NULL, collapse="\
   str(this$.verbose, level=-2, code);
 
   filename <- paste(name, ".m", sep="");
-  setVariable(this, fcndef=list(name=name, filename=filename, code=code));
-  expr <- "fid = fopen(fcndef.filename, 'w'); fprintf(fid, '%s', fcndef.code); fclose(fid); rehash;";
+  setVariable(this, MatlabServer_tmp_fcndef=list(name=name, filename=filename, code=code));
+  expr <- "MatlabServer_tmp_fid = fopen(MatlabServer_tmp_fcndef.filename, 'w'); fprintf(MatlabServer_tmp_fid, '%s', MatlabServer_tmp_fcndef.code); fclose(MatlabServer_tmp_fid); rehash;";
   res <- evaluate(this, expr);
 });
 
