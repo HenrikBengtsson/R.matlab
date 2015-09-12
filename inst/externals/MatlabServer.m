@@ -36,9 +36,11 @@ MatlabServer_tmp_hasMajor = eval('length(regexp(version, ''^[0-9]'')) ~= 0', '0'
 if (MatlabServer_tmp_hasMajor)
   MatlabServer_tmp_verParts = sscanf(version, '%d.');
   MatlabServer_tmp_verMajor = MatlabServer_tmp_verParts(1);
+  clear MatlabServer_tmp_verParts;
 else 
   MatlabServer_tmp_verMajor = -1;
 end
+clear MatlabServer_tmp_hasMajor;
 
 if (MatlabServer_tmp_verMajor < 6)
   % Java is not available/supported
@@ -69,6 +71,7 @@ else
   javaaddpath({fileparts(which('MatlabServer'))});
   disp('Added InputStreamByteWrapper to dynamic Java CLASSPATH.');
 end
+clear MatlabServer_tmp_verMajor;
 
 
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -166,7 +169,8 @@ while (MatlabServer_state >= 0),
     else
       MatlabServer_state = MatlabServer_tmp_cmd;
     end
-    
+    clear MatlabServer_tmp_cmd;
+
   %-------------------
   % 'evalc'
   %-------------------
@@ -181,6 +185,7 @@ while (MatlabServer_state >= 0),
       writeUTF(MatlabServer_os, MatlabServer_tmp_result);
       fprintf(1, 'Sent UTF: %s\n', MatlabServer_tmp_result);
       flush(MatlabServer_os);
+      clear MatlabServer_tmp_result;
     catch
       MatlabServer_lasterr = sprintf('Failed to evaluate expression ''%s''.', MatlabServer_tmp_bfr);
       fprintf(1, 'EvaluationException: %s\n', MatlabServer_lasterr);
@@ -192,6 +197,8 @@ while (MatlabServer_state >= 0),
     end
     flush(MatlabServer_os);
     MatlabServer_state = 0;
+    clear MatlabServer_tmp_bfr;
+
   %-------------------
   % 'eval'
   %-------------------
@@ -214,6 +221,7 @@ while (MatlabServer_state >= 0),
     end
     flush(MatlabServer_os);
     MatlabServer_state = 0;
+    clear MatlabServer_tmp_bfr;
   
   %-------------------
   % 'send'
@@ -232,6 +240,7 @@ while (MatlabServer_state >= 0),
       end;
       MatlabServer_tmp_expr = sprintf('%s, ''%s''', MatlabServer_tmp_expr, MatlabServer_tmp_variable);
     end;
+
     MatlabServer_tmp_expr = sprintf('%s)', MatlabServer_tmp_expr);
     if (~MatlabServer_tmp_ok)
       writeInt(MatlabServer_os, -1);
@@ -247,7 +256,8 @@ while (MatlabServer_state >= 0),
     fprintf('answer=%d\n', MatlabServer_tmp_answer);
     
     MatlabServer_state = 0;
-  
+    clear MatlabServer_tmp_name MatlabServer_tmp_expr MatlabServer_tmp_ok MatlabServer_tmp_answer;
+
   %-------------------
   % 'send-remote'
   %-------------------
@@ -265,6 +275,8 @@ while (MatlabServer_state >= 0),
       end;
       MatlabServer_tmp_expr = sprintf('%s, ''%s''', MatlabServer_tmp_expr, MatlabServer_tmp_variable);
     end;
+    clear MatlabServer_tmp_k MatlabServer_tmp_variable;
+
     MatlabServer_tmp_expr = sprintf('%s)', MatlabServer_tmp_expr);
     if (~MatlabServer_tmp_ok)
       writeInt(MatlabServer_os, -1);
@@ -288,7 +300,7 @@ while (MatlabServer_state >= 0),
       fclose(MatlabServer_tmp_fid);
       fprintf(1, 'Send buffer: %d bytes.\n', MatlabServer_tmp_maxLength);
       delete(MatlabServer_tmp_tmpname);
-      clear MatlabServer_tmp_bfr, MatlabServer_tmp_count, MatlabServer_tmp_maxLength, MatlabServer_tmp_fid, MatlabServer_tmp_tmpname;
+      clear MatlabServer_tmp_bfr MatlabServer_tmp_count MatlabServer_tmp_maxLength MatlabServer_tmp_fid MatlabServer_tmp_tmpname;
     end
     flush(MatlabServer_os);
     
@@ -296,6 +308,7 @@ while (MatlabServer_state >= 0),
     fprintf('answer=%d\n', MatlabServer_tmp_answer);
     
     MatlabServer_state = 0;
+    clear MatlabServer_tmp_name MatlabServer_tmp_expr MatlabServer_tmp_ok MatlabServer_tmp_answer;  
 
   %-------------------
   % 'receive-remote'
@@ -322,7 +335,7 @@ while (MatlabServer_state >= 0),
     fwrite(MatlabServer_tmp_fh, MatlabServer_tmp_bfr, 'int8');
     fclose(MatlabServer_tmp_fh);
 
-    clear MatlabServer_tmp_fh, MatlabServer_tmp_bfr;
+    clear MatlabServer_tmp_fh MatlabServer_tmp_bfr;
     
     load(MatlabServer_tmp_tmpfile);
     
@@ -342,6 +355,7 @@ while (MatlabServer_state >= 0),
     clear MatlabServer_tmp_filename;
     writeByte(MatlabServer_os, 0);
     MatlabServer_state = 0;
+    clear MatlabServer_tmp_filename;
   end
 end
 
@@ -361,7 +375,8 @@ quit;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % HISTORY:
-% 2015-09-08 [v3.2.0-9000]
+% 2015-09-11 [v3.2.0-9000]
+% o Add 'MatlabServer_' prefix to all variables.
 % o Add 'evalc' command.  Thanks to Rohan Shah for this.
 % 2015-01-08 [v3.1.2]
 % o BUG FIX: Matlab$getVariable() for a non-existing variable would
