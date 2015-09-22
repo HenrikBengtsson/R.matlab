@@ -27,4 +27,4 @@ R.matlab have been verified using `R CMD check --as-cran` on:
 
 It has also verified using the <http://win-builder.r-project.org/> service.
 
-Moreover, the updates cause no issues for any of the following 10 reverse dependencies on CRAN and Bioconductor: 
+Moreover, the updates cause no issues for any of the following 10 reverse dependencies on CRAN and Bioconductor: AnalyzeFMRI 1.1-16, CINOEDV 2.0, DATforDCEMRI 0.55, fda 2.4.4, geometry 0.3-6, hyperSpec 0.98-20150304, KATforDCEMRI 0.740, poweRlaw 0.50.0, retistruct 0.5.10 and SLOPE 0.1.1.
