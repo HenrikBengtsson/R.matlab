@@ -227,7 +227,7 @@ while (MatlabServer_state >= 0),
   % 'send'
   %-------------------
   elseif (MatlabServer_state == strmatch('send', MatlabServer_commands, 'exact'))
-    MatlabServer_tmp_tmpname = sprintf('%s.mat', tempname);
+    MatlabServer_tmp_tmpname = sprintf('%s_%d.mat', tempname, MatlabServer_port);
     MatlabServer_tmp_expr = sprintf('save(MatlabServer_tmp_tmpname, ''%s''', MatlabServer_saveOption);
     MatlabServer_tmp_ok = 1;
     for MatlabServer_tmp_k=1:length(MatlabServer_variables),
@@ -262,7 +262,7 @@ while (MatlabServer_state >= 0),
   % 'send-remote'
   %-------------------
   elseif (MatlabServer_state == strmatch('send-remote', MatlabServer_commands, 'exact'))
-    MatlabServer_tmp_tmpname = sprintf('%s.mat', tempname);
+    MatlabServer_tmp_tmpname = sprintf('%s_%d.mat', tempname, MatlabServer_port);
     MatlabServer_tmp_expr = sprintf('save(MatlabServer_tmp_tmpname, ''%s''', MatlabServer_saveOption);
     MatlabServer_tmp_ok = 1;
     for MatlabServer_tmp_k=1:length(MatlabServer_variables),
@@ -330,7 +330,7 @@ while (MatlabServer_state >= 0),
 
     clear MatlabServer_tmp_reader MatlabServer_tmp_count MatlabServer_tmp_len;
 
-    MatlabServer_tmp_tmpfile = sprintf('%s.mat', tempname);
+    MatlabServer_tmp_tmpfile = sprintf('%s_%d.mat', tempname, MatlabServer_port);
     MatlabServer_tmp_fh = fopen(MatlabServer_tmp_tmpfile, 'wb');
     fwrite(MatlabServer_tmp_fh, MatlabServer_tmp_bfr, 'int8');
     fclose(MatlabServer_tmp_fh);
