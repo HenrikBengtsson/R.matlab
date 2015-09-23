@@ -1,7 +1,7 @@
 Package: R.matlab
 =================
 
-Version: 3.2.0-9000 [2015-09-22]
+Version: 3.3.0 [2015-09-22]
 o evaluate() gained argument 'capture' for capturing MATLAB output
   while evaluating MATLAB expressions.  Thanks to Rohan Shah (GitHub
   user rohan-shah) for contributing code for this.

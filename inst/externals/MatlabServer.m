@@ -24,7 +24,7 @@
 % [3] http://www.mathworks.com/access/helpdesk/help/toolbox/
 %                                              modelsim/a1057689278b4.html
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-disp('Running MatlabServer v3.2.0-9000');
+disp('Running MatlabServer v3.3.0');
 
 %  addpath R/R_LIBS/linux/library/R.matlab/misc/
 
@@ -375,7 +375,8 @@ quit;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % HISTORY:
-% 2015-09-11 [v3.2.0-9000]
+% 2015-09-11 [v3.3.0]
+% o Now temporary files use format <tempname>_<port>.mat.
 % o Add 'MatlabServer_' prefix to all variables.
 % o Add 'evalc' command.  Thanks to Rohan Shah for this.
 % 2015-01-08 [v3.1.2]
