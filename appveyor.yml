@@ -4,8 +4,6 @@
 # REFERENCES:
 # * AppVeyor CI: https://ci.appveyor.com/
 # * r-travis: https://github.com/craigcitro/r-travis
-# * covr: https://github.com/jimhester/covr
-# * Coveralls: https://coveralls.io/
 #
 # Validate your .appveyor.yml file at
 # https://ci.appveyor.com/tools/validate-yaml 
@@ -27,16 +25,21 @@ install:
 # Adapt as necessary starting from here
 
 build_script:
+  - echo Current directory=%CD%
 
 
- - travis-tool.sh install_r R.methodsS3 R.oo R.utils
- - travis-tool.sh install_r Matrix SparseM
+
+
+
+  - travis-tool.sh install_r R.methodsS3 R.oo R.utils
+
+  - travis-tool.sh install_r Matrix SparseM
 
 test_script:
   - travis-tool.sh run_tests
 
-on_failure:
-  - travis-tool.sh dump_logs
+after_test:
+  - 7z a all-Rout.zip *.Rcheck\**\*.Rout *.Rcheck\**\*.fail
 
 artifacts:
   - path: '*.Rcheck\**\*.log'
@@ -45,11 +48,8 @@ artifacts:
   - path: '*.Rcheck\**\*.out'
     name: Logs
 
-  - path: '*.Rcheck\**\*.fail'
-    name: Logs
-
-  - path: '*.Rcheck\**\*.Rout'
-    name: Logs
+  - path: all-Rout.zip
+    name: AllRout
 
   - path: '\*_*.tar.gz'
     name: Bits

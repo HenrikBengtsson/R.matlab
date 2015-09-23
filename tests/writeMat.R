@@ -6,7 +6,7 @@ C <- array(1:18, dim=c(2,3,3))
 
 filename <- paste(tempfile(), ".mat", sep="")
 
-writeMat(filename, A=A, B=B, C=C)
+writeMat(filename, A=A, B=B, C=C, verbose=-120)
 data <- readMat(filename)
 str(data)
 
@@ -21,9 +21,9 @@ unlink(filename)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 tryCatch({
   # Named
-  writeMat(filename, A=A)
+  writeMat(filename, A=A, verbose=-120)
   # Not named
-  writeMat(filename, A)
+  writeMat(filename, A, verbose=-120)
 }, error = function(ex) {
   cat("ERROR:", ex$message, "\n")
 })
@@ -31,9 +31,9 @@ tryCatch({
 
 tryCatch({
   # Uniquely named
-  writeMat(filename, A=A, B=B, C=C)
+  writeMat(filename, A=A, B=B, C=C, verbose=-120)
   # Not uniquely named
-  writeMat(filename, A=A, B=B, A=C)
+  writeMat(filename, A=A, B=B, A=C, verbose=-120)
 }, error = function(ex) {
   cat("ERROR:", ex$message, "\n")
 })
@@ -47,7 +47,7 @@ tryCatch({
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 value <- double(0L)
 filename <- "octave-bug42562-empty.mat"
-writeMat(filename, value=value)
+writeMat(filename, value=value, verbose=-120)
 data <- readMat(filename, verbose=-100)
 value2 <- data$value
 str(value2)
@@ -56,7 +56,7 @@ stopifnot(all(value2 == value))
 
 value <- 0
 filename <- "octave-bug42562-scalar.mat"
-writeMat(filename, value=value)
+writeMat(filename, value=value, verbose=-120)
 data <- readMat(filename, verbose=-100)
 value2 <- data$value
 str(value2)
@@ -65,7 +65,7 @@ stopifnot(all(value2 == value))
 
 value <- 1:5
 filename <- "octave-bug42562-vector.mat"
-writeMat(filename, value=value)
+writeMat(filename, value=value, verbose=-120)
 data <- readMat(filename, verbose=-100)
 value2 <- data$value
 str(value2)

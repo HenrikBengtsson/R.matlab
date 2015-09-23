@@ -362,6 +362,7 @@ setMethodS3("setOption", "Matlab", function(this, ...) {
 # \arguments{
 #  \item{trials}{The number of trials before giving up.}
 #  \item{interval}{The interval in seconds between trials.}
+#  \item{timeout}{The timeout for the socket connection}
 #  \item{...}{Not used.}
 # }
 #
@@ -376,7 +377,7 @@ setMethodS3("setOption", "Matlab", function(this, ...) {
 #   @seeclass
 # }
 #*/###########################################################################
-setMethodS3("open", "Matlab", function(con, trials=30, interval=1, ...) {
+setMethodS3("open", "Matlab", function(con, trials=30, interval=1, timeout = getOption("timeout"), ...) {
   # To please R CMD check.
   # close() is already a generic function in 'base'.
   this <- con;
@@ -391,7 +392,7 @@ setMethodS3("open", "Matlab", function(con, trials=30, interval=1, ...) {
     tryCatch({
       printf(this$.verbose, level=-1, "Try #%d.\n", as.integer(count));
       suppressWarnings({
-        this$con <- socketConnection(host=this$host, port=as.integer(this$port), open="a+b", blocking=TRUE);
+        this$con <- socketConnection(host=this$host, port=as.integer(this$port), open="a+b", blocking=TRUE, timeout = timeout);
       });
       ok <- TRUE;
       # It is not possible to return() from tryCatch()! /HB 050224
@@ -581,10 +582,10 @@ setMethodS3("close", "Matlab", function(con, ...) {
 #*/###########################################################################
 setMethodS3("writeCommand", "Matlab", function(this, cmd, ...) {
   getCommandByte <- function(this, cmd) {
-    commands <- c("quit", "", "eval", "send", "receive", "send-remote", "receive-remote", "echo");
+    commands <- c("quit", "", "eval", "send", "receive", "send-remote", "receive-remote", "echo", "evalc");
     if (!is.element(cmd, commands))
-      return(as.integer(0));
-    as.integer(which(commands == cmd) - 2);
+      return(0L);
+    as.integer(which(commands == cmd) - 2L);
   }
 
   b <- getCommandByte(this, cmd);
@@ -656,7 +657,7 @@ setMethodS3("readResult", "Matlab", function(this, ...) {
       if (count <= maxTries) {
         Sys.sleep(interval);
       } else {
-        throw("Excepted an 'answer' from MATLAB, but kept receiving nothing. Tried ", maxTries, " times at intervals of approximately ", interval, " seconds. To change this, see ?setOption.Matlab.");
+        throw("Expected an 'answer' from MATLAB, but kept receiving nothing. Tried ", maxTries, " times at intervals of approximately ", interval, " seconds. To change this, see ?setOption.Matlab.");
       }
     }
   }
@@ -833,10 +834,10 @@ setMethodS3("startServer", "Matlab", function(this, matlab=getOption("matlab"), 
 #  Evaluates one or several MATLAB expressions on the MATLAB server. This
 #  method will not return until the MATLAB server is done.
 #
-#  If an error occured in MATLAB an exception will be thrown. This expection
-#  can be caught by \code{\link[base:conditions]{tryCatch}()}.
+#  If an error occurred in MATLAB an exception will be thrown. This
+#  exception can be caught by \code{\link[base:conditions]{tryCatch}()}.
 #
-#  If you receieve error message \emph{Excepted an 'answer' from MATLAB,
+#  If you receive error message \emph{Expected an 'answer' from MATLAB,
 #  but kept receiving nothing}, see "Troubleshooting" under ?R.matlab.
 # }
 #
@@ -847,11 +848,14 @@ setMethodS3("startServer", "Matlab", function(this, matlab=getOption("matlab"), 
 #     strings are given they will be concatenated with the separator
 #     \code{collapse}.}
 #   \item{collapse}{Separator to be used to concatenate expressions.}
+#   \item{capture}{If @TRUE, MATLAB output is captured into a string,
+#     otherwise not.}
 # }
 #
 # \value{
-#   Returns (invisibly) @NULL if expressions were evaluated successfully.
-#   An exception might also be thrown.
+#   If \code{caputure} is @TRUE, then a @character string of MATLAB output
+#   is returned, otherwise the MATLAB status code.
+#   The MATLAB status code is also/always returned as attribute \code{status}.
 # }
 #
 # @author
@@ -860,24 +864,33 @@ setMethodS3("startServer", "Matlab", function(this, matlab=getOption("matlab"), 
 #   @seeclass
 # }
 #*/###########################################################################
-setMethodS3("evaluate", "Matlab", function(this, ..., collapse=";") {
-  expr <- paste(..., collapse=collapse);
+setMethodS3("evaluate", "Matlab", function(this, ..., collapse=";", capture=FALSE) {
+  capture <- Arguments$getLogical(capture)
 
-  printf(this$.verbose, level=0, "Sending expression on the MATLAB server to be evaluated...: '%s'\n", expr);
+  expr <- paste(..., collapse=collapse)
 
-  writeCommand(this, "eval");
-  Java$writeUTF(this$con, expr);
+  printf(this$.verbose, level=0, "Sending expression on the MATLAB server to be evaluated...: '%s'\n", expr)
 
-  res <- readResult(this);
+  cmd <- if (capture) "evalc" else "eval"
+  writeCommand(this, cmd)
+  Java$writeUTF(this$con, expr)
 
-  resStr <- if (is.null(res)) 0 else res;
-  printf(this$.verbose, level=0, "Evaluated expression on the MATLAB server with return code %d.\n", as.integer(resStr));
+  ## Retrieve result from MATLAB - throws exception if error
+  status <- readResult(this)
 
-  invisible(res);
+  statusT <- if (is.null(status)) 0L else as.integer(status)
+  printf(this$.verbose, level=0, "Evaluated expression on the MATLAB server with return code %d.\n", statusT)
+
+  if (capture) {
+    statusT <- Java$readUTF(this$con)
+    attr(statusT, "status") <- status
+    status <- statusT
+  } else {
+    attr(status, "status") <- status
+  }
+
+  invisible(status)
 })
-
-
-
 
 
 
@@ -920,7 +933,7 @@ setMethodS3("getVariable", "Matlab", function(this, variables, remote=this$remot
 
   printf(this$.verbose, level=0, "Retrieving variables from the MATLAB server: %s\n", vars);
 
-  expr <- paste("variables = {", vars, "};", sep="");
+  expr <- paste("MatlabServer_variables = {", vars, "};", sep="");
   answer <- evaluate(this, expr);
 
   if (remote == FALSE) {
@@ -1097,12 +1110,12 @@ setMethodS3("setFunction", "Matlab", function(this, code, name=NULL, collapse="\
   }
 
   if (is.null(name)) {
-    nameStart = as.integer(pos + attr(pos, "match.length")-1);
+    nameStart = as.integer(pos + attr(pos, "match.length") - 1L);
     pos <- regexpr("^[ \t\n\r\v]*function[^=]*=[^( \t\n\r\v]*[( \t\n\r\v]", code);
     if (pos == -1) {
       throw("The code does not contain a open parentesis ('(') or a whitespace that defines the end of the function name: ", substring(code, 1, 20), "...");
     }
-    nameStop = as.integer(pos + attr(pos, "match.length")-2);
+    nameStop = as.integer(pos + attr(pos, "match.length") - 2L);
     name <- substring(code, nameStart, nameStop);
   }
 
@@ -1111,8 +1124,8 @@ setMethodS3("setFunction", "Matlab", function(this, code, name=NULL, collapse="\
   str(this$.verbose, level=-2, code);
 
   filename <- paste(name, ".m", sep="");
-  setVariable(this, fcndef=list(name=name, filename=filename, code=code));
-  expr <- "fid = fopen(fcndef.filename, 'w'); fprintf(fid, '%s', fcndef.code); fclose(fid); rehash;";
+  setVariable(this, MatlabServer_tmp_fcndef=list(name=name, filename=filename, code=code));
+  expr <- "MatlabServer_tmp_fid = fopen(MatlabServer_tmp_fcndef.filename, 'w'); fprintf(MatlabServer_tmp_fid, '%s', MatlabServer_tmp_fcndef.code); fclose(MatlabServer_tmp_fid); rehash; clear MatlabServer_tmp_fcndef MatlabServer_tmp_fid;";
   res <- evaluate(this, expr);
 });
 

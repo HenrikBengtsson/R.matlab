@@ -88,10 +88,11 @@
 # }
 #
 # \section{About MAT files saved in MATLAB using '-v7.3'}{
-#  This function does not support MAT files saved in MATLAB as
-#  \code{save('foo.mat', '-v7.3')}.
-#  Such MAT files are of a completely different file format [5,6]
-#  compared to those saved with, say, \code{'-v7'}.
+#  MAT v7.3 files, saved using for instance \code{save('foo.mat', '-v7.3')},
+#  stores the data in the Hierarchical Data Format (HDF5) [5,6], which
+#  is a format not supported by this function/package.
+#  However, there exist other R packages that can parse HDF5, e.g.
+#  CRAN package \pkg{h5} and Bioconductor package \pkg{rhdf5}.
 # }
 #
 # \section{Reading MAT file structures input streams}{
@@ -546,7 +547,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
     utfs <- grep("UTF", iconvlist(), value=TRUE);
     ## The convertUTF{16,32} routines below work in big-endian, so
     ## look for UTF-16BE or UTF16BE, etc..
-    utf16 <- utils::head(grep("UTF-?16BE", utfs, value=TRUE), n=1L);
+    utf16 <- head(grep("UTF-?16BE", utfs, value=TRUE), n=1L);
     if (length(utf16) > 0L) {
       convertUTF16 <- function(ary) {
         ary16 <- paste(intToChar(c(sapply(ary, FUN=function(x) {
@@ -555,7 +556,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
         iconv(ary16, from=utf16, to="UTF-8");
       }
     }
-    utf32 <- utils::head(grep("UTF-?32BE", utfs, value=TRUE), n=1L);
+    utf32 <- head(grep("UTF-?32BE", utfs, value=TRUE), n=1L);
     if (length(utf32) > 0L) {
       convertUTF32 <- function(ary) {
         ary32 <- paste(intToChar(c(sapply(ary, FUN=function(x) {
@@ -900,34 +901,34 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
   } # if (length(decompressWith) > 0L)
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Debug functions
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  debugIndent <- 0L;
-  debug <- function(..., sep="") {
-    if (debugIndent > 0L)
-      cat(paste(rep(" ", length.out=debugIndent), collapse=""));
-    cat(..., sep=sep);
-    cat("\n");
-  }
-
-  debugPrint <- function(...) {
-    print(...);
-  }
-
-  debugStr <- function(...) {
-    str(...);
-  }
-
-  debugEnter <- function(..., indent=+1L) {
-    debug(..., "...");
-    debugIndent <<- debugIndent + indent;
-  }
-
-  debugExit <- function(..., indent=-1L) {
-    debugIndent <<- debugIndent + indent;
-    debug(..., "...done\n");
-  }
+##  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+##  # Debug functions
+##  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+##  debugIndent <- 0L;
+##  debug <- function(..., sep="") {
+##    if (debugIndent > 0L)
+##      cat(paste(rep(" ", length.out=debugIndent), collapse=""));
+##    cat(..., sep=sep);
+##    cat("\n");
+##  }
+##
+##  debugPrint <- function(...) {
+##    print(...);
+##  }
+##
+##  debugStr <- function(...) {
+##    str(...);
+##  }
+##
+##  debugEnter <- function(..., indent=+1L) {
+##    debug(..., "...");
+##    debugIndent <<- debugIndent + indent;
+##  }
+##
+##  debugExit <- function(..., indent=-1L) {
+##    debugIndent <<- debugIndent + indent;
+##    debug(..., "...done\n");
+##  }
 
   #===========================================================================
   # General functions to read both MAT v4 and MAT v5 files.                END
@@ -2208,7 +2209,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
           ir <- mat5ReadValues(this)$value;
 
           # Note that the indices for MAT v5 sparse arrays start at 0 (not 1).
-          if (any(ir < 0L | ir > nrow-1L)) {
+          if (any(ir < 0L) || (nrow > 0 && any(ir > nrow-1L))) {
             stop("MAT v5 file format error: Some elements in row vector 'ir' (sparse arrays) are out of range [0,", nrow-1L, "].");
           }
 
@@ -2295,8 +2296,11 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
             pr <- as.double(pr);
           }
 
-          if (length(pr) == 0L) {
+          if (nrow == 0L || ncol == 0L) {
+            matrix <- matrix(pr, nrow=nrow, ncol=ncol)
+          } else if (length(pr) == 0L) {
             # Special case
+            str(list(nrow=nrow, ncol=ncol))
             matrix <- SparseM::as.matrix.csc(0, nrow=nrow, ncol=ncol)
           } else {
             matrix <- new("matrix.csc",

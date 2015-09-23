@@ -20,12 +20,13 @@
 }
 
 \usage{
-\method{open}{Matlab}(con, trials=30, interval=1, ...)
+\method{open}{Matlab}(con, trials=30, interval=1, timeout=getOption("timeout"), ...)
 }
 
 \arguments{
  \item{trials}{The number of trials before giving up.}
  \item{interval}{The interval in seconds between trials.}
+ \item{timeout}{The timeout for the socket connection}
  \item{...}{Not used.}
 }
 
