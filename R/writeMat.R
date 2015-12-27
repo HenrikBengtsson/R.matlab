@@ -92,12 +92,15 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   writeBinMat <- function(con, object, size, signed=TRUE, endian="little") {
     if (!is.null(con)) {
-      writeBin(object, con=con, size=size, endian=endian);
-###      verbose && printf(verbose, "writeBinMat([%s]<length=%d>, size=%d)\n", paste(object, collapse=","), length(object), size);
+      if (length(object)*size > .Machine$integer.max) {
+        throw(sprintf("Not yet supported; base::writeBin() cannot write more than %.0f bytes (=length(object) * sizeof(mode)): %.0f * %.0f bytes = %.0f bytes", .Machine$integer.max, length(object), size, length(object)*size))
+      }
+      writeBin(object, con=con, size=size, endian=endian)
+###      verbose && printf(verbose, "writeBinMat([%s]<length=%d>, size=%d)\n", paste(object, collapse=","), length(object), size)
     }
-    nbrOfBytes <- as.integer(size)*length(object);
+    nbrOfBytes <- size*length(object)
 
-    nbrOfBytes;
+    nbrOfBytes
   } # writeBinMat()
 
 
@@ -357,17 +360,17 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
 
   	if (is.integer(values)) {
   	  dataType <- "miINT32"
-  	  sizeOf <- 4L;
+  	  sizeOf <- 4
   	} else if (is.double(values)) {
   	  dataType <- "miDOUBLE"
-  	  sizeOf <- 8L;
+  	  sizeOf <- 8
   	} else {
-  	  dataType <- "miDOUBLE";
-  	  sizeOf <- 8L;
+  	  dataType <- "miDOUBLE"
+  	  sizeOf <- 8
         }
 
-  	values <- as.vector(values);
-  	nbrOfBytes <- length(values) * sizeOf;
+  	values <- as.vector(values)
+  	nbrOfBytes <- length(values) * sizeOf
 
         # Pad bytes?
   	padding <- 8 - ((nbrOfBytes-1) %% 8 + 1);
@@ -399,8 +402,8 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
   	values <- charToInt(unlist(strsplit(values, "")));
   	values <- as.vector(values);
 
-  	sizeOf <- 2L;
-  	nbrOfBytes <- length(values) * sizeOf;
+  	sizeOf <- 2
+  	nbrOfBytes <- length(values) * sizeOf
 
         # Pad bytes?
   	padding <- 8 - ((nbrOfBytes-1) %% 8 + 1);
@@ -490,16 +493,16 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
 
   	if (is.integer(data)) {
   	  class <- "mxINT32_CLASS"
-  	  sizeOf <- 4L;
+  	  sizeOf <- 4
   	} else if (is.double(data)) {
   	  class <- "mxDOUBLE_CLASS"
-  	  sizeOf <- 8L;
+  	  sizeOf <- 8
   	} else if (is.complex(data)) {
   	  class <- "mxDOUBLE_CLASS"
-  	  sizeOf <- 8L;
+  	  sizeOf <- 8
   	} else {
-  	  class <- "mxDOUBLE_CLASS";
-  	  sizeOf <- 8L;
+  	  class <- "mxDOUBLE_CLASS"
+  	  sizeOf <- 8
   	}
   	complex <- is.complex(data);
   	global  <- FALSE;
@@ -606,45 +609,45 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
       }
 
       # Get the data type
-      dataType <- "miMATRIX";
+      dataType <- "miMATRIX"
 
       if (is.integer(value)) {
-  	dataType <- "miINT32";
-  	sizeOf <- 4L;
+  	dataType <- "miINT32"
+  	sizeOf <- 4
       }
 
       if (is.double(value)) {
-  	dataType <- "miDOUBLE";
-  	sizeOf <- 8L;
+  	dataType <- "miDOUBLE"
+  	sizeOf <- 8
       }
 
       if (is.complex(value)) {
-  	sizeOf <- 2L*8L;
+  	sizeOf <- 2*8
       }
 
       if (is.character(value)) {
-  	dataType <- "miMATRIX";
-  	sizeOf <- 1L;
+  	dataType <- "miMATRIX"
+  	sizeOf <- 1
       }
 
       if (is.list(value)) {
-  	dataType <- "miMATRIX";
-  	sizeOf <- 1L;
+  	dataType <- "miMATRIX"
+  	sizeOf <- 1
       }
 
       if (!is.null(dim(value))) {
-  	dataType <- "miMATRIX";
+  	dataType <- "miMATRIX"
       }
 
 #      # Get the number of bytes
-#      nbrOfBytes <- length(value) * sizeOf;
+#      nbrOfBytes <- length(value) * sizeOf
 
       # "For data elements representing "MATLAB arrays", (type miMATRIX),
       # the value of the Number Of Bytes field includes padding bytes in
       # the total. For all other MAT-file data types, the value of the
       # Number of Bytes field does *not* include padding bytes."
       if (dataType == "miMATRIX") {
-  	padding <- 8L - ((nbrOfBytes-1) %% 8 + 1L);
+  	padding <- 8 - ((nbrOfBytes-1) %% 8 + 1)
   	if (padding < 0) {
           stop("Internal error: Negative padding: ", padding);
         }
@@ -728,8 +731,6 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
   	object <- objects[kk];   # NOT [[kk]], has to be a list!
   	nbrOfBytes <- nbrOfBytes + writeDataElement(con, object);
       }
-
-      nbrOfBytes <- as.integer(nbrOfBytes);
 
       # Return bytes written
       nbrOfBytes;
