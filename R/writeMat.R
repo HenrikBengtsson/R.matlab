@@ -254,7 +254,7 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
   	  stop(paste("Unknown Data Element Tag type: ", dataType, sep=""));
 
         ## Is the number of bytes supported by the MAT file format?
-        if (nbrOfBytes > MAX_WRITABLE_BYTES) maxBytesError(nbrOfBytes, knownTypes[type])
+        if (nbrOfBytes > MAX_WRITABLE_BYTES) maxBytesError(nbrOfBytes, knownTypes[type]/8)
 
         nbrOfBytesTag <- nbrOfBytes
 
