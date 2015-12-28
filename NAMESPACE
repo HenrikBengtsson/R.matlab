@@ -19,6 +19,7 @@ importFrom("R.utils", "cat") ## Multi-sources: R.utils, base
 importFrom("R.utils", "enter")
 importFrom("R.utils", "exit")
 importFrom("R.utils", "less")
+importFrom("R.utils", "pushTemporaryFile", "popTemporaryFile")
 importFrom("R.utils", "popState")
 importFrom("R.utils", "pushState")
 importFrom("R.utils", "printf")

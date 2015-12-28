@@ -106,7 +106,7 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   MAX_WRITABLE_BYTES <- min(2^31, .Machine$integer.max)
   maxBytesError <- function(nbrOfBytes, size) {
-    throw(sprintf("MAT file format error: Object is too large to be written to a MAT v%s file, which only supports variables of maximum 2^31 bytes. The object that cannot be written has %.0f elements each of %d bytes totalling %.0f bytes: %s", matVersion, nbrOfBytes/size, size, nbrOfBytes, pathname))
+    throw(sprintf("MAT file format error: Object is too large to be written to a MAT v%s file, which only supports variables of maximum 2^31 bytes. The object that cannot be written has %.0f elements each of %d bytes totalling %.0f bytes: %s", matVersion, nbrOfBytes/size, size, nbrOfBytes, sQuote(conDescription)))
   }
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -842,24 +842,35 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup the connection to be written to
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  ## Name of the output file, iff at all
-  pathname <- NA_character_
+  ## Close connection when exiting?
+  close <- FALSE
+  on.exit({ if (close) close(con) })
+  
+  ## Description of the output file/connection
+  conDescription <- NA_character_
+
+  ## Writing to temporary file?
+  pathnameT <- NULL
   
   if (inherits(con, "connection")) {
     if (!isOpen(con)) {
-      open(con, open="wb");
-      on.exit(close(con));
+      open(con, open="wb")
+      close <- TRUE
     }
-    pathname <- as.character(summary(con)$description)
+    conDescription <- as.character(summary(con)$description)
   } else {
     # For all other types of values of 'con' make it into a character string.
     # This will for instance also make it possible to use object of class
     # File in the R.io package to be used.
-    pathname <- as.character(con);
+    pathname <- as.character(con)
+
+    ## Write to temporary file and rename only if successful
+    pathnameT <- pushTemporaryFile(pathname)
+    conDescription <- pathnameT
 
     # Now, assume that 'con' is a filename specifying a file to be opened.
-    con <- file(pathname, open="wb");
-    on.exit(close(con));
+    con <- file(pathnameT, open="wb")
+    close <- TRUE
   }
 
   # Assert that it is a binary connection
@@ -872,11 +883,22 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
   # Write the data
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (matVersion == "5") {
-    writeMat5(con, objects=args, onWrite=onWrite);
+    nbrOfBytes <- writeMat5(con, objects=args, onWrite=onWrite)
   } else {
     stop(paste("Can not write MAT file. Unknown or unsupported MAT version: ",
-                                                         matVersion, sep=""));
+                                                         matVersion, sep=""))
   }
+
+  ## Close connection (only iff opened above)
+  if (close) {
+    close <- FALSE
+    close(con)
+  }
+
+  ## Rename temporary file? (only iff successful)
+  if (!is.null(pathnameT)) popTemporaryFile(pathnameT)
+
+  invisible(nbrOfBytes)
 }) # writeMat()
 
 
