@@ -106,7 +106,7 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   MAX_WRITABLE_BYTES <- min(2^31, .Machine$integer.max)
   maxBytesError <- function(nbrOfBytes, size) {
-    throw(sprintf("MAT file format error: Object is too large to be written to a MAT v%s file, which only supports variables of maximum 2^31 bytes. The object that cannot be written has %.0f elements each of %d bytes totalling %.0f bytes.", matVersion, nbrOfBytes/size, size, nbrOfBytes))
+    throw(sprintf("MAT file format error: Object is too large to be written to a MAT v%s file, which only supports variables of maximum 2^31 bytes. The object that cannot be written has %.0f elements each of %d bytes totalling %.0f bytes: %s", matVersion, nbrOfBytes/size, size, nbrOfBytes, pathname))
   }
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -842,19 +842,23 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup the connection to be written to
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  ## Name of the output file, iff at all
+  pathname <- NA_character_
+  
   if (inherits(con, "connection")) {
     if (!isOpen(con)) {
       open(con, open="wb");
       on.exit(close(con));
     }
+    pathname <- as.character(summary(con)$description)
   } else {
     # For all other types of values of 'con' make it into a character string.
     # This will for instance also make it possible to use object of class
     # File in the R.io package to be used.
-    con <- as.character(con);
+    pathname <- as.character(con);
 
     # Now, assume that 'con' is a filename specifying a file to be opened.
-    con <- file(con, open="wb");
+    con <- file(pathname, open="wb");
     on.exit(close(con));
   }
 
