@@ -6,9 +6,6 @@
 # \description{
 #  This function takes the given variables (\code{...}) and places them in a
 #  MAT file structure, which is then written to a binary connection.
-#
-#  Currently only the uncompressed MAT version 5 file format is supported,
-#  that is, compressed MAT files cannot be written (only read).
 # }
 #
 # @synopsis
@@ -45,6 +42,16 @@
 #   any onWrite function are \emph{not} included in this count.
 # }
 #
+# \section{Limitations}{
+#  Currently only the uncompressed MAT version 5 file format [5] is
+#  supported, that is, compressed MAT files cannot be written (only read).
+#
+#  Moreover, the maximum variable size supported by the MAT version 5
+#  file format is 2^31 bytes [5].  In R, this limitation translates to
+#  2^31-1 bytes, which corresponds to for instance an integer object
+#  with 536870912 elements or double object with 268435456 elements.
+# }
+#
 # \section{Details on onWrite()}{
 #   If specified, the \code{onWrite()} function is called before the
 #   data is written to the connection.  This function must take a @list
@@ -74,6 +81,15 @@
 #
 # @author
 #
+# \references{
+#   [1] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version 5}, June 1999.\cr
+#   [2] The MathWorks Inc., \emph{MATLAB - Application Program Interface Guide, version 5}, 1998.\cr
+#   [3] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version 7}, September 2009.\cr
+#   [4] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version R2012a}, September 2012.\cr
+#   [5] The MathWorks Inc., \emph{MATLAB - MAT-File Versions}, December 2015.
+#       \url{http://www.mathworks.com/help/matlab/import_export/mat-file-versions.html}\cr
+# }
+
 # \seealso{
 #   @see "readMat".
 # }
