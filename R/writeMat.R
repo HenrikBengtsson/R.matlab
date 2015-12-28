@@ -102,19 +102,27 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
   # General functions to write MAT v5 files (and later MAT v4 files).    BEGIN
   #===========================================================================
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # The MAT file format (<= 7) only supports 2^31 bytes per variable [5]
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  MAX_WRITABLE_BYTES <- min(2^31, .Machine$integer.max)
+  maxBytesError <- function(nbrOfBytes, size) {
+    throw(sprintf("MAT file format error: Object is too large to be written to a MAT v%s file, which only supports variables of maximum 2^31 bytes. The object that cannot be written has %.0f elements each of %d bytes totalling %.0f bytes.", matVersion, nbrOfBytes/size, size, nbrOfBytes))
+  }
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Function to write (or just count) an object to a connection.
   #
   # This function will also keep track of the actual number of bytes written.
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   writeBinMat <- function(con, object, size, signed=TRUE, endian="little") {
-    if (!is.null(con)) {
-      if (length(object)*size > .Machine$integer.max) {
-        throw(sprintf("Not yet supported; base::writeBin() cannot write more than %.0f bytes (=length(object) * sizeof(mode)): %.0f * %.0f bytes = %.0f bytes", .Machine$integer.max, length(object), size, length(object)*size))
-      }
-      writeBin(object, con=con, size=size, endian=endian)
-###      verbose && printf(verbose, "writeBinMat([%s]<length=%d>, size=%d)\n", paste(object, collapse=","), length(object), size)
-    }
     nbrOfBytes <- size*length(object)
+
+    ## Is the number of bytes supported by the MAT file format?
+    if (nbrOfBytes > MAX_WRITABLE_BYTES) maxBytesError(nbrOfBytes, size)
+
+    if (!is.null(con)) {
+      writeBin(object, con=con, size=size, endian=endian)
+    }
 
     nbrOfBytes
   } # writeBinMat()
@@ -245,9 +253,12 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
   	if (length(type) == 0)
   	  stop(paste("Unknown Data Element Tag type: ", dataType, sep=""));
 
-        nbrOfBytesTag <- nbrOfBytes;
+        ## Is the number of bytes supported by the MAT file format?
+        if (nbrOfBytes > MAX_WRITABLE_BYTES) maxBytesError(nbrOfBytes, knownTypes[type])
 
-        nbrOfBytes <- 0L;
+        nbrOfBytesTag <- nbrOfBytes
+
+        nbrOfBytes <- 0;
   	if (compressed) {
   	  bfr <- nbrOfBytesTag * 256^2 + type;
   	  nbrOfBytes <- nbrOfBytes + writeBinMat(con, as.integer(bfr), size=4, endian="little");
