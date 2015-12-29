@@ -1513,24 +1513,24 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
     # Data sizes and types according to [3]
     KNOWN_TYPES <- c(
       "miMATRIX"=0L,
-      "miINT8"=8L, 	     #  1 miINT8 8 bit, signed
-      "miUINT8"=8L, 	     #  2 miUINT8 8 bit, unsigned
-      "miINT16"=16L,      #  3 miINT16 16-bit, signed
-      "miUINT16"=16L,     #  4 miUINT16 16-bit, unsigned
-      "miINT32"=32L,      #  5 miINT32 32-bit, signed
-      "miUINT32"=32L,     #  6 miUINT32 32-bit, unsigned
-      "miSINGLE"=32L,     #  7 miSINGLE IEEE 754 single format
-      "--"=NA_integer_,			     #  8 -- Reserved
-      "miDOUBLE"=64L,     #  9 miDOUBLE IEEE 754 double format
-      "--"=NA_integer_,			     # 10 -- Reserved
-      "--"=NA_integer_,			     # 11 -- Reserved
-      "miINT64"=64L,	     # 12 miINT64 64-bit, signed
-      "miUINT64"=64L,     # 13 miUINT64 64-bit, unsigned
+      "miINT8"=8L,                #  1 miINT8 8 bit, signed
+      "miUINT8"=8L,               #  2 miUINT8 8 bit, unsigned
+      "miINT16"=16L,              #  3 miINT16 16-bit, signed
+      "miUINT16"=16L,             #  4 miUINT16 16-bit, unsigned
+      "miINT32"=32L,              #  5 miINT32 32-bit, signed
+      "miUINT32"=32L,             #  6 miUINT32 32-bit, unsigned
+      "miSINGLE"=32L,             #  7 miSINGLE IEEE 754 single format
+      "--"=NA_integer_,           #  8 -- Reserved
+      "miDOUBLE"=64L,             #  9 miDOUBLE IEEE 754 double format
+      "--"=NA_integer_,           # 10 -- Reserved
+      "--"=NA_integer_,           # 11 -- Reserved
+      "miINT64"=64L,              # 12 miINT64 64-bit, signed
+      "miUINT64"=64L,             # 13 miUINT64 64-bit, unsigned
       "miMATRIX"=NA_integer_,     # 14 miMATRIX MATLAB array
       "miCOMPRESSED"=NA_integer_, # 15 miCOMPRESSED Compressed Data
-      "miUTF8"=8L,        # 16 miUTF8 Unicode UTF-8 Encoded Character Data
-      "miUTF16"=16L,      # 17 miUTF16 Unicode UTF-16 Encoded Character Data
-      "miUTF32"=32L       # 18 miUTF32 Unicode UTF-32 Encoded Character Data
+      "miUTF8"=8L,                # 16 miUTF8 Unicode UTF-8 Encoded Character Data
+      "miUTF16"=16L,              # 17 miUTF16 Unicode UTF-16 Encoded Character Data
+      "miUTF32"=32L               # 18 miUTF32 Unicode UTF-32 Encoded Character Data
     );
     NAMES_OF_KNOWN_TYPES <- names(KNOWN_TYPES);
     NBR_OF_KNOWN_TYPES <- length(KNOWN_TYPES);
