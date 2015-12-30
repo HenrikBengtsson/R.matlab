@@ -17,6 +17,30 @@ unlink(filename)
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Multi-dimensional arrays
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+filename <- paste(tempfile(), ".mat", sep="")
+X <- array(1:24, dim=c(2,3,4))
+writeMat(filename, X=X)
+data <- readMat(filename)
+str(data)
+stopifnot(all.equal(data$X, X))
+unlink(filename)
+
+filename <- paste(tempfile(), ".mat", sep="")
+A <- 1:4
+X <- array(1:24, dim=c(2,3,4))
+data <- list(A=A, X=X)
+writeMat(filename, data=data)
+data2 <- readMat(filename)$data
+str(data2)
+## FIXME: https://github.com/HenrikBengtsson/R.matlab/issues/30
+## stopifnot(all.equal(data2$A, data$A), all.equal(data2$X, data$X), all.equal(data2, data))
+unlink(filename)
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # All objects written must be named uniquely
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 tryCatch({
