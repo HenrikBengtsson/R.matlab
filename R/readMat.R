@@ -1817,11 +1817,6 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
         print(verbose, level=-100, unlist(flags[-1L]));
       }
 
-      ## Unknown/undocumented, cf. https://github.com/HenrikBengtsson/R.matlab/issues/28
-      if (class == 16L) {
-        stop(sprintf("Unsupported array type (class): %d (%s)", class, sQuote(symbol)))
-      }
-
       flags;
     } # mat5ReadArrayFlags()
 
@@ -2073,6 +2068,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
       dimensionsArray <- mat5ReadDimensionsArray(this);
       arrayName <- mat5ReadName(this);
       verbose && cat(verbose, "Array name: ", sQuote(arrayName$name));
+
 
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
       # (a) mxCELL_CLASS
@@ -2366,8 +2362,18 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
         verbose && exit(verbose);
       } # (d) mxSPARSE_CLASS
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
-      # (e) Everything else but (a) mxCELL_CLASS, (b) mxSTRUCT_CLASS,
-      #    (c) mxOBJECT_CLASS, and (d) mxSPARSE_CLASS.
+      # (e) mxFUN_CLASS (undocumented)
+      # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
+      else if (arrayFlags$class == "mxFUN_CLASS") {
+        ## FIXME: Find a way to parse and at least skip (with a warning)
+        ## The problem is that this array type/class is undocumented,
+        ## cf. https://github.com/HenrikBengtsson/R.matlab/issues/28
+        stop(sprintf("Unsupported array type (class): %s (16)", arrayFlags$class))
+      }
+      # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
+      # (f) Everything else but:
+      #     (a) mxCELL_CLASS, (b) mxSTRUCT_CLASS, (c) mxOBJECT_CLASS,
+      #   , (d) mxSPARSE_CLASS and (e) mxFUN_CLASS.
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
       else {
         data <- mat5ReadValues(this, logical=arrayFlags$logical);
