@@ -88,7 +88,7 @@
 
 \section{Reading compressed MAT files}{
  From MATLAB v7, \emph{compressed} MAT version 5 files are used by
- default [3,4].  This function supports reading such files,
+ default [3-5].  This function supports reading such files,
  if running R v2.10.0 or newer.
  For older versions of R, the \pkg{Rcompression} package is used.
  To install that package, please see instructions at
@@ -101,7 +101,7 @@
 
 \section{About MAT files saved in MATLAB using '-v7.3'}{
  MAT v7.3 files, saved using for instance \code{save('foo.mat', '-v7.3')},
- stores the data in the Hierarchical Data Format (HDF5) [5,6], which
+ stores the data in the Hierarchical Data Format (HDF5) [6,7], which
  is a format not supported by this function/package.
  However, there exist other R packages that can parse HDF5, e.g.
  CRAN package \pkg{h5} and Bioconductor package \pkg{rhdf5}.
@@ -141,13 +141,14 @@ print(data)
   [2] The MathWorks Inc., \emph{MATLAB - Application Program Interface Guide, version 5}, 1998.\cr
   [3] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version 7}, September 2009.\cr
   [4] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version R2012a}, September 2012.\cr
-  [5] The MathWorks Inc., \emph{MATLAB - MAT-File Versions}, December 2015.
+  [5] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version R2015b}, September 2015.\cr
+  [6] The MathWorks Inc., \emph{MATLAB - MAT-File Versions}, December 2015.
       \url{http://www.mathworks.com/help/matlab/import_export/mat-file-versions.html}\cr
-  [6] Undocumented Matlab, \emph{Improving save performance}, May 2013.
+  [7] Undocumented Matlab, \emph{Improving save performance}, May 2013.
       \url{http://undocumentedmatlab.com/blog/improving-save-performance/}\cr
-  [7] J. Gilbert et al., {Sparse Matrices in MATLAB: Design and Implementation}, SIAM J. Matrix Anal. Appl., 1992.
+  [8] J. Gilbert et al., {Sparse Matrices in MATLAB: Design and Implementation}, SIAM J. Matrix Anal. Appl., 1992.
       \url{https://www.mathworks.com/help/pdf_doc/otherdocs/simax.pdf}\cr
-  [8] J. Burkardt, \emph{HB Files: Harwell Boeing Sparse Matrix File Format}, Apr 2010.
+  [9] J. Burkardt, \emph{HB Files: Harwell Boeing Sparse Matrix File Format}, Apr 2010.
       \url{http://people.sc.fsu.edu/~jburkardt/data/hb/hb.html}
 }
 

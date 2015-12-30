@@ -54,11 +54,11 @@
 }
 
 \section{Limitations}{
- Currently only the uncompressed MAT version 5 file format [5] is
+ Currently only the uncompressed MAT version 5 file format [6] is
  supported, that is, compressed MAT files cannot be written (only read).
 
  Moreover, the maximum variable size supported by the MAT version 5
- file format is 2^31 bytes [5].  In R, this limitation translates to
+ file format is 2^31 bytes [6].  In R, this limitation translates to
  2^31-1 bytes, which corresponds to for instance an integer object
  with 536870912 elements or double object with 268435456 elements.
 }
@@ -134,9 +134,11 @@ onWrite <- function(x)
   [2] The MathWorks Inc., \emph{MATLAB - Application Program Interface Guide, version 5}, 1998.\cr
   [3] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version 7}, September 2009.\cr
   [4] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version R2012a}, September 2012.\cr
-  [5] The MathWorks Inc., \emph{MATLAB - MAT-File Versions}, December 2015.
+  [5] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version R2015b}, September 2015.\cr
+  [6] The MathWorks Inc., \emph{MATLAB - MAT-File Versions}, December 2015.
       \url{http://www.mathworks.com/help/matlab/import_export/mat-file-versions.html}\cr
 }
+
 \seealso{
   \code{\link{readMat}}().
 }
