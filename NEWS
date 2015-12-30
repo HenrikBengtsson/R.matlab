@@ -1,7 +1,12 @@
 Package: R.matlab
 =================
 
-Version: 3.3.0-9000 [2015-12-27]
+Version: 3.3.0-9000 [2015-12-29]
+o ROBUSTNESS: Now readMat() gives a slightly more informative error
+  message when trying to read a MAT file containing a function object
+  of MAT array type (class) with value 16.  Note that the official
+  'MAT-File Format R2015b' (Sept 2015) does not document/describe
+  the format of this array type.
 o ROBUSTNESS: Now writeMat(pathname, ...) writes the MAT file
   atomically by first writing to a temporary file which is renamed
   only if successful.
@@ -9,7 +14,7 @@ o ROBUSTNESS: Now writeMat() asserts that a maximum of 2^31-1 bytes
   are written per variable, otherwise an informative error is thrown.
   This byte limit is set by the MAT file format definition.  Thanks
   to GitHub user 'intelinsight' for report on this.
-  
+
 
 Version: 3.3.0 [2015-09-22]
 o evaluate() gained argument 'capture' for capturing MATLAB output

@@ -76,7 +76,7 @@
 #
 # \section{Reading compressed MAT files}{
 #  From MATLAB v7, \emph{compressed} MAT version 5 files are used by
-#  default [3,4].  This function supports reading such files,
+#  default [3-5].  This function supports reading such files,
 #  if running R v2.10.0 or newer.
 #  For older versions of R, the \pkg{Rcompression} package is used.
 #  To install that package, please see instructions at
@@ -89,7 +89,7 @@
 #
 # \section{About MAT files saved in MATLAB using '-v7.3'}{
 #  MAT v7.3 files, saved using for instance \code{save('foo.mat', '-v7.3')},
-#  stores the data in the Hierarchical Data Format (HDF5) [5,6], which
+#  stores the data in the Hierarchical Data Format (HDF5) [6,7], which
 #  is a format not supported by this function/package.
 #  However, there exist other R packages that can parse HDF5, e.g.
 #  CRAN package \pkg{h5} and Bioconductor package \pkg{rhdf5}.
@@ -124,13 +124,14 @@
 #   [2] The MathWorks Inc., \emph{MATLAB - Application Program Interface Guide, version 5}, 1998.\cr
 #   [3] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version 7}, September 2009.\cr
 #   [4] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version R2012a}, September 2012.\cr
-#   [5] The MathWorks Inc., \emph{MATLAB - MAT-File Versions}, December 2015.
+#   [5] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version R2015b}, September 2015.\cr
+#   [6] The MathWorks Inc., \emph{MATLAB - MAT-File Versions}, December 2015.
 #       \url{http://www.mathworks.com/help/matlab/import_export/mat-file-versions.html}\cr
-#   [6] Undocumented Matlab, \emph{Improving save performance}, May 2013.
+#   [7] Undocumented Matlab, \emph{Improving save performance}, May 2013.
 #       \url{http://undocumentedmatlab.com/blog/improving-save-performance/}\cr
-#   [7] J. Gilbert et al., {Sparse Matrices in MATLAB: Design and Implementation}, SIAM J. Matrix Anal. Appl., 1992.
+#   [8] J. Gilbert et al., {Sparse Matrices in MATLAB: Design and Implementation}, SIAM J. Matrix Anal. Appl., 1992.
 #       \url{https://www.mathworks.com/help/pdf_doc/otherdocs/simax.pdf}\cr
-#   [8] J. Burkardt, \emph{HB Files: Harwell Boeing Sparse Matrix File Format}, Apr 2010.
+#   [9] J. Burkardt, \emph{HB Files: Harwell Boeing Sparse Matrix File Format}, Apr 2010.
 #       \url{http://people.sc.fsu.edu/~jburkardt/data/hb/hb.html}
 # }
 #
@@ -1510,27 +1511,28 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # MAT5 CONSTANTS
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # Data sizes and types according to [3]
+    # Data sizes and types according to [5]
     KNOWN_TYPES <- c(
-      "miMATRIX"=0L,
-      "miINT8"=8L,                #  1 miINT8 8 bit, signed
-      "miUINT8"=8L,               #  2 miUINT8 8 bit, unsigned
-      "miINT16"=16L,              #  3 miINT16 16-bit, signed
-      "miUINT16"=16L,             #  4 miUINT16 16-bit, unsigned
-      "miINT32"=32L,              #  5 miINT32 32-bit, signed
-      "miUINT32"=32L,             #  6 miUINT32 32-bit, unsigned
-      "miSINGLE"=32L,             #  7 miSINGLE IEEE 754 single format
-      "--"=NA_integer_,           #  8 -- Reserved
-      "miDOUBLE"=64L,             #  9 miDOUBLE IEEE 754 double format
-      "--"=NA_integer_,           # 10 -- Reserved
-      "--"=NA_integer_,           # 11 -- Reserved
-      "miINT64"=64L,              # 12 miINT64 64-bit, signed
-      "miUINT64"=64L,             # 13 miUINT64 64-bit, unsigned
-      "miMATRIX"=NA_integer_,     # 14 miMATRIX MATLAB array
-      "miCOMPRESSED"=NA_integer_, # 15 miCOMPRESSED Compressed Data
-      "miUTF8"=8L,                # 16 miUTF8 Unicode UTF-8 Encoded Character Data
-      "miUTF16"=16L,              # 17 miUTF16 Unicode UTF-16 Encoded Character Data
-      "miUTF32"=32L               # 18 miUTF32 Unicode UTF-32 Encoded Character Data
+                                  # Value  Symbol        MAT-File Data Type
+      "miMATRIX"=0L,              # ----------------------------------------------------------
+      "miINT8"=8L,                #     1  miINT8        8 bit, signed
+      "miUINT8"=8L,               #     2  miUINT8       8 bit, unsigned
+      "miINT16"=16L,              #     3  miINT16       16-bit, signed
+      "miUINT16"=16L,             #     4  miUINT16      16-bit, unsigned
+      "miINT32"=32L,              #     5  miINT32       32-bit, signed
+      "miUINT32"=32L,             #     6  miUINT32      32-bit, unsigned
+      "miSINGLE"=32L,             #     7  miSINGLE      IEEE 754 single format
+      "--"=NA_integer_,           #     8  --            Reserved
+      "miDOUBLE"=64L,             #     9  miDOUBLE      IEEE 754 double format
+      "--"=NA_integer_,           #    10  --            Reserved
+      "--"=NA_integer_,           #    11  --            Reserved
+      "miINT64"=64L,              #    12  miINT64       64-bit, signed
+      "miUINT64"=64L,             #    13  miUINT64      64-bit, unsigned
+      "miMATRIX"=NA_integer_,     #    14  miMATRIX      MATLAB array
+      "miCOMPRESSED"=NA_integer_, #    15  miCOMPRESSED  Compressed Data
+      "miUTF8"=8L,                #    16  miUTF8        Unicode UTF-8 Encoded Character Data
+      "miUTF16"=16L,              #    17  miUTF16       Unicode UTF-16 Encoded Character Data
+      "miUTF32"=32L               #    18  miUTF32       Unicode UTF-32 Encoded Character Data
     );
     NAMES_OF_KNOWN_TYPES <- names(KNOWN_TYPES);
     NBR_OF_KNOWN_TYPES <- length(KNOWN_TYPES);
@@ -1563,24 +1565,26 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
     );
     stopifnot(length(KNOWN_WHATS) == NBR_OF_KNOWN_TYPES);
 
-    # Known types and the number of bytes they occupy.
+    # Known array types [5] and the number of bytes they occupy.
     # NOTE: The index corresponds to its encoded value.
-    KNOWN_ARRAY_FLAGS <- c(
-      "mxCELL_CLASS"=NA_integer_,
-      "mxSTRUCT_CLASS"=NA_integer_,
-      "mxOBJECT_CLASS"=NA_integer_,
-      "mxCHAR_CLASS"=8L,
-      "mxSPARSE_CLASS"=NA_integer_,
-      "mxDOUBLE_CLASS"=NA_integer_,
-      "mxSINGLE_CLASS"=NA_integer_,
-      "mxINT8_CLASS"=8L,
-      "mxUINT8_CLASS"=8L,
-      "mxINT16_CLASS"=16L,
-      "mxUINT16_CLASS"=16,
-      "mxINT32_CLASS"=32L,
-      "mxUINT32_CLASS"=32L,
-      "mxINT64_CLASS"=64L,
-      "mxUINT64_CLASS"=64L
+    KNOWN_ARRAY_FLAGS <- c(          # MATLAB Array Type (Class)  Value
+                                     # ---------------------------------
+      "mxCELL_CLASS"=NA_integer_,    # Cell array                 1
+      "mxSTRUCT_CLASS"=NA_integer_,  # Structure                  2
+      "mxOBJECT_CLASS"=NA_integer_,  # Object                     3
+      "mxCHAR_CLASS"=8L,             # Character array            4
+      "mxSPARSE_CLASS"=NA_integer_,  # Sparse array               5
+      "mxDOUBLE_CLASS"=NA_integer_,  # Double precision array     6
+      "mxSINGLE_CLASS"=NA_integer_,  # Single precision array     7
+      "mxINT8_CLASS"=8L,             # 8-bit, signed integer      8
+      "mxUINT8_CLASS"=8L,            # 8-bit, unsigned integer    9
+      "mxINT16_CLASS"=16L,           # 16-bit, signed integer     10
+      "mxUINT16_CLASS"=16,           # 16-bit, unsigned integer   11
+      "mxINT32_CLASS"=32L,           # 32-bit, signed integer     12
+      "mxUINT32_CLASS"=32L,          # 32-bit, unsigned integer   13
+      "mxINT64_CLASS"=64L,           # 64-bit, signed integer     14
+      "mxUINT64_CLASS"=64L,          # 64-bit, unsigned integer   15
+      "mxFUN_CLASS"=NA_integer_      # Function                   16 ## Undocumented!
     );
     NAMES_OF_KNOWN_ARRAY_FLAGS <- names(KNOWN_ARRAY_FLAGS);
     NBR_OF_KNOWN_ARRAY_FLAGS <- length(KNOWN_ARRAY_FLAGS);
@@ -1767,8 +1771,10 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
       if (class < 1L || class > NBR_OF_KNOWN_ARRAY_FLAGS) {
         stop("Unknown array type (class). Not in [1,", NBR_OF_KNOWN_ARRAY_FLAGS, "]: ", class);
       }
+
+      symbol <- NAMES_OF_KNOWN_ARRAY_FLAGS[class];
       classSize <- KNOWN_ARRAY_FLAGS[class];
-      class <- NAMES_OF_KNOWN_ARRAY_FLAGS[class];
+
 
       arrayFlags <- arrayFlags %/% 256;
 
@@ -1804,11 +1810,16 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
       nzmax <- readBinMat(con, what=integer(), size=4L, n=1L);
       left <<- left - 4L;
 
-      flags <- list(logical=logical, global=global, complex=complex, class=class, classSize=classSize, nzmax=nzmax);
+      flags <- list(logical=logical, global=global, complex=complex, class=symbol, classSize=classSize, nzmax=nzmax);
 
       if (verbose) {
         cat(verbose, level=-100, "Flags:");
         print(verbose, level=-100, unlist(flags[-1L]));
+      }
+
+      ## Unknown/undocumented, cf. https://github.com/HenrikBengtsson/R.matlab/issues/28
+      if (class == 16L) {
+        stop(sprintf("Unsupported array type (class): %d (%s)", class, sQuote(symbol)))
       }
 
       flags;

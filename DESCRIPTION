@@ -11,7 +11,7 @@ Imports:
 Suggests:
   Matrix,
   SparseM
-Date: 2015-12-27
+Date: 2015-12-29
 Title: Read and Write MAT Files and Call MATLAB from Within R
 Authors@R: c(
   person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),
