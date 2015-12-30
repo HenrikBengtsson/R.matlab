@@ -490,6 +490,8 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
       writeFieldNames <- function(fieldNames, maxLength=32) {
   	verbose && enter(verbose, "writeFieldNames(): ", length(fieldNames), " names(s)");
 
+        verbose && cat(verbose, "Field names: ", hpaste(sQuote(fieldNames)))
+
   	# Field Names [miINT8]
   	nbrOfBytes <- length(fieldNames)*maxLength;
 
@@ -573,7 +575,7 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
 
 
       writeStructure <- function(name, structure) {
-  	verbose && enter(verbose, "writeStructure()");
+  	verbose && enter(verbose, sprintf("writeStructure(name=%s)", sQuote(name)));
 
   	nbrOfBytes <- writeArrayFlags(class="mxSTRUCT_CLASS", complex=FALSE, global=FALSE, logical=FALSE);
   	nbrOfBytes <- nbrOfBytes + writeDimensionsArray(dim=c(1,1));
@@ -582,9 +584,13 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
   	nbrOfBytes <- nbrOfBytes + writeFieldNames(names(structure), maxLength=32);
   	for (kk in seq(along=structure)) {
   	  field <- structure[[kk]];
-  	  field <- as.matrix(field);
-  	  field <- list(field);
-  	  nbrOfBytes <- nbrOfBytes + writeDataElement(con, field);
+          verbose && printf(verbose, "Field %s:\n", sQuote(names(structure)[kk]))
+          ## FIXME: The following turns vectors and arrays into
+          ## one-column matrices, cf. Issue #30. /HB 2015-12-29
+  	  field <- as.matrix(field)
+  	  field <- list(field)
+          ## Should we add? names(field) <- names(structure)[kk]
+  	  nbrOfBytes <- nbrOfBytes + writeDataElement(con, field)
   	}
 
   	verbose && exit(verbose);

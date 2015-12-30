@@ -2108,6 +2108,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
         names(matrix) <- NULL;
 
         # Set the dimension of the structure
+        ## FIXME: Is this really correct?, cf. Issue #30. /HB 2015-12-29
         dim <- c(nbrOfFields, dimensionsArray$dim);
         if (prod(dim) > 0) {
           matrix <- structure(matrix, dim=dim);
@@ -2464,8 +2465,11 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
           exit(verbose);
         }
       } else {
-        verbose && printf(verbose, level=-3, "Reading (outer) %.0f integers", tag$nbrOfBytes);
+        verbose && printf(verbose, level=-3, "Reading (outer) %.0f integers\n", tag$nbrOfBytes);
+        ## FIXME: Is this really correct?, cf. Issue #30. /HB 2015-12-29
+        ## Should it be: data <- mat5ReadMiMATRIX(this, tag);
         data <- readBinMat(con, what=integer(), size=1L, n=tag$nbrOfBytes, signed=tag$signed);
+        verbose && str(verbose, level=-50, data)
       }
 
       data;
