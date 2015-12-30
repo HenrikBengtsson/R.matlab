@@ -1584,7 +1584,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
       "mxUINT32_CLASS"=32L,          # 32-bit, unsigned integer   13
       "mxINT64_CLASS"=64L,           # 64-bit, signed integer     14
       "mxUINT64_CLASS"=64L,          # 64-bit, unsigned integer   15
-      "mxFUN_CLASS"=NA_integer_      # Function                   16 ## Undocumented!
+      "mxFUN_CLASS"=8L               # Function                   16 ## Undocumented!
     );
     NAMES_OF_KNOWN_ARRAY_FLAGS <- names(KNOWN_ARRAY_FLAGS);
     NBR_OF_KNOWN_ARRAY_FLAGS <- length(KNOWN_ARRAY_FLAGS);
@@ -2007,6 +2007,8 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
 
       verbose && cat(verbose, level=-100, "Reading ", len, " values each of ", sizeOf, " bytes. In total ", tag$nbrOfBytes, " bytes.");
 
+      ## stopifnot(is.finite(tag$nbrOfBytes), is.finite(tag$sizeOf))
+
       value <- readBinMat(con, what=what, size=sizeOf, n=len, signed=tag$signed);
       verbose && str(verbose, level=-102, value);
       verbose && str(verbose, level=-102, intToChar(value));
@@ -2142,7 +2144,6 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
         if (left > 0L) {
           pi <- mat5ReadValues(this, logical=arrayFlags$logical);
         } else {
-            stop("XX");
           pi <- NULL;
         }
         matrix <- complex(real=pr$value, imaginary=pi$value);
@@ -2365,10 +2366,22 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
       # (e) mxFUN_CLASS (undocumented)
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
       else if (arrayFlags$class == "mxFUN_CLASS") {
-        ## FIXME: Find a way to parse and at least skip (with a warning)
-        ## The problem is that this array type/class is undocumented,
-        ## cf. https://github.com/HenrikBengtsson/R.matlab/issues/28
-        stop(sprintf("Unsupported array type (class): %s (16)", arrayFlags$class))
+       ## NOTE: This is unknown territories and only reverse engineered
+       ## since mxFUN_CLASS (=16) is undocumented, cf. [5].
+       ## See also: https://github.com/HenrikBengtsson/R.matlab/issues/28
+
+       ## Next block
+       tag <- mat5ReadTag(this)
+
+       ## Read functional object as raw data
+       raw <- readBinMat(con, what=raw(), size=1L, n=tag$nbrOfBytes)
+       verbose && str(verbose, raw)
+
+       ## Skip padding
+       padding <- readBinMat(con, what=raw(), size=1L, n=tag$padding)
+
+       matrix <- list(raw)
+       names(matrix) <- arrayName$name
       }
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
       # (f) Everything else but:

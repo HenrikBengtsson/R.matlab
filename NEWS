@@ -2,11 +2,12 @@ Package: R.matlab
 =================
 
 Version: 3.3.0-9000 [2015-12-29]
-o ROBUSTNESS: Now readMat() gives a slightly more informative error
-  message when trying to read a MAT file containing a function object
-  of MAT array type (class) with value 16.  Note that the official
-  'MAT-File Format R2015b' (Sept 2015) does not document/describe
-  the format of this array type.
+o ROBUSTNESS: Now readMat() parses also functional objects of array
+  type (class) 16.  Note that the official 'MAT-File Format R2015b'
+  (Sept 2015) documentation does not describe this type.  I had to
+  implement the parser based on best guess on how the MAT file format
+  works in general, so it might not work in all cases.  Thanks to
+  GitHub user 'anilatx' for reporting on this type of MAT files.
 o ROBUSTNESS: Now writeMat(pathname, ...) writes the MAT file
   atomically by first writing to a temporary file which is renamed
   only if successful.
