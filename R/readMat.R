@@ -800,7 +800,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
     n <- length(zraw);
     unzraw <- NULL;
 
-    verbose && printf(verbose, level=-50, "Compress data size: %.3f Mb\n", n/1024^2);
+    verbose && printf(verbose, level=-50, "Compress data size: %.3f MiB\n", n/1024^2);
 
     lastException <- NULL;
     size <- NULL;
@@ -835,7 +835,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
     # Failed?
     if (is.null(unzraw)) {
       msg <- lastException$message;
-      throw(sprintf("Failed to uncompress compressed %d bytes (with smallest initial buffer size of %.3f Mb: %s)", n, size/1024^2, msg));
+      throw(sprintf("Failed to uncompress compressed %d bytes (with smallest initial buffer size of %.3f MiB: %s)", n, size/1024^2, msg));
     }
 
     unzraw;
