@@ -14,7 +14,7 @@ o ROBUSTNESS: Now writeMat(pathname, ...) writes the MAT file
 o ROBUSTNESS: Now writeMat() asserts that a maximum of 2^31-1 bytes
   are written per variable, otherwise an informative error is thrown.
   This byte limit is set by the MAT file format definition.  Thanks
-  to GitHub user 'intelinsight' for report on this.
+  to GitHub user 'intelinsight' for reporting on this.
 
 
 Version: 3.3.0 [2015-09-22]
