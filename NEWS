@@ -1,7 +1,7 @@
 Package: R.matlab
 =================
 
-Version: 3.3.0-9000 [2015-02-03]
+Version: 3.4.0 [2015-02-03]
 o ROBUSTNESS: Now readMat() parses also functional objects of array
   type (class) 16.  Note that the official 'MAT-File Format R2015b'
   (Sept 2015) documentation does not describe this type.  I had to
@@ -15,6 +15,7 @@ o ROBUSTNESS: Now writeMat() asserts that a maximum of 2^31-1 bytes
   are written per variable, otherwise an informative error is thrown.
   This byte limit is set by the MAT file format definition.  Thanks
   to GitHub user 'intelinsight' for reporting on this.
+o ROBUSTNESS: Package test coverage is 81%.
 
 
 Version: 3.3.0 [2015-09-22]
