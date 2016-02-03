@@ -871,6 +871,12 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
     # File in the R.io package to be used.
     pathname <- as.character(con)
 
+    ## Default has always been to overwrite existing file
+    ## Should this be made an argument?
+    overwrite <- TRUE
+    pathname <- Arguments$getWritablePathname(pathname, mustNotExist=FALSE)
+    if (overwrite && isFile(pathname)) file.remove(pathname)
+
     ## Write to temporary file and rename only if successful
     pathnameT <- pushTemporaryFile(pathname)
     conDescription <- pathnameT

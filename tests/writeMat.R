@@ -13,6 +13,15 @@ str(data)
 X <- list(A=A, B=B, C=C)
 stopifnot(all.equal(X, data[names(X)]))
 
+
+## Files are overwritten without notice
+writeMat(filename, A=A, B=B, C=C)
+data <- readMat(filename)
+str(data)
+
+X <- list(A=A, B=B, C=C)
+stopifnot(all.equal(X, data[names(X)]))
+
 unlink(filename)
 
 
