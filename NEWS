@@ -1,7 +1,7 @@
 Package: R.matlab
 =================
 
-Version: 3.3.0-9000 [2015-12-29]
+Version: 3.3.0-9000 [2015-02-03]
 o ROBUSTNESS: Now readMat() parses also functional objects of array
   type (class) 16.  Note that the official 'MAT-File Format R2015b'
   (Sept 2015) documentation does not describe this type.  I had to
