@@ -12,17 +12,8 @@
 }
 
 .onAttach <- function(libname, pkgname) {
-  pkg <- get(pkgname, envir=getNamespace(pkgname));
-
-  # Patch for Sys.setenv() and Sys.putenv()
-  # Sys.setenv() replaces Sys.putenv() from R v2.5.0. Code for migration.
-  if (!exists("Sys.setenv", mode="function", envir=baseenv())) {
-    # To please R CMD check on R (>= 2.15.0)
-    Sys.putenv <- NULL; rm(list="Sys.putenv");
-    assign("Sys.setenv", Sys.putenv, pos=getPosition(pkg));
-  }
-
-  startupMessage(pkg);
+  pkg <- get(pkgname, envir=getNamespace(pkgname))
+  startupMessage(pkg)
 }
 
 
