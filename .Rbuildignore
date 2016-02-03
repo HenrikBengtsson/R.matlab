@@ -6,6 +6,7 @@
 ^.make
 INSTALL[.]md
 OVERVIEW[.]md
+README[.]md
 
 #----------------------------
 # Travis-CI et al.
