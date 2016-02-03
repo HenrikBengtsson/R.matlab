@@ -1921,7 +1921,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
       sizeOf <- tag$sizeOf %/% 8;
       nbrOfNames <- tag$nbrOfBytes %/% maxLength;
       names <- character(length=nbrOfNames);
-      for (kk in seq(length=nbrOfNames)) {
+      for (kk in seq_len(nbrOfNames)) {
         name <- readBinMat(con, what=tag$what, size=sizeOf, n=maxLength);
         left <<- left - maxLength;
         name <- matToString(name, tag$type);
@@ -1958,7 +1958,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
       dropSingletonLists <- is.element("singletonLists", drop);
 
       fields <- vector("list", length=length(names));
-      for (kk in seq(along=names)) {
+      for (kk in seq_along(names)) {
         verbose && enter(verbose, level=-3, "Reading field: ", sQuote(names[kk]));
         field <- readMat5DataElement(this);
         # If read element is a list with a single element, then return that
@@ -2079,7 +2079,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
         nbrOfCells <- prod(dimensionsArray$dim);
         verbose && enter(verbose, level=-4, "Reading mxCELL_CLASS with ", nbrOfCells, " cells.");
         matrix <- vector("list", length=nbrOfCells);
-        for (kk in seq(length=nbrOfCells)) {
+        for (kk in seq_len(nbrOfCells)) {
           tag <- mat5ReadTag(this);
           if (tag$nbrOfBytes > 0L) {
             matrix[[kk]] <- mat5ReadMiMATRIX(this, tag);
@@ -2101,7 +2101,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
         verbose && cat(verbose, level=-100, "Field names: ", paste(names$names, collapse=", "));
         nbrOfFields <- length(names$names);
         matrix <- list();
-        for (kk in seq(length=nbrOfCells)) {
+        for (kk in seq_len(nbrOfCells)) {
           fields <- mat5ReadFields(this, names=names$names);
           matrix <- c(matrix, fields);
         }

@@ -498,7 +498,7 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
         tagSize <- writeTag(dataType="miINT8", nbrOfBytes=nbrOfBytes);
         nbrOfBytes <- tagSize;
 
-        for (kk in seq(along=fieldNames)) {
+        for (kk in seq_along(fieldNames)) {
           name <- fieldNames[kk];
           if (nchar(name) > maxLength-1)
             stop(paste("Too long field name: ", name, sep=""));
@@ -582,7 +582,7 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
         nbrOfBytes <- nbrOfBytes + writeArrayName(name=name);
         nbrOfBytes <- nbrOfBytes + writeFieldNameLength(maxLength=32);
         nbrOfBytes <- nbrOfBytes + writeFieldNames(names(structure), maxLength=32);
-        for (kk in seq(along=structure)) {
+        for (kk in seq_along(structure)) {
           field <- structure[[kk]];
           verbose && printf(verbose, "Field %s:\n", sQuote(names(structure)[kk]))
           ## FIXME: The following turns vectors and arrays into
@@ -608,7 +608,7 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
         nbrOfBytes <- writeArrayFlags(class="mxCELL_CLASS", complex=complex, global=global, logical=logical);
         nbrOfBytes <- nbrOfBytes + writeDimensionsArray(dim=dim(cells));
         nbrOfBytes <- nbrOfBytes + writeArrayName(name=name);
-        for (kk in seq(along=cells)) {
+        for (kk in seq_along(cells)) {
           cell <- cells[kk];
           nbrOfBytes <- nbrOfBytes + writeDataElement(con, cell);
         }
@@ -746,7 +746,7 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
     # by anyone, we have decided to not put the 'format' argument in the
     # main function readMat(), but if ever need, just add it there too.
     if (!is.null(format) && format == "matlab") {
-      for (kk in seq(along=objects)) {
+      for (kk in seq_along(objects)) {
         object <- objects[[kk]];
         if (!is.null(object)) {
           if (!is.array(object) && !is.list(object)) {
@@ -761,7 +761,7 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
     writeAll <- function(con, objects) {
       nbrOfBytes <- writeHeader(con);
 
-      for (kk in seq(along=objects)) {
+      for (kk in seq_along(objects)) {
         object <- objects[kk];   # NOT [[kk]], has to be a list!
         nbrOfBytes <- nbrOfBytes + writeDataElement(con, object);
       }
@@ -836,7 +836,7 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
 ###     # Fix invalid names
 ###     if (any(!isValid)) {
 ###       names3 <- names2[!isValid];
-###       names3 <- sprintf("unnamed%d", seq(along=names3));
+###       names3 <- sprintf("unnamed%d", seq_along(names3));
 ###       names2[!isValid] <- names3;
 ###     }
 ###
