@@ -908,7 +908,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
 ##  debugIndent <- 0L;
 ##  debug <- function(..., sep="") {
 ##    if (debugIndent > 0L)
-##      cat(paste(rep(" ", length.out=debugIndent), collapse=""));
+##      cat(paste(rep(" ", times=debugIndent), collapse=""));
 ##    cat(..., sep=sep);
 ##    cat("\n");
 ##  }
@@ -1640,7 +1640,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
         #  of the first two bytes of the tag with the value zero (0). If
         #  these two bytes are not zero, the tag uses the compressed format."
         tmp <- type;
-        bytes <- rep(NA_integer_, length=4L);
+        bytes <- rep(NA_integer_, times=4L);
         for (kk in 1:4) {
           bytes[kk] <- (tmp %% 256);
           tmp <- tmp %/% 256;
