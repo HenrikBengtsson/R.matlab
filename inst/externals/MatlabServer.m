@@ -24,7 +24,7 @@
 % [3] http://www.mathworks.com/access/helpdesk/help/toolbox/
 %                                              modelsim/a1057689278b4.html
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-fprintf(1, 'Running MatlabServer v3.3.0');
+fprintf(1, 'Running MatlabServer v3.3.1');
 
 %  addpath R/R_LIBS/linux/library/R.matlab/misc/
 
