@@ -14,7 +14,7 @@
 % Requirements:
 % This requires MATLAB with Java support, i.e. MATLAB v6 or higher.
 %
-% Author: Henrik Bengtsson, 2002-2015
+% Author: Henrik Bengtsson, 2002-2016
 %
 % References:
 % [1] http://www.mathworks.com/access/helpdesk/help/techdoc/
