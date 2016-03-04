@@ -253,7 +253,7 @@ while (MatlabServer_state >= 0),
     end
     
     MatlabServer_tmp_answer = readByte(MatlabServer_is);
-    fprintf('answer=%d\n', MatlabServer_tmp_answer);
+    fprintf(1, 'answer=%d\n', MatlabServer_tmp_answer);
     
     MatlabServer_state = 0;
     clear MatlabServer_tmp_name MatlabServer_tmp_expr MatlabServer_tmp_ok MatlabServer_tmp_answer;
@@ -305,7 +305,7 @@ while (MatlabServer_state >= 0),
     flush(MatlabServer_os);
     
     MatlabServer_tmp_answer = readByte(MatlabServer_is);
-    fprintf('answer=%d\n', MatlabServer_tmp_answer);
+    fprintf(1, 'answer=%d\n', MatlabServer_tmp_answer);
     
     MatlabServer_state = 0;
     clear MatlabServer_tmp_name MatlabServer_tmp_expr MatlabServer_tmp_ok MatlabServer_tmp_answer;  
