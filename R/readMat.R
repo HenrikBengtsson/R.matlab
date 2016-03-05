@@ -1584,7 +1584,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
       "mxUINT32_CLASS"=32L,           # 32-bit, unsigned integer   13
       "mxINT64_CLASS"=64L,            # 64-bit, signed integer     14
       "mxUINT64_CLASS"=64L,           # 64-bit, unsigned integer   15
-      "mxFUN_CLASS"=8L,               # Function                   16 ## Undocumented!
+      "mxFUNCTION_CLASS"=8L,          # Function                   16 ## Undocumented!
       "mxUNKNOWN17_CLASS"=NA_integer_ # ????????                   17 ## Undocumented!
     );
     NAMES_OF_KNOWN_ARRAY_FLAGS <- names(KNOWN_ARRAY_FLAGS);
@@ -2364,12 +2364,12 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
         verbose && exit(verbose);
       } # (d) mxSPARSE_CLASS
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
-      # (e) mxFUN_CLASS (undocumented)
+      # (e) mxFUNCTION_CLASS (undocumented)
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
-      else if (arrayFlags$class %in% c("mxFUN_CLASS", "mxUNKNOWN17_CLASS")) {
+      else if (arrayFlags$class %in% c("mxFUNCTION_CLASS", "mxUNKNOWN17_CLASS")) {
        ## NOTE: This is unknown territories and only reverse engineered
        ## since these array types/classes are undocumented [5];
-       ## * mxFUN_CLASS (=16): https://github.com/HenrikBengtsson/R.matlab/issues/28
+       ## * mxFUNCTION_CLASS (=16): https://github.com/HenrikBengtsson/R.matlab/issues/28
        ## * mxUNKNOWN17_CLASS (=17): https://github.com/HenrikBengtsson/R.matlab/issues/32
 
        ## Next block
@@ -2388,7 +2388,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
       # (f) Everything else but:
       #     (a) mxCELL_CLASS, (b) mxSTRUCT_CLASS, (c) mxOBJECT_CLASS,
-      #   , (d) mxSPARSE_CLASS and (e) mxFUN_CLASS.
+      #   , (d) mxSPARSE_CLASS and (e) mxFUNCTION_CLASS.
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
       else {
         data <- mat5ReadValues(this, logical=arrayFlags$logical);
