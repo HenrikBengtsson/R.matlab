@@ -1585,7 +1585,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
       "mxINT64_CLASS"=64L,            # 64-bit, signed integer     14
       "mxUINT64_CLASS"=64L,           # 64-bit, unsigned integer   15
       "mxFUNCTION_CLASS"=8L,          # Function                   16 ## Undocumented!
-      "mxOPAQUE_CLASS"=NA_integer_    # ????????                   17 ## Undocumented!
+      "mxOPAQUE_CLASS"=NA_integer_    # Function handle, ...?      17 ## Undocumented!
     );
     NAMES_OF_KNOWN_ARRAY_FLAGS <- names(KNOWN_ARRAY_FLAGS);
     NBR_OF_KNOWN_ARRAY_FLAGS <- length(KNOWN_ARRAY_FLAGS);
@@ -2367,7 +2367,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
       # (e) mxFUNCTION_CLASS (undocumented)
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
       else if (arrayFlags$class %in% c("mxFUNCTION_CLASS", "mxOPAQUE_CLASS")) {
-       ## NOTE: This is unknown territories and only reverse engineered
+       ## NOTE: These are unknown territories and only reverse engineered
        ## since these array types/classes are undocumented [5];
        ## * mxFUNCTION_CLASS (=16):
        ##   https://github.com/HenrikBengtsson/R.matlab/issues/28
@@ -2381,7 +2381,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
        ## Next block
        tag <- mat5ReadTag(this)
 
-       ## Read functional object as raw data
+       ## Read object as raw data
        raw <- readBinMat(con, what=raw(), size=1L, n=tag$nbrOfBytes)
        verbose && str(verbose, raw)
 
