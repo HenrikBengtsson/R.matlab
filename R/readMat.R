@@ -80,7 +80,7 @@
 #  if running R v2.10.0 or newer.
 #  For older versions of R, the \pkg{Rcompression} package is used.
 #  To install that package, please see instructions at
-#  \url{http://www.omegahat.org/cranRepository.html}.
+#  \url{http://www.omegahat.net/cranRepository.html}.
 #
 #  As a last resort, use \code{save -V6} in MATLAB to write MAT files
 #  that are compatible with MATLAB v6, that is, to write
