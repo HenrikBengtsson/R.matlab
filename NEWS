@@ -3,11 +3,10 @@ Package: R.matlab
 
 Version: 3.4.0-9000 [2015-02-23]
 o ROBUSTNESS: Now readMat() parses (effectively skips) also objects of
-  array type/class 17, which is an unknown type.  The official
-  'MAT-File Format R2015b' (Sept 2015) documentation does not describe
-  this type.  The parsing/skipping was done by reverse engineering and
-  clever guesses.  Thanks to GitHub user 'yakzan' for reporting on this
-  type of MAT files.
+  array class mxOPAQUE_CLASS (=17).  The official 'MAT-File Format R2015b'
+  (Sept 2015) documentation does not describe this type.
+  The parsing/skipping was done by reverse engineering and clever guesses.
+  Thanks to GitHub user 'yakzan' for reporting on this type of MAT files.
 
 
 Version: 3.4.0 [2015-02-03]
