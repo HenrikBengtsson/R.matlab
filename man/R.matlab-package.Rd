@@ -66,7 +66,7 @@
   A related initiative is \emph{RMatlab} by Duncan Temple Lang
   and Omegahat.  It provides a bi-directional interface between the
   \R and MATLAB languages. For more details, see
-  \url{http://www.omegahat.org/RMatlab/}.
+  \url{http://www.omegahat.net/RMatlab/}.
   To call R from MATLAB on Windows (only), see \emph{MATLAB R-link}
   by Robert Henson available at the MATLAB Central File Exchange
   (\url{http://www.mathworks.com/matlabcentral/fileexchange/loadFile.do?objectId=5051}).
@@ -77,7 +77,7 @@
 
   \preformatted{
 Henrik Bengtsson (2016). R.matlab: Read and Write MAT Files and Call MATLAB from
-Within R. R package version 3.4.0. https://github.com/HenrikBengtsson/R.matlab
+Within R. R package version 3.5.0. https://github.com/HenrikBengtsson/R.matlab
 }
 \emph{}
 

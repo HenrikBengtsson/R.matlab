@@ -14,7 +14,7 @@
 % Requirements:
 % This requires MATLAB with Java support, i.e. MATLAB v6 or higher.
 %
-% Author: Henrik Bengtsson, 2002-2015
+% Author: Henrik Bengtsson, 2002-2016
 %
 % References:
 % [1] http://www.mathworks.com/access/helpdesk/help/techdoc/
@@ -24,7 +24,7 @@
 % [3] http://www.mathworks.com/access/helpdesk/help/toolbox/
 %                                              modelsim/a1057689278b4.html
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-disp('Running MatlabServer v3.3.0');
+fprintf(1, 'Running MatlabServer v3.5.0\n');
 
 %  addpath R/R_LIBS/linux/library/R.matlab/misc/
 
@@ -46,7 +46,7 @@ if (MatlabServer_tmp_verMajor < 6)
   % Java is not available/supported
   error('MATLAB v5.x and below is not supported.');
 elseif (MatlabServer_tmp_verMajor == 6)
-  disp('MATLAB v6.x detected.');
+  fprintf(1, 'MATLAB v6.x detected.\n');
   % Default save option
   MatlabServer_saveOption = '';
   % In MATLAB v6 only the static Java CLASSPATH is supported. It is
@@ -58,18 +58,18 @@ elseif (MatlabServer_tmp_verMajor == 6)
   %
   % To do the above automatically from R, does not seem to be an option.
 else
-  disp('MATLAB v7.x or higher detected.');
+  fprintf(1, 'MATLAB v7.x or higher detected.\n');
   % MATLAB v7 and above saves compressed files, which is not recognized
   % by R.matlab's readMat(); force saving in old format.
   MatlabServer_saveOption = '-V6';
-  disp('Saving with option -V6.');
+  fprintf(1, 'Saving with option -V6.\n');
 
   % In MATLAB v7 and above both static and dynamic Java CLASSPATH:s exist.
   % Using dynamic ones, it is possible to add the file
   % InputStreamByteWrapper.class to CLASSPATH, given it is
   % in the same directory as this script.
   javaaddpath({fileparts(which('MatlabServer'))});
-  disp('Added InputStreamByteWrapper to dynamic Java CLASSPATH.');
+  fprintf(1, 'Added InputStreamByteWrapper to dynamic Java CLASSPATH.\n');
 end
 clear MatlabServer_tmp_verMajor;
 
@@ -234,7 +234,7 @@ while (MatlabServer_state >= 0),
       MatlabServer_tmp_variable = MatlabServer_variables{MatlabServer_tmp_k};
       if (exist(MatlabServer_tmp_variable) ~= 1)
         MatlabServer_lasterr = sprintf('Variable ''%s'' not found.', MatlabServer_tmp_variable);
-        disp(MatlabServer_lasterr);
+        fprintf(1, '%s\n', MatlabServer_lasterr);
         MatlabServer_tmp_ok = 0;
         break;
       end;
@@ -246,14 +246,14 @@ while (MatlabServer_state >= 0),
       writeInt(MatlabServer_os, -1);
       writeUTF(MatlabServer_os, MatlabServer_lasterr);
     else
-      disp(MatlabServer_tmp_expr);
+      fprintf(1, '%s\n', MatlabServer_tmp_expr);
       eval(MatlabServer_tmp_expr);
       writeInt(MatlabServer_os, 0); % Here anything but -1 means "success"
       writeUTF(MatlabServer_os, MatlabServer_tmp_tmpname);
     end
     
     MatlabServer_tmp_answer = readByte(MatlabServer_is);
-    fprintf('answer=%d\n', MatlabServer_tmp_answer);
+    fprintf(1, 'answer=%d\n', MatlabServer_tmp_answer);
     
     MatlabServer_state = 0;
     clear MatlabServer_tmp_name MatlabServer_tmp_expr MatlabServer_tmp_ok MatlabServer_tmp_answer;
@@ -269,7 +269,7 @@ while (MatlabServer_state >= 0),
       MatlabServer_tmp_variable = MatlabServer_variables{MatlabServer_tmp_k};
       if (exist(MatlabServer_tmp_variable) ~= 1)
         MatlabServer_lasterr = sprintf('Variable ''%s'' not found.', MatlabServer_tmp_variable);
-        disp(MatlabServer_lasterr);
+        fprintf(1, '%s\n', MatlabServer_lasterr);
         MatlabServer_tmp_ok = 0;
         break;
       end;
@@ -282,7 +282,7 @@ while (MatlabServer_state >= 0),
       writeInt(MatlabServer_os, -1);
       writeUTF(MatlabServer_os, MatlabServer_lasterr);
     else
-      disp(MatlabServer_tmp_expr);
+      fprintf(1, '%s\n', MatlabServer_tmp_expr);
       eval(MatlabServer_tmp_expr);
       MatlabServer_tmp_file = java.io.File(MatlabServer_tmp_tmpname);
       MatlabServer_tmp_maxLength = length(MatlabServer_tmp_file);
@@ -305,7 +305,7 @@ while (MatlabServer_state >= 0),
     flush(MatlabServer_os);
     
     MatlabServer_tmp_answer = readByte(MatlabServer_is);
-    fprintf('answer=%d\n', MatlabServer_tmp_answer);
+    fprintf(1, 'answer=%d\n', MatlabServer_tmp_answer);
     
     MatlabServer_state = 0;
     clear MatlabServer_tmp_name MatlabServer_tmp_expr MatlabServer_tmp_ok MatlabServer_tmp_answer;  

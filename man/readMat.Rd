@@ -88,15 +88,10 @@
 
 \section{Reading compressed MAT files}{
  From MATLAB v7, \emph{compressed} MAT version 5 files are used by
- default [3-5].  This function supports reading such files,
- if running R v2.10.0 or newer.
- For older versions of R, the \pkg{Rcompression} package is used.
- To install that package, please see instructions at
- \url{http://www.omegahat.org/cranRepository.html}.
+ default [3-5], which is supported by this function.
 
- As a last resort, use \code{save -V6} in MATLAB to write MAT files
- that are compatible with MATLAB v6, that is, to write
- non-compressed MAT version 5 files.
+ If for some reason it fails, use \code{save -V6} in MATLAB to write
+ non-compressed MAT v5 files (sic!).
 }
 
 \section{About MAT files saved in MATLAB using '-v7.3'}{
@@ -127,9 +122,8 @@ print(data)
   Henrik Bengtsson.
   The internal MAT v4 reader was written by
   Andy Jacobson (Princeton University).
-  Support for reading compressed files via \pkg{Rcompression},
-  sparse matrices and UTF-encoded strings was added by
-  Jason Riedy (UC Berkeley).
+  Support for reading sparse matrices, UTF-encoded strings and
+  compressed files, was contributed by Jason Riedy (UC Berkeley).
 }
 
 \seealso{

@@ -76,15 +76,10 @@
 #
 # \section{Reading compressed MAT files}{
 #  From MATLAB v7, \emph{compressed} MAT version 5 files are used by
-#  default [3-5].  This function supports reading such files,
-#  if running R v2.10.0 or newer.
-#  For older versions of R, the \pkg{Rcompression} package is used.
-#  To install that package, please see instructions at
-#  \url{http://www.omegahat.org/cranRepository.html}.
+#  default [3-5], which is supported by this function.
 #
-#  As a last resort, use \code{save -V6} in MATLAB to write MAT files
-#  that are compatible with MATLAB v6, that is, to write
-#  non-compressed MAT version 5 files.
+#  If for some reason it fails, use \code{save -V6} in MATLAB to write
+#  non-compressed MAT v5 files (sic!).
 # }
 #
 # \section{About MAT files saved in MATLAB using '-v7.3'}{
@@ -110,9 +105,8 @@
 #   Henrik Bengtsson.
 #   The internal MAT v4 reader was written by
 #   Andy Jacobson (Princeton University).
-#   Support for reading compressed files via \pkg{Rcompression},
-#   sparse matrices and UTF-encoded strings was added by
-#   Jason Riedy (UC Berkeley).
+#   Support for reading sparse matrices, UTF-encoded strings and
+#   compressed files, was contributed by Jason Riedy (UC Berkeley).
 # }
 #
 # \seealso{
@@ -625,8 +619,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # \description{
   #  Function to uncompress zlib compressed data.
-  #  If R v2.10.0 or newer, we'll utilize base::memDecompress(), otherwise
-  #  we'll utilize Rcompression::uncompress(), iff package is installed.
+  #  We'll utilize base::memDecompress() which was introduced in R 2.10.0.
   # }
   #
   # \arguments{
@@ -779,127 +772,11 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
   } # uncompressMemDecompress()
 
 
-  # This is a smart wrapper function around Rcompression::uncompress(),
-  # which in order to avoid lack-of-memory allocation errors will via
-  # trial and error find a reasonably sized internal inflation buffer.
-  uncompressRcompression <- function(zraw, type=NA_character_, asText=TRUE, sizeRatio=3, delta=0.9, ...) {
-    # To please R CMD check
-    pkgName <- "Rcompression"
-    if (!.require(pkgName, quietly=TRUE)) {
-      throw("Cannot read compressed data.  Omegahat.org package 'Rcompression' could not be loaded.  Alternatively, save your data in a non-compressed format by specifying -V6 when calling save() in MATLAB or Octave.");
-    }
-
-    # Argument 'delta':
-    if (delta <= 0 || delta >= 1) {
-      throw("Argument 'delta' is out of range (0,1): ", delta);
-    }
-
-    # Get Rcompression::uncompress() without R CMD check noticing.
-    uncompress <- getFromNamespace("uncompress", ns="Rcompression");
-
-    n <- length(zraw);
-    unzraw <- NULL;
-
-    verbose && printf(verbose, level=-50, "Compress data size: %.3f MiB\n", n/1024^2);
-
-    lastException <- NULL;
-    size <- NULL;
-    while (is.null(unzraw) && sizeRatio >= 1) {
-      # The initial size of the internal inflation buffer.  If it is too
-      # small, Rcompression::uncompress() will try to *double* it, which
-      # might be too big for memory allocation.
-      size <- sizeRatio * n;
-
-      verbose && printf(verbose, level=-50, "Size ratio: %.3f\n", sizeRatio);
-
-      lastException <- NULL;
-      tryCatch({
-        unzraw <- uncompress(zraw, size=size, asText=asText);
-        # Successful uncompression
-        break;
-      }, error = function(ex) {
-        msg <- ex$message;
-        # Is the error is due to corrupt data, ...
-        if (regexpr("corrupted compressed", msg) != -1) {
-          # ...then there is nothing we can do.
-          errorMsg <- paste("Failed to uncompress data: ", msg, sep="");
-          throw(errorMsg);
-        }
-        # ...but it could be that there is not enough memory
-        lastException <<- ex;
-      }) # tryCatch()
-
-      sizeRatio <- delta * sizeRatio;
-    } # while (...)
-
-    # Failed?
-    if (is.null(unzraw)) {
-      msg <- lastException$message;
-      throw(sprintf("Failed to uncompress compressed %d bytes (with smallest initial buffer size of %.3f MiB: %s)", n, size/1024^2, msg));
-    }
-
-    unzraw;
-  } # uncompressRcompression()
-
-
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Decompression method
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Default decompress function
-  uncompress <- function(..., type=NA_character_) {
-    throw(sprintf("Cannot decompress (%s) compressed MAT file because none of the decompression methods are available: %s", type, hpaste(decompressWith0, maxHead=Inf)));
-  } # uncompress()
-  attr(uncompress, "label") <- "N/A";
-
-
-  # Override with available methods
-  decompressWith <- getOption("R.matlab::readMat/decompressWith", c("memDecompress", "Rcompression"));
-
-  # Validate option
-  if (is.character(decompressWith)) {
-  } else if (is.function(decompressWith)) {
-  } else {
-    throw("Unknown mode of 'R.matlab::readMat/decompressWith': ", mode(decompressWith));
-  }
-
-  decompressWith0 <- decompressWith;
-
-  if (length(decompressWith) > 0L) {
-    if (is.character(decompressWith)) {
-      # Is memDecompress() available?
-      # memDecompress() was introduced in R v2.10.0
-      if (is.element("memDecompress", decompressWith)) {
-        if (getRversion() < "2.10.0" || !exists("memDecompress", mode="function")) {
-          decompressWith <- setdiff(decompressWith, "memDecompress");
-        }
-      }
-
-      # Is Rcompression package available?
-      if (is.element("Rcompression", decompressWith)) {
-        if (!isPackageInstalled("Rcompression")) {
-          decompressWith <- setdiff(decompressWith, "Rcompression");
-        }
-      }
-
-      # Select decompression method
-      if (is.character(decompressWith)) {
-        if (decompressWith[1L] == "memDecompress") {
-          uncompress <- uncompressMemDecompress;
-          attr(uncompress, "label") <- decompressWith[1L];
-        } else if (decompressWith[1L] == "Rcompression") {
-          uncompress <- uncompressRcompression;
-          attr(uncompress, "label") <- decompressWith[1L];
-        } else {
-          # Don't throw an exception here, because it may be
-          # that the MAT files is not compressed.
-        }
-      }
-    } else if (is.function(decompressWith)) {
-      uncompress <- decompressWith;
-      attr(uncompress, "label") <- "<function>";
-
-    }
-  } # if (length(decompressWith) > 0L)
+  uncompress <- uncompressMemDecompress
+  attr(uncompress, "label") <- "memDecompress"
 
 
 ##  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -908,7 +785,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
 ##  debugIndent <- 0L;
 ##  debug <- function(..., sep="") {
 ##    if (debugIndent > 0L)
-##      cat(paste(rep(" ", length.out=debugIndent), collapse=""));
+##      cat(paste(rep(" ", times=debugIndent), collapse=""));
 ##    cat(..., sep=sep);
 ##    cat("\n");
 ##  }
@@ -1567,24 +1444,25 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
 
     # Known array types [5] and the number of bytes they occupy.
     # NOTE: The index corresponds to its encoded value.
-    KNOWN_ARRAY_FLAGS <- c(          # MATLAB Array Type (Class)  Value
-                                     # ---------------------------------
-      "mxCELL_CLASS"=NA_integer_,    # Cell array                 1
-      "mxSTRUCT_CLASS"=NA_integer_,  # Structure                  2
-      "mxOBJECT_CLASS"=NA_integer_,  # Object                     3
-      "mxCHAR_CLASS"=8L,             # Character array            4
-      "mxSPARSE_CLASS"=NA_integer_,  # Sparse array               5
-      "mxDOUBLE_CLASS"=NA_integer_,  # Double precision array     6
-      "mxSINGLE_CLASS"=NA_integer_,  # Single precision array     7
-      "mxINT8_CLASS"=8L,             # 8-bit, signed integer      8
-      "mxUINT8_CLASS"=8L,            # 8-bit, unsigned integer    9
-      "mxINT16_CLASS"=16L,           # 16-bit, signed integer     10
-      "mxUINT16_CLASS"=16,           # 16-bit, unsigned integer   11
-      "mxINT32_CLASS"=32L,           # 32-bit, signed integer     12
-      "mxUINT32_CLASS"=32L,          # 32-bit, unsigned integer   13
-      "mxINT64_CLASS"=64L,           # 64-bit, signed integer     14
-      "mxUINT64_CLASS"=64L,          # 64-bit, unsigned integer   15
-      "mxFUN_CLASS"=8L               # Function                   16 ## Undocumented!
+    KNOWN_ARRAY_FLAGS <- c(           # MATLAB Array Type (Class)  Value
+                                      # ---------------------------------
+      "mxCELL_CLASS"=NA_integer_,     # Cell array                 1
+      "mxSTRUCT_CLASS"=NA_integer_,   # Structure                  2
+      "mxOBJECT_CLASS"=NA_integer_,   # Object                     3
+      "mxCHAR_CLASS"=8L,              # Character array            4
+      "mxSPARSE_CLASS"=NA_integer_,   # Sparse array               5
+      "mxDOUBLE_CLASS"=NA_integer_,   # Double precision array     6
+      "mxSINGLE_CLASS"=NA_integer_,   # Single precision array     7
+      "mxINT8_CLASS"=8L,              # 8-bit, signed integer      8
+      "mxUINT8_CLASS"=8L,             # 8-bit, unsigned integer    9
+      "mxINT16_CLASS"=16L,            # 16-bit, signed integer     10
+      "mxUINT16_CLASS"=16L,           # 16-bit, unsigned integer   11
+      "mxINT32_CLASS"=32L,            # 32-bit, signed integer     12
+      "mxUINT32_CLASS"=32L,           # 32-bit, unsigned integer   13
+      "mxINT64_CLASS"=64L,            # 64-bit, signed integer     14
+      "mxUINT64_CLASS"=64L,           # 64-bit, unsigned integer   15
+      "mxFUNCTION_CLASS"=8L,          # Function                   16 ## Undocumented!
+      "mxOPAQUE_CLASS"=NA_integer_    # Function handle, ...?      17 ## Undocumented!
     );
     NAMES_OF_KNOWN_ARRAY_FLAGS <- names(KNOWN_ARRAY_FLAGS);
     NBR_OF_KNOWN_ARRAY_FLAGS <- length(KNOWN_ARRAY_FLAGS);
@@ -1639,7 +1517,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
         #  of the first two bytes of the tag with the value zero (0). If
         #  these two bytes are not zero, the tag uses the compressed format."
         tmp <- type;
-        bytes <- rep(NA_integer_, length=4L);
+        bytes <- rep(NA_integer_, times=4L);
         for (kk in 1:4) {
           bytes[kk] <- (tmp %% 256);
           tmp <- tmp %/% 256;
@@ -1828,7 +1706,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
       }
 
       tag <- mat5ReadTag(this);
-      if (tag$type != "miINT32") {
+      if (!tag$type %in% c("miINT8", "miINT32")) {
         if (verbose) {
           cat(verbose, "Tag:");
           str(verbose, tag);
@@ -2070,7 +1948,6 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
       dimensionsArray <- mat5ReadDimensionsArray(this);
       arrayName <- mat5ReadName(this);
       verbose && cat(verbose, "Array name: ", sQuote(arrayName$name));
-
 
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
       # (a) mxCELL_CLASS
@@ -2364,17 +2241,24 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
         verbose && exit(verbose);
       } # (d) mxSPARSE_CLASS
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
-      # (e) mxFUN_CLASS (undocumented)
+      # (e) mxFUNCTION_CLASS (undocumented)
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
-      else if (arrayFlags$class == "mxFUN_CLASS") {
-       ## NOTE: This is unknown territories and only reverse engineered
-       ## since mxFUN_CLASS (=16) is undocumented, cf. [5].
-       ## See also: https://github.com/HenrikBengtsson/R.matlab/issues/28
+      else if (arrayFlags$class %in% c("mxFUNCTION_CLASS", "mxOPAQUE_CLASS")) {
+       ## NOTE: These are unknown territories and only reverse engineered
+       ## since these array types/classes are undocumented [5];
+       ## * mxFUNCTION_CLASS (=16):
+       ##   https://github.com/HenrikBengtsson/R.matlab/issues/28
+       ## * mxOPAQUE_CLASS (=17):
+       ##   https://github.com/HenrikBengtsson/R.matlab/issues/32
+       ##   Thread 'saveing/loading symbol table of annymous functions',
+       ##   Octave Maintainers, April-May 2007:
+       ##   - https://lists.gnu.org/archive/html/octave-maintainers/2007-04/msg00031.html
+       ##   - https://lists.gnu.org/archive/html/octave-maintainers/2007-05/msg00032.html
 
        ## Next block
        tag <- mat5ReadTag(this)
 
-       ## Read functional object as raw data
+       ## Read object as raw data
        raw <- readBinMat(con, what=raw(), size=1L, n=tag$nbrOfBytes)
        verbose && str(verbose, raw)
 
@@ -2387,7 +2271,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
       # (f) Everything else but:
       #     (a) mxCELL_CLASS, (b) mxSTRUCT_CLASS, (c) mxOBJECT_CLASS,
-      #   , (d) mxSPARSE_CLASS and (e) mxFUN_CLASS.
+      #   , (d) mxSPARSE_CLASS and (e) mxFUNCTION_CLASS.
       # -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
       else {
         data <- mat5ReadValues(this, logical=arrayFlags$logical);
@@ -2590,7 +2474,6 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
     enter(verbose, "R.matlab options");
     cat(verbose, "R.matlab::readMat/rawBufferSize: ", rawBufferSize);
     cat(verbose, "R.matlab::readMat/rawBufferMethod: ", rawBufferMethod);
-    cat(verbose, "R.matlab::readMat/decompressWith: ", decompressWith);
     cat(verbose, "R.matlab::readMat/onDecompressError: ", getOption("R.matlab::readMat/onDecompressError", "error"));
 
     exit(verbose);
@@ -2626,6 +2509,9 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
 
 ###########################################################################
 # HISTORY:
+# 2016-03-04
+# o CLEANUP: Dropping uncompression by Rcompression package.  This also
+#   makes option 'R.matlab::decompressWith' obsolete.
 # 2015-01-31
 # o BUG FIX: readMat(..., sparseMatrixClass='matrix') did not return
 #   the correct results in all cases.  Added more package tests.
