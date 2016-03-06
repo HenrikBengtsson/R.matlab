@@ -10,6 +10,7 @@ o ROBUSTNESS: Now readMat() parses (effectively skips) also objects of
 o CLEANUP: Internal fallback method for reading compressed MAT files
   using Omegahat's Rcompression package is not needed since R 2.10.0 and
   therefore dropped.
+o ROBUSTNESS: Package test coverage is 82%.
 
 
 Version: 3.4.0 [2015-02-03]
