@@ -1,9 +1,9 @@
 Package: R.matlab
 =================
 
-Version: 3.5.0-9000 [2015-03-27]
-* CLEANUP / CRAN: Dropping reference to deprecated utils::setInternet2()
-  in help("Matlab").
+Version: 3.5.1 [2015-03-27]
+* CRAN POLICIES/CLEANUP: Dropping reference to deprecated (soon defunct)
+  utils::setInternet2() in help("Matlab").
 
 
 Version: 3.5.0 [2015-03-05]
