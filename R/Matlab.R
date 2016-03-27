@@ -153,12 +153,6 @@
 #   is not possible for others to connect to the MATLAB server.
 # }
 #
-# \section{Firewalls}{
-#   If the MATLAB server is running on a machine behind a firewall,
-#   one may have to connect via a proxy.  If on Windows, see
-#   \code{setInternet2()} in the \pkg{utils} package on how to do this.
-# }
-#
 # \section{MATLAB server is timing out}{
 #   It might be that an @seemethod "evaluate" call to the MATLAB server
 #   takes a long time for the server to finish resulting in a time-out
