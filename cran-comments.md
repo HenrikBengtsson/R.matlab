@@ -19,7 +19,7 @@ The package has been verified using `R CMD check --as-cran` on:
 * Platform x86_64-pc-linux-gnu (64-bit):
   - R version 3.1.3 (2015-03-09)
   - R version 3.2.4 patched (2016-03-16 r70378)
-  - R Under development (unstable) (2016-03-05 r70278)
+  - R Under development (unstable) (2016-03-25 r70378)
 
 * Platform i386-w64-mingw32 (32-bit) [Appveyor CI]:
   - R Under development (unstable) (2016-03-26 r70382)
