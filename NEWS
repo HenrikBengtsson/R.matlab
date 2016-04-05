@@ -1,8 +1,13 @@
 Package: R.matlab
 =================
 
+Version: 3.5.9-9000 [2015-04-05]
+o The MatlabServer.m script now outputs verbose/debug messages to 
+  standard error (or more precisely MATLAB file #2) (Issue #27).
+  
+
 Version: 3.5.1 [2015-03-27]
-* CRAN POLICIES/CLEANUP: Dropping reference to deprecated (soon defunct)
+o CRAN POLICIES/CLEANUP: Dropping reference to deprecated (soon defunct)
   utils::setInternet2() in help("Matlab").
 
 

@@ -53,7 +53,7 @@
 \% [3] http://www.mathworks.com/access/helpdesk/help/toolbox/
 \%                                              modelsim/a1057689278b4.html
 \%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%
-fprintf(1, 'Running MatlabServer v3.5.0\n');
+fprintf(2, 'Running MatlabServer v3.5.9-9000\n');
 
 \%  addpath R/R_LIBS/linux/library/R.matlab/misc/
 
@@ -75,7 +75,7 @@ if (MatlabServer_tmp_verMajor < 6)
   \% Java is not available/supported
   error('MATLAB v5.x and below is not supported.');
 elseif (MatlabServer_tmp_verMajor == 6)
-  fprintf(1, 'MATLAB v6.x detected.\n');
+  fprintf(2, 'MATLAB v6.x detected.\n');
   \% Default save option
   MatlabServer_saveOption = '';
   \% In MATLAB v6 only the static Java CLASSPATH is supported. It is
@@ -87,18 +87,18 @@ elseif (MatlabServer_tmp_verMajor == 6)
   \%
   \% To do the above automatically from R, does not seem to be an option.
 else
-  fprintf(1, 'MATLAB v7.x or higher detected.\n');
+  fprintf(2, 'MATLAB v7.x or higher detected.\n');
   \% MATLAB v7 and above saves compressed files, which is not recognized
   \% by R.matlab's readMat(); force saving in old format.
   MatlabServer_saveOption = '-V6';
-  fprintf(1, 'Saving with option -V6.\n');
+  fprintf(2, 'Saving with option -V6.\n');
 
   \% In MATLAB v7 and above both static and dynamic Java CLASSPATH:s exist.
   \% Using dynamic ones, it is possible to add the file
   \% InputStreamByteWrapper.class to CLASSPATH, given it is
   \% in the same directory as this script.
   javaaddpath({fileparts(which('MatlabServer'))});
-  fprintf(1, 'Added InputStreamByteWrapper to dynamic Java CLASSPATH.\n');
+  fprintf(2, 'Added InputStreamByteWrapper to dynamic Java CLASSPATH.\n');
 end
 clear MatlabServer_tmp_verMajor;
 
@@ -131,11 +131,11 @@ if (exist('MatlabServer_os'))
   clear MatlabServer_os;
 end
 
-fprintf(1, '----------------------\n');
-fprintf(1, 'MATLAB server started!\n');
-fprintf(1, '----------------------\n');
+fprintf(2, '----------------------\n');
+fprintf(2, 'MATLAB server started!\n');
+fprintf(2, '----------------------\n');
 
-fprintf(1, 'MATLAB working directory: \%s\n', pwd);
+fprintf(2, 'MATLAB working directory: \%s\n', pwd);
 
 
 \% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -155,9 +155,9 @@ if (MatlabServer_port < 1023 | MatlabServer_port > 65535)
   error('Cannot not open connection. Port (''MATLABSERVER_PORT'') is out of range [1023,65535]: \%d', MatlabServer_port);
 end
 
-fprintf(1, 'Trying to open server socket (port \%d)...', MatlabServer_port);
+fprintf(2, 'Trying to open server socket (port \%d)...', MatlabServer_port);
 MatlabServer_server = java.net.ServerSocket(MatlabServer_port);
-fprintf(1, 'done.\n');
+fprintf(2, 'done.\n');
 
 
 \% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -168,9 +168,9 @@ fprintf(1, 'done.\n');
 \% Open input and output streams
 
 \% Wait for the client to connect
-fprintf(1, 'Waiting for client to connect (port \%d)...', MatlabServer_port);
+fprintf(2, 'Waiting for client to connect (port \%d)...', MatlabServer_port);
 MatlabServer_clientSocket = accept(MatlabServer_server);
-fprintf(1, 'connected.\n');
+fprintf(2, 'connected.\n');
 
 \% ...client connected.
 MatlabServer_is = java.io.DataInputStream(getInputStream(MatlabServer_clientSocket));
@@ -192,9 +192,9 @@ MatlabServer_state = 0;
 while (MatlabServer_state >= 0),
   if (MatlabServer_state == 0)
     MatlabServer_tmp_cmd = readByte(MatlabServer_is);
-    fprintf(1, 'Received cmd: \%d\n', MatlabServer_tmp_cmd);
+    fprintf(2, 'Received cmd: \%d\n', MatlabServer_tmp_cmd);
     if (MatlabServer_tmp_cmd < -1 | MatlabServer_tmp_cmd > length(MatlabServer_commands))
-      fprintf(1, 'Unknown command code: \%d\n', MatlabServer_tmp_cmd);
+      fprintf(2, 'Unknown command code: \%d\n', MatlabServer_tmp_cmd);
     else
       MatlabServer_state = MatlabServer_tmp_cmd;
     end
@@ -205,23 +205,23 @@ while (MatlabServer_state >= 0),
   \%-------------------
   elseif (MatlabServer_state == strmatch('evalc', MatlabServer_commands, 'exact'))
     MatlabServer_tmp_bfr = char(readUTF(MatlabServer_is));
-    fprintf(1, '"evalc" string: "\%s"\n', MatlabServer_tmp_bfr);
+    fprintf(2, '"evalc" string: "\%s"\n', MatlabServer_tmp_bfr);
     try
       MatlabServer_tmp_bfr = sprintf(MatlabServer_tmp_bfr);
       MatlabServer_tmp_result = evalc(MatlabServer_tmp_bfr);
       writeByte(MatlabServer_os, 0);
-      fprintf(1, 'Sent byte: \%d\n', 0);
+      fprintf(2, 'Sent byte: \%d\n', 0);
       writeUTF(MatlabServer_os, MatlabServer_tmp_result);
-      fprintf(1, 'Sent UTF: \%s\n', MatlabServer_tmp_result);
+      fprintf(2, 'Sent UTF: \%s\n', MatlabServer_tmp_result);
       flush(MatlabServer_os);
       clear MatlabServer_tmp_result;
     catch
       MatlabServer_lasterr = sprintf('Failed to evaluate expression ''\%s''.', MatlabServer_tmp_bfr);
-      fprintf(1, 'EvaluationException: \%s\n', MatlabServer_lasterr);
+      fprintf(2, 'EvaluationException: \%s\n', MatlabServer_lasterr);
       writeByte(MatlabServer_os, -1);
-      fprintf(1, 'Sent byte: \%d\n', -1);
+      fprintf(2, 'Sent byte: \%d\n', -1);
       writeUTF(MatlabServer_os, MatlabServer_lasterr);
-      fprintf(1, 'Sent UTF: \%s\n', MatlabServer_lasterr);
+      fprintf(2, 'Sent UTF: \%s\n', MatlabServer_lasterr);
       flush(MatlabServer_os);
     end
     flush(MatlabServer_os);
@@ -233,19 +233,19 @@ while (MatlabServer_state >= 0),
   \%-------------------
   elseif (MatlabServer_state == strmatch('eval', MatlabServer_commands, 'exact'))
     MatlabServer_tmp_bfr = char(readUTF(MatlabServer_is));
-    fprintf(1, '"eval" string: "\%s"\n', MatlabServer_tmp_bfr);
+    fprintf(2, '"eval" string: "\%s"\n', MatlabServer_tmp_bfr);
     try
       eval(MatlabServer_tmp_bfr);
       writeByte(MatlabServer_os, 0);
-      fprintf(1, 'Sent byte: \%d\n', 0);
+      fprintf(2, 'Sent byte: \%d\n', 0);
       flush(MatlabServer_os);
     catch
       MatlabServer_lasterr = sprintf('Failed to evaluate expression ''\%s''.', MatlabServer_tmp_bfr);
-      fprintf(1, 'EvaluationException: \%s\n', MatlabServer_lasterr);
+      fprintf(2, 'EvaluationException: \%s\n', MatlabServer_lasterr);
       writeByte(MatlabServer_os, -1);
-      fprintf(1, 'Sent byte: \%d\n', -1);
+      fprintf(2, 'Sent byte: \%d\n', -1);
       writeUTF(MatlabServer_os, MatlabServer_lasterr);
-      fprintf(1, 'Sent UTF: \%s\n', MatlabServer_lasterr);
+      fprintf(2, 'Sent UTF: \%s\n', MatlabServer_lasterr);
       flush(MatlabServer_os);
     end
     flush(MatlabServer_os);
@@ -263,7 +263,7 @@ while (MatlabServer_state >= 0),
       MatlabServer_tmp_variable = MatlabServer_variables{MatlabServer_tmp_k};
       if (exist(MatlabServer_tmp_variable) ~= 1)
         MatlabServer_lasterr = sprintf('Variable ''\%s'' not found.', MatlabServer_tmp_variable);
-        fprintf(1, '\%s\n', MatlabServer_lasterr);
+        fprintf(2, '\%s\n', MatlabServer_lasterr);
         MatlabServer_tmp_ok = 0;
         break;
       end;
@@ -275,14 +275,14 @@ while (MatlabServer_state >= 0),
       writeInt(MatlabServer_os, -1);
       writeUTF(MatlabServer_os, MatlabServer_lasterr);
     else
-      fprintf(1, '\%s\n', MatlabServer_tmp_expr);
+      fprintf(2, '\%s\n', MatlabServer_tmp_expr);
       eval(MatlabServer_tmp_expr);
       writeInt(MatlabServer_os, 0); \% Here anything but -1 means "success"
       writeUTF(MatlabServer_os, MatlabServer_tmp_tmpname);
     end
    
     MatlabServer_tmp_answer = readByte(MatlabServer_is);
-    fprintf(1, 'answer=\%d\n', MatlabServer_tmp_answer);
+    fprintf(2, 'answer=\%d\n', MatlabServer_tmp_answer);
    
     MatlabServer_state = 0;
     clear MatlabServer_tmp_name MatlabServer_tmp_expr MatlabServer_tmp_ok MatlabServer_tmp_answer;
@@ -298,7 +298,7 @@ while (MatlabServer_state >= 0),
       MatlabServer_tmp_variable = MatlabServer_variables{MatlabServer_tmp_k};
       if (exist(MatlabServer_tmp_variable) ~= 1)
         MatlabServer_lasterr = sprintf('Variable ''\%s'' not found.', MatlabServer_tmp_variable);
-        fprintf(1, '\%s\n', MatlabServer_lasterr);
+        fprintf(2, '\%s\n', MatlabServer_lasterr);
         MatlabServer_tmp_ok = 0;
         break;
       end;
@@ -311,13 +311,13 @@ while (MatlabServer_state >= 0),
       writeInt(MatlabServer_os, -1);
       writeUTF(MatlabServer_os, MatlabServer_lasterr);
     else
-      fprintf(1, '\%s\n', MatlabServer_tmp_expr);
+      fprintf(2, '\%s\n', MatlabServer_tmp_expr);
       eval(MatlabServer_tmp_expr);
       MatlabServer_tmp_file = java.io.File(MatlabServer_tmp_tmpname);
       MatlabServer_tmp_maxLength = length(MatlabServer_tmp_file);
       clear MatlabServer_tmp_file;
       writeInt(MatlabServer_os, MatlabServer_tmp_maxLength); \% Here anything but -1 means "success"
-      fprintf(1, 'Send int: \%d (maxLength)\n', MatlabServer_tmp_maxLength);
+      fprintf(2, 'Send int: \%d (maxLength)\n', MatlabServer_tmp_maxLength);
       MatlabServer_tmp_fid = fopen(MatlabServer_tmp_tmpname, 'r');
       MatlabServer_tmp_count = 1;
       while (MatlabServer_tmp_count ~= 0)
@@ -327,14 +327,14 @@ while (MatlabServer_state >= 0),
         end;
       end;
       fclose(MatlabServer_tmp_fid);
-      fprintf(1, 'Send buffer: \%d bytes.\n', MatlabServer_tmp_maxLength);
+      fprintf(2, 'Send buffer: \%d bytes.\n', MatlabServer_tmp_maxLength);
       delete(MatlabServer_tmp_tmpname);
       clear MatlabServer_tmp_bfr MatlabServer_tmp_count MatlabServer_tmp_maxLength MatlabServer_tmp_fid MatlabServer_tmp_tmpname;
     end
     flush(MatlabServer_os);
    
     MatlabServer_tmp_answer = readByte(MatlabServer_is);
-    fprintf(1, 'answer=\%d\n', MatlabServer_tmp_answer);
+    fprintf(2, 'answer=\%d\n', MatlabServer_tmp_answer);
    
     MatlabServer_state = 0;
     clear MatlabServer_tmp_name MatlabServer_tmp_expr MatlabServer_tmp_ok MatlabServer_tmp_answer; 
@@ -344,7 +344,7 @@ while (MatlabServer_state >= 0),
   \%-------------------
   elseif (MatlabServer_state == strmatch('receive-remote', MatlabServer_commands, 'exact'))
     MatlabServer_tmp_len = readInt(MatlabServer_is);
-    fprintf(1, 'Will read MAT file structure of length: \%d bytes.\n', MatlabServer_tmp_len);
+    fprintf(2, 'Will read MAT file structure of length: \%d bytes.\n', MatlabServer_tmp_len);
 
     MatlabServer_tmp_reader = InputStreamByteWrapper(4096);
     MatlabServer_tmp_bfr = [];
@@ -379,7 +379,7 @@ while (MatlabServer_state >= 0),
   \%-------------------
   elseif (MatlabServer_state == strmatch('receive', MatlabServer_commands, 'exact'))
     MatlabServer_tmp_filename = char(readUTF(MatlabServer_is));
-    fprintf(1, 'Will read MAT file: "\%s"\n', MatlabServer_tmp_filename);
+    fprintf(2, 'Will read MAT file: "\%s"\n', MatlabServer_tmp_filename);
     load(MatlabServer_tmp_filename);
     clear MatlabServer_tmp_filename;
     writeByte(MatlabServer_os, 0);
@@ -393,9 +393,9 @@ end
 \% Shutting down the MATLAB server
 \% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-fprintf(1, '-----------------------\n');
-fprintf(1, 'MATLAB server shutdown!\n');
-fprintf(1, '-----------------------\n');
+fprintf(2, '-----------------------\n');
+fprintf(2, 'MATLAB server shutdown!\n');
+fprintf(2, '-----------------------\n');
 writeByte(MatlabServer_os, 0);
 close(MatlabServer_os);
 close(MatlabServer_is);
@@ -404,6 +404,8 @@ quit;
 
 \%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%
 \% HISTORY:
+\% 2016-04-05 [v3.6.0]
+\% o All verbose/debug messages are outputted to stream #2 ("stderr").
 \% 2015-09-11 [v3.3.0]
 \% o Now temporary files use format <tempname>_<port>.mat.
 \% o Add 'MatlabServer_' prefix to all variables.
