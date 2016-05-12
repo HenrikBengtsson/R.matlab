@@ -11,12 +11,12 @@
 \alias{Matlab.writeCommand}
 \alias{writeCommand,Matlab-method}
 
-\title{Writes (sends) a command to the MATLAB server}
+\title{(internal) Writes (sends) an R-to-MATLAB command to the MATLAB server}
 
 \description{
- Writes (sends) a command to the MATLAB server.
+ (internal) Writes (sends) an R-to-MATLAB command to the MATLAB server.
 
- This method is for internal use only.
+ \emph{This method is for internal use only.}
 }
 
 \usage{
@@ -24,6 +24,7 @@
 }
 
 \arguments{
+ \item{cmd}{A \code{\link[base]{character}} string specifying the command.}
  \item{...}{Not used.}
 }
 

@@ -72,7 +72,7 @@ $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCa
 \section{Requirements}{
   In order for \R to communicate with MATLAB, MATLAB v6 or higher is
   needed. It will \emph{not} work with previous versions, because they
-  do not support Java!\cr
+  do not support Java.\cr
 
   We use the term \emph{server} to say that MATLAB acts like a server
   with regard to \R. Note that it a standard MATLAB session that runs.\cr

@@ -1,10 +1,13 @@
 Package: R.matlab
 =================
 
-Version: 3.5.9-9000 [2015-04-05]
-o The MatlabServer.m script now outputs verbose/debug messages to 
+Version: 3.5.9-9000 [2015-05-12]
+o The MatlabServer.m script now outputs verbose/debug messages to
   standard error (or more precisely MATLAB file #2) (Issue #27).
-  
+o Internal writeCommand() now gives an informative error if an
+  unknown command is used.  Previously it silently sent a "0L"
+  command to MATLAB.
+
 
 Version: 3.5.1 [2015-03-27]
 o CRAN POLICIES/CLEANUP: Dropping reference to deprecated (soon defunct)
