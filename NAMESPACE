@@ -48,10 +48,37 @@ importFrom("methods", "new")
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # EXPORTS
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Export all public methods, that is, those without a preceeding dot
-# in their names.
-exportPattern("^[^\\.]")
-
+export("close.Matlab")
+export("evaluate")
+export("evaluate.Matlab")
+export("finalize.Matlab")
+export("getOption")
+export("getOption.Matlab")
+export("getVariable")
+export("getVariable.Matlab")
+export("isOpen")
+export("isOpen.default")
+export("isOpen.Matlab")
+export("Matlab")
+export("open.Matlab")
+export("R.matlab")
+export("readMat")
+export("readMat.default")
+export("readResult")
+export("readResult.Matlab")
+export("setFunction")
+export("setFunction.Matlab")
+export("setOption.Matlab")
+export("setVariable")
+export("setVariable.Matlab")
+export("setVerbose")
+export("setVerbose.Matlab")
+export("startServer")
+export("startServer.Matlab")
+export("writeCommand")
+export("writeCommand.Matlab")
+export("writeMat")
+export("writeMat.default")
 export("setOption") # Re-export from R.utils::setOption()
 
 
