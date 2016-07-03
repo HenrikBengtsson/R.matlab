@@ -40,7 +40,7 @@ filename <- paste(tempfile(), ".mat", sep="")
 con <- file(filename)
 
 ## Files are overwritten without notice
-writeMat(con, A=A, B=B, C=C, D=D)
+writeMat(con, A=A, B=B, C=C, D=D, verbose=-1)
 
 con <- file(filename)
 data <- readMat(con)
@@ -137,6 +137,26 @@ message("writeMat() - multidimensional arrays ... DONE")
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # All objects written must be named uniquely
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+message("writeMat() - onWrite ...")
+
+g <- 0L
+onWrite <- function(...) {
+  args <- list(...)
+  str(args)
+  g <<- g + 1L
+}
+
+filename <- paste(tempfile(), ".mat", sep="")
+writeMat(filename, x=1, onWrite=onWrite)
+unlink(filename)
+print(g)
+stopifnot(g == 1L)
+
+message("writeMat() - onWrite ... DONE")
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# All objects written must be named uniquely
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 message("writeMat() - exceptions ...")
 
 tryCatch({
@@ -157,6 +177,16 @@ tryCatch({
 }, error = function(ex) {
   cat("ERROR:", ex$message, "\n")
 })
+
+res <- tryCatch({
+  writeMat(filename, expr=substitute(x <- 2))
+}, error = function(ex) ex)
+print(res)
+
+res <- tryCatch({
+  writeMat(filename, formula=y ~ x)
+}, error = function(ex) ex)
+print(res)
 
 message("writeMat() - exceptions ... DONE")
 

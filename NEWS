@@ -8,6 +8,7 @@ o Internal writeCommand() now gives an informative error if an
   unknown command is used.  Previously it silently sent a "0L"
   command to MATLAB.
 o CLEANUP: Exporting only methods parts of the public API.
+o ROBUSTNESS: Increased test coverage to 79% (was 73%).
 o BUG FIX: writeMat() could not write logical elements.  They are
   now converted to integers as MATLAB does not have a native
   logical / boolean data type.  Previously, writeMat() silently
