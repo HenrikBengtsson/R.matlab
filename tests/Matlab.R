@@ -9,6 +9,10 @@ fullTest <- fullTest && nzchar(Sys.which("matlab"))
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 message("Matlab class ...")
 
+workdir <- tempdir()
+res <- Matlab$startServer(workdir=workdir)
+print(res)
+
 matlab <- Matlab()
 print(matlab)
 
@@ -17,6 +21,56 @@ setVerbose(matlab, FALSE)
 setVerbose(matlab, 0)
 setVerbose(matlab, -1)
 setVerbose(matlab, -100)
+
+res <- tryCatch({
+  open(matlab, trials=2L, interval=0.1, timeout=0.5)
+}, error = function(ex) ex)
+print(res)
+
+res <- tryCatch({
+  writeCommand(matlab, "echo")
+}, error = function(ex) ex)
+print(res)
+
+res <- tryCatch({
+  writeCommand(matlab, "<unknown>")
+}, error = function(ex) ex)
+print(res)
+
+res <- tryCatch({
+  evaluate(matlab, "x = 1;")
+}, error = function(ex) ex)
+print(res)
+
+res <- tryCatch({
+  setVariable(matlab, x=2)
+}, error = function(ex) ex)
+print(res)
+
+res <- tryCatch({
+  getVariable(matlab, "x")
+}, error = function(ex) ex)
+print(res)
+
+res <- tryCatch({
+  setFunction(matlab, "  \
+    function [y]=foo(x)  \
+      y=x;               \
+  ")
+}, error = function(ex) ex)
+print(res)
+
+options("readResult/maxTries"=2L)
+options("readResult/interval"=0.1)
+res <- tryCatch({
+  readResults(matlab)
+}, error = function(ex) ex)
+print(res)
+
+res <- tryCatch({
+  close(matlab)
+}, error = function(ex) ex)
+print(res)
 
 rm(list="matlab")
 gc()

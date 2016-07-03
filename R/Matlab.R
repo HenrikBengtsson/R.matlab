@@ -406,9 +406,7 @@ setMethodS3("open", "Matlab", function(con, trials=30, interval=1, timeout = get
   suffix <- sprintf("...failed (after %d tries)", as.integer(count));
 
   throw(sprintf("Failed to connect to MATLAB on host '%s' (port %d) after trying %d times for approximately %.1f seconds.", this$host, as.integer(this$port), count, count*interval));
-
-  return(FALSE);
-});
+})
 
 
 
