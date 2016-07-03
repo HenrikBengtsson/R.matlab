@@ -159,6 +159,7 @@ message("writeMat() - onWrite ... DONE")
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 message("writeMat() - exceptions ...")
 
+filename <- paste(tempfile(), ".mat", sep="")
 tryCatch({
   # Named
   writeMat(filename, A=A, verbose=-120)
@@ -167,8 +168,10 @@ tryCatch({
 }, error = function(ex) {
   cat("ERROR:", ex$message, "\n")
 })
+unlink(filename)
 
 
+filename <- paste(tempfile(), ".mat", sep="")
 tryCatch({
   # Uniquely named
   writeMat(filename, A=A, B=B, C=C, verbose=-120)
@@ -177,22 +180,29 @@ tryCatch({
 }, error = function(ex) {
   cat("ERROR:", ex$message, "\n")
 })
+unlink(filename)
 
+filename <- paste(tempfile(), ".mat", sep="")
 res <- tryCatch({
   writeMat(filename, expr=substitute(x <- 2))
 }, error = function(ex) ex)
 print(res)
+unlink(filename)
 
+filename <- paste(tempfile(), ".mat", sep="")
 res <- tryCatch({
   writeMat(filename, formula=y ~ x)
 }, error = function(ex) ex)
 print(res)
+unlink(filename)
 
 
+filename <- paste(tempfile(), ".mat", sep="")
 res <- tryCatch({
   writeMat(filename, x=1, matVersion="99")
 }, error = function(ex) ex)
 print(res)
+unlink(filename)
 
 message("writeMat() - exceptions ... DONE")
 
