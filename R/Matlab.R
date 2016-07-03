@@ -1173,7 +1173,12 @@ setMethodS3("setVerbose", "Matlab", function(this, threshold=0, ...) {
   verbose <- this$.verbose;
   oldThreshold <- getThreshold(verbose);
 
-  if (identical(threshold, FALSE)) {
+  if (is.logical(threshold)) {
+    threshold <- -as.integer(threshold)
+  }
+  stopifnot(is.numeric(threshold))
+  
+  if (threshold >= 0) {
     verbose <- NullVerbose();
   } else {
     verbose <- Verbose();

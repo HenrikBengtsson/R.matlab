@@ -2,8 +2,29 @@ library("R.matlab")
 
 fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
 fullTest <- fullTest && nzchar(Sys.which("matlab"))
-if (fullTest) {
 
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Test Matlab class regardless of MATLAB installed or not
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+message("Matlab class ...")
+
+matlab <- Matlab()
+print(matlab)
+
+setVerbose(matlab, TRUE)
+setVerbose(matlab, FALSE)
+setVerbose(matlab, 0)
+setVerbose(matlab, -1)
+setVerbose(matlab, -100)
+
+rm(list="matlab")
+gc()
+
+message("Matlab class ... DONE")
+
+
+if (fullTest) {
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # This example will try to start the MATLAB server on the local machine,
 # and then setup a Matlab object in R for communicating data between R
@@ -43,7 +64,7 @@ print(matlab)
 
 # If you experience any problems, ask for detailed outputs
 # by uncommenting the next line
-# setVerbose(matlab, -2)
+setVerbose(matlab, -2)
 
 # Connect to the MATLAB server.
 isOpen <- open(matlab)
