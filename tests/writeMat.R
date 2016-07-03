@@ -188,6 +188,12 @@ res <- tryCatch({
 }, error = function(ex) ex)
 print(res)
 
+
+res <- tryCatch({
+  writeMat(filename, x=1, matVersion="99")
+}, error = function(ex) ex)
+print(res)
+
 message("writeMat() - exceptions ... DONE")
 
 
