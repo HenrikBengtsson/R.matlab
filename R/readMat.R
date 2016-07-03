@@ -159,12 +159,6 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # willRead(), hasHead() and isDone() operators keep count on the number of
-  # bytes actually read and compares it with 'maxLength'.
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  nbrOfBytesRead <- 0L;
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # readBinMat() need to know what endian the numerics in the stream are
   # written with. From the beginning we assume Little Endian, but that might
   # be updated when we have read the MAT-file header.
@@ -239,170 +233,85 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
 ##   } # getBits()
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Function to assert that it is possible to read a certain number of bytes.
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  willRead <- function(nbrOfBytes) {
-      return()
-    if (is.null(maxLength))
-      return();
-    if (nbrOfBytesRead + nbrOfBytes <= maxLength)
-      return();
-    stop("Trying to read more bytes than expected from connection. Have read ", nbrOfBytesRead, " byte(s) and trying to read another ", nbrOfBytes, " byte(s), but expected ", maxLength, " byte(s).");
-  } # willRead()
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Function to tell now many bytes we actually have read.
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  hasRead <- function(nbrOfBytes) {
-      return()
-    nbrOfBytesRead <<- nbrOfBytesRead + nbrOfBytes;
-    if (is.null(maxLength))
-      return(TRUE);
-    return(nbrOfBytesRead <= maxLength);
-  } # hasRead()
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Function to check is there are more bytes to read.
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  isDone <- function() {
-    if (is.null(maxLength))
-      return(FALSE);
-    return(nbrOfBytesRead >= maxLength);
-  } # isDone()
-
-
   rawBuffer <- NULL;
   rawBufferSize <- getOption("R.matlab::readMat/rawBufferSize", 10e6);
-  rawBufferMethod <- getOption("R.matlab::readMat/rawBufferMethod", "1.8.0");
 
-  if (rawBufferMethod == "1.7.1") {
-    fillRawBuffer <- function(need) {
-      nTotal <- length(rawBuffer);
-      nMissing <- (need - nTotal);
-      if (nMissing < 0L) {
-        verbose && cat(verbose, level=-500, "Not filling, have enough data.")
-        return(NULL);
-      }
-      nRead <- max(nMissing, rawBufferSize);
-      raw <- readBin(con=con, what=raw(), n=nRead);
-      if (length(raw) > 0L) {
-        rawBuffer <<- c(rawBuffer, raw);
-      }
-      NULL;
+  rawBufferOffset <- 0L;
+
+  shortenRawBuffer <- function() {
+    # Shorten existing raw buffer?
+    nTotal <- length(rawBuffer);
+    if (rawBufferOffset > 0L && nTotal > 0L) {
+      idxs <- (rawBufferOffset+1L):nTotal;
+      rawBuffer <<- rawBuffer[idxs];
+      rawBufferOffset <<- 0L;
+    }
+    ### stopifnot(rawBufferOffset == 0L);
+    NULL;
+  } # shortenRawBuffer()
+
+  fillRawBuffer <- function(need) {
+    nTotal <- length(rawBuffer);
+    nAvail <- nTotal - rawBufferOffset;
+    nMissing <- (need - nAvail);
+    if (nMissing <= 0L) {
+      verbose && cat(verbose, level=-500, "Not filling, have enough data.")
+      return(NULL);
     }
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # Function to push back a raw vector to the main input stream
-    # This is used to push back a decompressed stream of data.
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    pushBackRawMat <- function(con, raw) {
-      if (length(raw) > 0L) {
-        rawBuffer <<- c(raw, rawBuffer);
-      }
-      NULL;
-    } # pushBackRawMat()
+    # Read and append, if more data exists
+    nRead <- max(nMissing, rawBufferSize);
+    raw <- readBin(con=con, what=raw(), n=nRead);
+    if (length(raw) > 0L) {
+      shortenRawBuffer();
+      rawBuffer <<- c(rawBuffer, raw);
+    }
 
-    readRawBuffer <- function(nbrOfBytes) {
-      nTotal <- length(rawBuffer);
-      # Nothing to read? [nTotal == 0 is a special case for reaching EoF]
-      if (nbrOfBytes == 0L || nTotal == 0L) {
-        return(raw(0L));
-      }
+    NULL;
+  }
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Function to push back a raw vector to the main input stream
+  # This is used to push back a decompressed stream of data.
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  pushBackRawMat <- function(con, raw) {
+    if (length(raw) > 0L) {
+      shortenRawBuffer();
+      # Insert pushback 'raw' data
+      rawBuffer <<- c(raw, rawBuffer);
+      rawBufferOffset <<- 0L;
+    }
+    NULL;
+  } # pushBackRawMat()
+
+  readRawBuffer <- function(nbrOfBytes) {
+    nTotal <- length(rawBuffer);
+    # Nothing to read?
+    if (nTotal == 0L) {
+      return(raw(0L));
+    }
+    # Sanity check
+    ### stopifnot(nbrOfBytes <= nTotal);
+    idxs <- seq.int(from=rawBufferOffset+1L, to=rawBufferOffset+nbrOfBytes, by=1L);
+    ### stopifnot(length(idxs) == nbrOfBytes);
+    rawBuffer[idxs];
+  }
+
+  eatRawBuffer <- function(eaten) {
+    nTotal <- length(rawBuffer);
+    nAvail <- nTotal - rawBufferOffset;
+    if (eaten < nAvail) {
+      rawBufferOffset <<- rawBufferOffset + eaten;
       # Sanity check
-      ### stopifnot(nbrOfBytes <= nTotal);
-      rawBuffer[1:nbrOfBytes];
+      ### stopifnot(rawBufferOffset <= nTotal);
+    } else if (eaten == nAvail) {
+      rawBuffer <<- raw(0L);
+      rawBufferOffset <<- 0L;
+    } else {
+      stop("INTERNAL ERROR: More bytes was read from the raw buffer than existed: ", eaten, " > ", nAvail);
     }
-
-    eatRawBuffer <- function(eaten) {
-      nTotal <- length(rawBuffer);
-      if (eaten < nTotal) {
-        rawBuffer <<- rawBuffer[(eaten+1L):nTotal];
-      } else {
-        rawBuffer <<- raw(0L);
-      }
-      NULL;
-    }
-  } else if (rawBufferMethod == "1.8.0") {
-    rawBufferOffset <- 0L;
-
-    shortenRawBuffer <- function() {
-      # Shorten existing raw buffer?
-      nTotal <- length(rawBuffer);
-      if (rawBufferOffset > 0L && nTotal > 0L) {
-        idxs <- (rawBufferOffset+1L):nTotal;
-        rawBuffer <<- rawBuffer[idxs];
-        rawBufferOffset <<- 0L;
-      }
-      ### stopifnot(rawBufferOffset == 0L);
-      NULL;
-    } # shortenRawBuffer()
-
-    fillRawBuffer <- function(need) {
-      nTotal <- length(rawBuffer);
-      nAvail <- nTotal - rawBufferOffset;
-      nMissing <- (need - nAvail);
-      if (nMissing <= 0L) {
-        verbose && cat(verbose, level=-500, "Not filling, have enough data.")
-        return(NULL);
-      }
-
-      # Read and append, if more data exists
-      nRead <- max(nMissing, rawBufferSize);
-      raw <- readBin(con=con, what=raw(), n=nRead);
-      if (length(raw) > 0L) {
-        shortenRawBuffer();
-        rawBuffer <<- c(rawBuffer, raw);
-      }
-
-      NULL;
-    }
-
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # Function to push back a raw vector to the main input stream
-    # This is used to push back a decompressed stream of data.
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    pushBackRawMat <- function(con, raw) {
-      if (length(raw) > 0L) {
-        shortenRawBuffer();
-        # Insert pushback 'raw' data
-        rawBuffer <<- c(raw, rawBuffer);
-        rawBufferOffset <<- 0L;
-      }
-      NULL;
-    } # pushBackRawMat()
-
-    readRawBuffer <- function(nbrOfBytes) {
-      nTotal <- length(rawBuffer);
-      # Nothing to read?
-      if (nTotal == 0L) {
-        return(raw(0L));
-      }
-      # Sanity check
-      ### stopifnot(nbrOfBytes <= nTotal);
-      idxs <- seq.int(from=rawBufferOffset+1L, to=rawBufferOffset+nbrOfBytes, by=1L);
-      ### stopifnot(length(idxs) == nbrOfBytes);
-      rawBuffer[idxs];
-    }
-
-    eatRawBuffer <- function(eaten) {
-      nTotal <- length(rawBuffer);
-      nAvail <- nTotal - rawBufferOffset;
-      if (eaten < nAvail) {
-        rawBufferOffset <<- rawBufferOffset + eaten;
-        # Sanity check
-        ### stopifnot(rawBufferOffset <= nTotal);
-      } else if (eaten == nAvail) {
-        rawBuffer <<- raw(0L);
-        rawBufferOffset <<- 0L;
-      } else {
-        stop("INTERNAL ERROR: More bytes was read from the raw buffer than existed: ", eaten, " > ", nAvail);
-      }
-      NULL;
-    }
-  } else {
-    throw("Unkown value of option' R.matlab::readMat/rawBufferMethod': ", rawBufferMethod);
-  } # if (rawBufferMethod ...)
+    NULL;
+  }
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -412,7 +321,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   readBinMat <- function(con, what, size=1L, n, signed=TRUE, endian=detectedEndian) {
     # Nothing to do?
-    if (n == 0L || isDone()) {
+    if (n == 0L) {
       return(c());
     }
 
@@ -424,7 +333,6 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
     }
 
     nbrOfBytes <- size*n;
-    willRead(nbrOfBytes);
     fillRawBuffer(nbrOfBytes);
 
     # Extract the subset to read
@@ -434,7 +342,6 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
     if (nbfr > 0L) {
       ### stopifnot(nbfr == n && nbfr*size == nbrOfBytes);
       eatRawBuffer(nbfr*size);
-      hasRead(nbfr*size);
     }
 
     bfr;
@@ -446,11 +353,10 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   readCharMat <- function(con, nchars) {
     # Check maxLength to see if we are done.
-    if (nchars == 0L || isDone()) {
+    if (nchars == 0L) {
       return(character(0L));
     }
 
-    willRead(nchars);
     fillRawBuffer(nchars);
 
     # Extract the subset to read
@@ -466,7 +372,6 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
     ## bfr <- paste(bfr, collapse="");
 
     eatRawBuffer(nchars);
-    hasRead(nchars);
 
     bfr;
   } # readCharMat()
@@ -2464,7 +2369,6 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
   if (verbose && isVisible(verbose, -100)) {
     enter(verbose, "R.matlab options");
     cat(verbose, "R.matlab::readMat/rawBufferSize: ", rawBufferSize);
-    cat(verbose, "R.matlab::readMat/rawBufferMethod: ", rawBufferMethod);
     cat(verbose, "R.matlab::readMat/onDecompressError: ", getOption("R.matlab::readMat/onDecompressError", "error"));
 
     exit(verbose);
