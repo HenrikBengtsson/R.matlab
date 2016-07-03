@@ -7,7 +7,7 @@ o The MatlabServer.m script now outputs verbose/debug messages to
 o Internal writeCommand() now gives an informative error if an
   unknown command is used.  Previously it silently sent a "0L"
   command to MATLAB.
-o CLEANUP: Exporting methods parts of the public API.
+o CLEANUP: Exporting only methods parts of the public API.
 
 
 Version: 3.5.1 [2015-03-27]
