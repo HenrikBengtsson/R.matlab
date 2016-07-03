@@ -211,15 +211,6 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
     "\370","\371","\372","\373","\374","\375","\376","\377"  # 370-377
   );
 
-  # We removed ASCII 0x00, because it represents an empty string in
-  # R v2.7.0 (and maybe some earlier version) and in R v2.8.0 we will get
-  # a warning.  However, for backward compatibility we will still use it
-  # for version prior to R v2.7.0.  See also email from Brian Ripley
-  # on 2008-04-23 on this problem.
-  if (getRversion() < "2.7.0") {  ## covr: skip=2
-    ASCII[1L] <- eval(parse(text="\"\\000\""));
-  }
-
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Function to convert a vector of integers into a vector of ASCII chars.
