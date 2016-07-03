@@ -20,6 +20,10 @@ data <- readMat(filename)
 str(data)
 stopifnot(all.equal(truth, data[names(truth)]))
 
+unlink(filename)
+
+
+filename <- paste(tempfile(), ".mat", sep="")
 
 ## Files are overwritten without notice
 writeMat(filename, A=A, B=B, C=C, D=D)
@@ -28,6 +32,30 @@ str(data)
 stopifnot(all.equal(truth, data[names(truth)]))
 
 unlink(filename)
+
+
+message("writeMat() - to connection ...")
+
+filename <- paste(tempfile(), ".mat", sep="")
+con <- file(filename)
+
+## Files are overwritten without notice
+writeMat(con, A=A, B=B, C=C, D=D)
+
+con <- file(filename)
+data <- readMat(con)
+str(data)
+stopifnot(all.equal(truth, data[names(truth)]))
+
+raw <- readBin(filename, what="raw", n=1e6)
+data <- readMat(raw)
+str(data)
+stopifnot(all.equal(truth, data[names(truth)]))
+
+unlink(filename)
+
+message("writeMat() - to connection ... DONE")
+
 
 message("writeMat() - basic objects ... DONE")
 
@@ -82,6 +110,7 @@ message("writeMat() - character objects ... DONE")
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Multi-dimensional arrays
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+message("writeMat() - multidimensional arrays ...")
 
 filename <- paste(tempfile(), ".mat", sep="")
 X <- array(1:24, dim=c(2,3,4))
@@ -102,10 +131,14 @@ str(data2)
 ## stopifnot(all.equal(data2$A, data$A), all.equal(data2$X, data$X), all.equal(data2, data))
 unlink(filename)
 
+message("writeMat() - multidimensional arrays ... DONE")
+
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # All objects written must be named uniquely
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+message("writeMat() - exceptions ...")
+
 tryCatch({
   # Named
   writeMat(filename, A=A, verbose=-120)
@@ -124,6 +157,8 @@ tryCatch({
 }, error = function(ex) {
   cat("ERROR:", ex$message, "\n")
 })
+
+message("writeMat() - exceptions ... DONE")
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
