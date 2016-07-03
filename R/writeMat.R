@@ -117,12 +117,10 @@ setMethodS3("writeMat", "default", function(con, ..., fixNames=TRUE, matVersion=
   # Function to make a variable name into a safe MATLAB variable name.
   # For instance, periods ('.') are replaced by underscores ('_').
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  asSafeMatlabName <- function(name) {
-    if (fixNames) {
-      gsub(".", "_", name, fixed=TRUE)
-    } else {
-      name
-    }
+  if (fixNames) {
+    asSafeMatlabName <- function(name) gsub(".", "_", name, fixed=TRUE)
+  } else {
+    asSafeMatlabName <- function(name) name
   }
 
 

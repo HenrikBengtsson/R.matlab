@@ -504,12 +504,10 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
   # Function to make a variable name into a safe R variable name.
   # For instance, underscores ('_') are replaced by periods ('.').
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  asSafeRName <- function(name) {
-    if (fixNames) {
-      gsub("_", ".", name, fixed=TRUE)
-    } else {
-      name
-    }
+  if (fixNames) {
+    asSafeRName <- function(name) gsub("_", ".", name, fixed=TRUE)
+  } else {
+    asSafeRName <- function(name) name
   }
 
 
