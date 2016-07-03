@@ -9,6 +9,9 @@ fullTest <- fullTest && nzchar(Sys.which("matlab"))
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 message("Matlab class ...")
 
+readResult <- R.matlab:::readResult
+writeCommand <- R.matlab:::writeCommand
+
 workdir <- tempdir()
 res <- Matlab$startServer(workdir=workdir)
 print(res)
