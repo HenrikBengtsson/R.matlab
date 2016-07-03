@@ -1,5 +1,9 @@
 library("R.matlab")
 
+message("writeMat() ...")
+
+message("writeMat() - basic objects ...")
+
 A <- matrix(1:27, nrow=9, ncol=3)
 B <- as.matrix(1:10)
 C <- matrix(c(TRUE, FALSE, FALSE, TRUE), nrow=2, ncol=2)
@@ -24,6 +28,38 @@ str(data)
 stopifnot(all.equal(truth, data[names(truth)]))
 
 unlink(filename)
+
+message("writeMat() - basic objects ... DONE")
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Character vectors
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+message("writeMat() - character vectors and matrices ...")
+
+e <- paste("letter:", letters)
+E <- matrix(c(e, letters), nrow=13, ncol=4)
+
+filename <- paste(tempfile(), ".mat", sep="")
+
+writeMat(filename, e=e, verbose=-120)
+data <- readMat(filename)
+str(data)
+stopifnot(length(data$e) == length(e))
+
+unlink(filename)
+
+
+filename <- paste(tempfile(), ".mat", sep="")
+
+writeMat(filename, E=E, verbose=-120)
+data <- readMat(filename)
+str(data)
+stopifnot(length(data$E) == length(E))
+
+unlink(filename)
+
+message("writeMat() - character vectors and matrices ... DONE")
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -79,6 +115,8 @@ tryCatch({
 #     (>maltab r2010b), 2014-06-15
 #     https://savannah.gnu.org/bugs/?42562
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+message("writeMat() - Octave compatibility ...")
+
 value <- double(0L)
 filename <- file.path(tempdir(), "octave-bug42562-empty.mat")
 writeMat(filename, value=value, verbose=-120)
@@ -106,3 +144,6 @@ str(value2)
 stopifnot(length(value2) == length(value))
 stopifnot(all(value2 == value))
 
+message("writeMat() - Octave compatibility ... DONE")
+
+message("writeMat() ... DONE")
