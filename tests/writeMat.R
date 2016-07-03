@@ -1,26 +1,27 @@
 library("R.matlab")
 
-A <- matrix(1:27, ncol=3)
+A <- matrix(1:27, nrow=9, ncol=3)
 B <- as.matrix(1:10)
-C <- array(1:18, dim=c(2,3,3))
+C <- matrix(c(TRUE, FALSE, FALSE, TRUE), nrow=2, ncol=2)
+D <- array(1:18, dim=c(2,3,3))
+
+Cint <- local({ mode(C) <- "integer"; C })
+truth <- list(A=A, B=B, C=Cint, D=D)
+
 
 filename <- paste(tempfile(), ".mat", sep="")
 
-writeMat(filename, A=A, B=B, C=C, verbose=-120)
+writeMat(filename, A=A, B=B, C=C, D=D, verbose=-120)
 data <- readMat(filename)
 str(data)
-
-X <- list(A=A, B=B, C=C)
-stopifnot(all.equal(X, data[names(X)]))
+stopifnot(all.equal(truth, data[names(truth)]))
 
 
 ## Files are overwritten without notice
-writeMat(filename, A=A, B=B, C=C)
+writeMat(filename, A=A, B=B, C=C, D=D)
 data <- readMat(filename)
 str(data)
-
-X <- list(A=A, B=B, C=C)
-stopifnot(all.equal(X, data[names(X)]))
+stopifnot(all.equal(truth, data[names(truth)]))
 
 unlink(filename)
 
@@ -79,7 +80,7 @@ tryCatch({
 #     https://savannah.gnu.org/bugs/?42562
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 value <- double(0L)
-filename <- "octave-bug42562-empty.mat"
+filename <- file.path(tempdir(), "octave-bug42562-empty.mat")
 writeMat(filename, value=value, verbose=-120)
 data <- readMat(filename, verbose=-100)
 value2 <- data$value
@@ -88,7 +89,7 @@ stopifnot(length(value2) == length(value))
 stopifnot(all(value2 == value))
 
 value <- 0
-filename <- "octave-bug42562-scalar.mat"
+filename <- file.path(tempdir(), "octave-bug42562-scalar.mat")
 writeMat(filename, value=value, verbose=-120)
 data <- readMat(filename, verbose=-100)
 value2 <- data$value
@@ -97,7 +98,7 @@ stopifnot(length(value2) == length(value))
 stopifnot(all(value2 == value))
 
 value <- 1:5
-filename <- "octave-bug42562-vector.mat"
+filename <- file.path(tempdir(), "octave-bug42562-vector.mat")
 writeMat(filename, value=value, verbose=-120)
 data <- readMat(filename, verbose=-100)
 value2 <- data$value

@@ -246,6 +246,7 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
       #   +---------------------------------------+
 
       verbose && enter(verbose, "writeDataElement()");
+      verbose && str(verbose, object);
 
       writeTag <- function(dataType, nbrOfBytes, compressed=FALSE) {
 ##        verbose && enter(verbose, sprintf("writeTag(%s, nbrOfBytes=%d, compressed=%s)", dataType, nbrOfBytes, compressed));
@@ -694,7 +695,14 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
       tagSize <- writeTag(dataType=dataType, nbrOfBytes=nbrOfBytes);
       nbrOfBytes <- tagSize;
 
-      if (is.numeric(value) || is.complex(value)) {
+      verbose && cat(verbose, "Data type: ", sQuote(mode(value)));
+
+      if (is.numeric(value) || is.complex(value) || is.logical(value)) {
+        if (is.logical(value)) {
+	  dim <- dim(value);
+          value <- as.integer(value);
+	  dim(value) <- dim
+	}
         if (is.null(dim(value)))
           value <- as.matrix(value);
         nbrOfBytes <- nbrOfBytes + writeNumericArray(name=name, data=value);
@@ -707,6 +715,8 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
         }
       } else if (is.list(value)) {
         nbrOfBytes <- nbrOfBytes + writeStructure(name=name, structure=value);
+      } else {
+        stop("NON-SUPPORTED DATA TYPE: Do not know how to write objects of this type: ", sQuote(mode(value)))
       }
 
       verbose && exit(verbose);
@@ -761,10 +771,22 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
     writeAll <- function(con, objects) {
       nbrOfBytes <- writeHeader(con);
 
+      verbose && enter(verbose, "writeAll()")
+      
       for (kk in seq_along(objects)) {
+        verbose && enter(verbose, sprintf("Writing element #%d of %d", kk, length(objects)))
+	
         object <- objects[kk];   # NOT [[kk]], has to be a list!
-        nbrOfBytes <- nbrOfBytes + writeDataElement(con, object);
+        verbose && cat(verbose, "Element name: ", sQuote(names(object)));
+        verbose && str(verbose, object);
+	nbrOfBytesKK <- writeDataElement(con, object);
+        verbose && cat(verbose, "Number of bytes written: ", nbrOfBytesKK);
+        nbrOfBytes <- nbrOfBytes + nbrOfBytesKK
+	
+        verbose && exit(verbose)
       }
+      
+      verbose && exit(verbose)
 
       # Return bytes written
       nbrOfBytes;
