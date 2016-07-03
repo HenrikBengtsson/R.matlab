@@ -739,10 +739,7 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
     } else if (is.numeric(verbose)) {
       verbose <<- Verbose(threshold=verbose);
     } else {
-      verbose <- as.logical(verbose);
-      if (verbose) {
-        verbose <<- Verbose(threshold=-1);
-      }
+      verbose <<- Verbose(threshold=-as.integer(as.logical(verbose)));
     }
 
     # Since writeMat5() is wrapped inside the writeMat() function, we can

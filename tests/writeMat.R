@@ -40,7 +40,7 @@ filename <- paste(tempfile(), ".mat", sep="")
 con <- file(filename)
 
 ## Files are overwritten without notice
-writeMat(con, A=A, B=B, C=C, D=D, verbose=-1)
+writeMat(con, A=A, B=B, C=C, D=D, verbose=TRUE)
 
 con <- file(filename)
 data <- readMat(con)
