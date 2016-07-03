@@ -33,9 +33,26 @@ message("writeMat() - basic objects ... DONE")
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Character vectors
+# Complex objects
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-message("writeMat() - character vectors and matrices ...")
+message("writeMat() - complex objects ...")
+
+F <- matrix(1i^ (-6:5), nrow = 4)
+
+filename <- paste(tempfile(), ".mat", sep="")
+writeMat(filename, F=F, verbose=-120)
+data <- readMat(filename)
+str(data)
+stopifnot(all.equal(data$F, F))
+unlink(filename)
+
+message("writeMat() - complex objects ... DONE")
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Character objects
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+message("writeMat() - character objects ...")
 
 e <- paste("letter:", letters)
 E <- matrix(c(e, letters), nrow=13, ncol=4)
@@ -59,7 +76,7 @@ stopifnot(length(data$E) == length(E))
 
 unlink(filename)
 
-message("writeMat() - character vectors and matrices ... DONE")
+message("writeMat() - character objects ... DONE")
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
