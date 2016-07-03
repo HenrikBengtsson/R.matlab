@@ -506,9 +506,10 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   asSafeRName <- function(name) {
     if (fixNames) {
-      name <- gsub("_", ".", name, fixed=TRUE);
+      gsub("_", ".", name, fixed=TRUE)
+    } else {
+      name
     }
-    name;
   }
 
 

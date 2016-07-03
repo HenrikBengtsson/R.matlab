@@ -18,7 +18,7 @@
 }
 
 \usage{
-\method{writeMat}{default}(con, ..., matVersion="5", onWrite=NULL, verbose=FALSE)
+\method{writeMat}{default}(con, ..., fixNames=TRUE, matVersion="5", onWrite=NULL, verbose=FALSE)
 }
 
 \arguments{
@@ -27,6 +27,8 @@
     opened (and closed afterwards).}
   \item{...}{\emph{Named} variables to be written where the names
     must be unique.}
+  \item{fixNames}{If \code{\link[base:logical]{TRUE}}, periods within names of R variables
+    and fields are converted to underscores.}
   \item{matVersion}{A \code{\link[base]{character}} string specifying what MAT file format
     version to be written to the connection. If \code{"5"}, a MAT v5 file
     structure is written. No other formats are currently supported.}

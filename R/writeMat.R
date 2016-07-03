@@ -16,6 +16,8 @@
 #     opened (and closed afterwards).}
 #   \item{...}{\emph{Named} variables to be written where the names
 #     must be unique.}
+#   \item{fixNames}{If @TRUE, periods within names of R variables
+#     and fields are converted to underscores.}
 #   \item{matVersion}{A @character string specifying what MAT file format
 #     version to be written to the connection. If \code{"5"}, a MAT v5 file
 #     structure is written. No other formats are currently supported.}
@@ -98,7 +100,7 @@
 # @keyword file
 # @keyword IO
 #*/###########################################################################
-setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NULL, verbose=FALSE) {
+setMethodS3("writeMat", "default", function(con, ..., fixNames=TRUE, matVersion="5", onWrite=NULL, verbose=FALSE) {
   #===========================================================================
   # General functions to write MAT v5 files (and later MAT v4 files).    BEGIN
   #===========================================================================
@@ -109,6 +111,20 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
   maxBytesError <- function(nbrOfBytes, size) {
     throw(sprintf("MAT file format error: Object is too large to be written to a MAT v%s file, which only supports variables of maximum 2^31 bytes. The object that cannot be written has %.0f elements each of %d bytes totalling %.0f bytes: %s", matVersion, nbrOfBytes/size, size, nbrOfBytes, sQuote(conDescription)))
   }
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Function to make a variable name into a safe MATLAB variable name.
+  # For instance, periods ('.') are replaced by underscores ('_').
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  asSafeMatlabName <- function(name) {
+    if (fixNames) {
+      gsub(".", "_", name, fixed=TRUE)
+    } else {
+      name
+    }
+  }
+
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Function to write (or just count) an object to a connection.
@@ -216,7 +232,8 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
       # Write 124 bytes header description
       rVersion <- paste(c(R.Version()$major, R.Version()$minor), collapse=".");
       description <- paste("MATLAB 5.0 MAT-file, Platform: ", .Platform$OS.type, ", Software: R v", rVersion, ", Created on: ", date(), sep="");
-      bfr <- charToInt(unlist(strsplit(description, "")));
+      bfr <- unlist(strsplit(description, split="", fixed=TRUE), use.names=FALSE)
+      bfr <- charToInt(bfr)
       bfr <- c(bfr, rep(32, max(124-length(bfr),0)));
       if (length(bfr) > 124) bfr <- bfr[1:124];
       nbrOfBytes <- writeBinMat(con, as.integer(bfr), size=1);
@@ -349,8 +366,10 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
 
       writeArrayName <- function(name) {
         verbose && enter(verbose, "writeArrayName(): '", name, "'");
-        name <- charToInt(unlist(strsplit(name,"")));
-        nbrOfBytes <- length(name);
+	name <- asSafeMatlabName(name)
+        name <- unlist(strsplit(name, split="", fixed=TRUE), use.names=FALSE)
+        name <- charToInt(name)
+        nbrOfBytes <- length(name)
 
         # NOTE: Compression is not optional (as stated in [1]). /HB 020828
         compressed <- (nbrOfBytes > 0 && nbrOfBytes <= 4);
@@ -428,8 +447,9 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
       writeCharPart <- function(values) {
         verbose && enter(verbose, "writeCharPart(): '", values, "'");
 
-        values <- charToInt(unlist(strsplit(values, "")));
-        values <- as.vector(values);
+        values <- unlist(strsplit(values, split="", fixed=TRUE), use.names=FALSE)
+        values <- charToInt(values)
+        values <- as.vector(values)
 
         sizeOf <- 2
         nbrOfBytes <- length(values) * sizeOf
@@ -501,9 +521,11 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
 
         for (kk in seq_along(fieldNames)) {
           name <- fieldNames[kk];
+          name <- asSafeMatlabName(name)
           if (nchar(name) > maxLength-1)
             stop("Too long field name: ", name);
-          bfr <- charToInt(unlist(strsplit(name, "")));
+          bfr <- unlist(strsplit(name, split="", fixed=TRUE), use.names=FALSE)
+          bfr <- charToInt(bfr)
           # Append trailing '\0'
           bfr <- c(bfr, 0);
           # Pad with '\0':s

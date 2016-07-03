@@ -155,6 +155,67 @@ stopifnot(g == 1L)
 message("writeMat() - onWrite ... DONE")
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Renaming variable and field names
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+message("writeMat() - fixNames ...")
+
+truth <- list(a.b=1, c_d=2, e_f.g=3, x=4)
+str(truth)
+names <- names(truth)
+names. <- gsub("_", ".", names(truth), fixed=TRUE)
+names_ <- gsub(".", "_", names(truth), fixed=TRUE)
+
+message("writeMat() - fixNames and variable names ...")
+
+filename <- paste(tempfile(), ".mat", sep="")
+do.call(writeMat, args=c(list(filename), truth, fixNames=FALSE))
+data <- readMat(filename, fixNames=FALSE)
+str(data)
+stopifnot(length(data) == length(truth), all(names(data) == names))
+data <- readMat(filename, fixNames=TRUE)
+str(data)
+stopifnot(length(data) == length(truth), all(names(data) == names.))
+unlink(filename)
+
+filename <- paste(tempfile(), ".mat", sep="")
+do.call(writeMat, args=c(list(filename), truth, fixNames=TRUE))
+data <- readMat(filename, fixNames=FALSE)
+str(data)
+stopifnot(length(data) == length(truth), all(names(data) == names_))
+data <- readMat(filename, fixNames=TRUE)
+str(data)
+stopifnot(length(data) == length(truth), all(names(data) == names.))
+unlink(filename)
+
+message("writeMat() - fixNames and variable names ... DONE")
+
+message("writeMat() - fixNames and field names ...")
+
+filename <- paste(tempfile(), ".mat", sep="")
+writeMat(filename, x=truth, fixNames=FALSE)
+data <- readMat(filename, fixNames=FALSE)
+str(data)
+stopifnot(nrow(data) == length(truth), all(rownames(data$x) == names))
+data <- readMat(filename, fixNames=TRUE)
+str(data)
+stopifnot(nrow(data) == length(truth), all(rownames(data$x) == names.))
+unlink(filename)
+
+filename <- paste(tempfile(), ".mat", sep="")
+writeMat(filename, x=truth, fixNames=TRUE)
+data <- readMat(filename, fixNames=FALSE)
+str(data)
+stopifnot(nrow(data) == length(truth), all(rownames(data$x) == names_))
+data <- readMat(filename, fixNames=TRUE)
+str(data)
+stopifnot(nrow(data) == length(truth), all(rownames(data$x) == names.))
+unlink(filename)
+
+message("writeMat() - fixNames and field names ... DONE")
+
+message("writeMat() - fixNames ... DONE")
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # All objects written must be named uniquely
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 message("writeMat() - exceptions ...")

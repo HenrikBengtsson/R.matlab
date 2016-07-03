@@ -2,6 +2,10 @@ Package: R.matlab
 =================
 
 Version: 3.5.9-9000 [2015-07-03]
+o writeMat() gained argument 'fixNames=TRUE' for automatically
+  replacing periods (.) in variable and field names with
+  underscores (_). Thanks to Eugenio Piasini at University College
+  London for suggesting this feature.
 o The MatlabServer.m script now outputs verbose/debug messages to
   standard error (or more precisely MATLAB file #2) (Issue #27).
 o Internal writeCommand() now gives an informative error if an
@@ -14,8 +18,8 @@ o BUG FIX: writeMat() could not write logical elements.  They are
   logical / boolean data type.  Previously, writeMat() silently
   ignored writing the data section of these logical elements
   resulting in a MAT file that could not be parsed by MATLAB
-  (although readMat() could).  Thanks to Eugenio Piasini at
-  University College London for reporting on this problem.
+  (although readMat() could).  Thanks to Eugenio Piasini for
+  reporting on this problem.
 
 
 Version: 3.5.1 [2015-03-27]
