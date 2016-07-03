@@ -252,7 +252,7 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
         knownTypes <- c("miINT8"=8, "miUINT8"=8, "miINT16"=16, "miUINT16"=16, "miINT32"=32, "miUINT32"=32, "miSINGLE"=NA, NA, "miDOUBLE"=64, NA, NA, "miINT64"=64, "miUINT64"=64, "miMATRIX"=NA);
         type <- which(names(knownTypes) == dataType);
         if (length(type) == 0)
-          stop(paste("Unknown Data Element Tag type: ", dataType, sep=""));
+          stop("Unknown Data Element Tag type: ", dataType);
 
         ## Is the number of bytes supported by the MAT file format?
         if (nbrOfBytes > MAX_WRITABLE_BYTES) maxBytesError(nbrOfBytes, knownTypes[type]/8)
@@ -295,7 +295,7 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
         knownClasses <- c("mxCELL_CLASS"=NA, "mxSTRUCT_CLASS"=NA, "mxOBJECT_CLASS"=NA, "mxCHAR_CLASS"=8, "mxSPARSE_CLASS"=NA, "mxDOUBLE_CLASS"=NA, "mxSINGLE_CLASS"=NA, "mxINT8_CLASS"=8, "mxUINT8_CLASS"=8, "mxINT16_CLASS"=16, "mxUINT16_CLASS"=16, "mxINT32_CLASS"=32, "mxUINT32_CLASS"=32);
         classID <- which(names(knownClasses) == class);
         if (length(classID) == 0)
-          stop(paste("Unknown tag type: ", class, sep=""));
+          stop("Unknown tag type: ", class);
 
         flags <- c(2^3*complex, 2^2*global, 2^1*logical, 0);
         flags <- sum(flags);
@@ -501,7 +501,7 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
         for (kk in seq_along(fieldNames)) {
           name <- fieldNames[kk];
           if (nchar(name) > maxLength-1)
-            stop(paste("Too long field name: ", name, sep=""));
+            stop("Too long field name: ", name);
           bfr <- charToInt(unlist(strsplit(name, "")));
           # Append trailing '\0'
           bfr <- c(bfr, 0);
@@ -898,8 +898,7 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
   if (matVersion == "5") {
     nbrOfBytes <- writeMat5(con, objects=args, onWrite=onWrite)
   } else {
-    stop(paste("Can not write MAT file. Unknown or unsupported MAT version: ",
-                                                         matVersion, sep=""))
+    stop("Can not write MAT file. Unknown or unsupported MAT version: ", matVersion)
   }
 
   ## Close connection (only iff opened above)
