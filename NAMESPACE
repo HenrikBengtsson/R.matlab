@@ -71,6 +71,13 @@ export("startServer")
 export("startServer.Matlab")
 export("writeMat")
 
+## DEPRECATED:
+## Exporting because CRAN package CINOEDV 2.0 (2014-11-27) calls
+## readMat.default() and not readMat(). However, this will be
+## removed from the public API of R.matlab in a future version.
+## /HB 2016-07-05
+export("readMat.default")
+
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # DECLARATIONS
