@@ -1,7 +1,7 @@
 Package: R.matlab
 =================
 
-Version: 3.5.9-9000 [2015-07-03]
+Version: 3.6.0 [2015-07-05]
 o writeMat() gained argument 'fixNames=TRUE' for automatically
   replacing periods (.) in variable and field names with
   underscores (_). Thanks to Eugenio Piasini at University College
