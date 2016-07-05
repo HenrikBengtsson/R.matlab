@@ -16,6 +16,8 @@
 #     opened (and closed afterwards).}
 #   \item{...}{\emph{Named} variables to be written where the names
 #     must be unique.}
+#   \item{fixNames}{If @TRUE, periods within names of R variables
+#     and fields are converted to underscores.}
 #   \item{matVersion}{A @character string specifying what MAT file format
 #     version to be written to the connection. If \code{"5"}, a MAT v5 file
 #     structure is written. No other formats are currently supported.}
@@ -98,7 +100,7 @@
 # @keyword file
 # @keyword IO
 #*/###########################################################################
-setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NULL, verbose=FALSE) {
+setMethodS3("writeMat", "default", function(con, ..., fixNames=TRUE, matVersion="5", onWrite=NULL, verbose=FALSE) {
   #===========================================================================
   # General functions to write MAT v5 files (and later MAT v4 files).    BEGIN
   #===========================================================================
@@ -109,6 +111,18 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
   maxBytesError <- function(nbrOfBytes, size) {
     throw(sprintf("MAT file format error: Object is too large to be written to a MAT v%s file, which only supports variables of maximum 2^31 bytes. The object that cannot be written has %.0f elements each of %d bytes totalling %.0f bytes: %s", matVersion, nbrOfBytes/size, size, nbrOfBytes, sQuote(conDescription)))
   }
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Function to make a variable name into a safe MATLAB variable name.
+  # For instance, periods ('.') are replaced by underscores ('_').
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (fixNames) {
+    asSafeMatlabName <- function(name) gsub(".", "_", name, fixed=TRUE)
+  } else {
+    asSafeMatlabName <- function(name) name
+  }
+
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Function to write (or just count) an object to a connection.
@@ -216,7 +230,8 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
       # Write 124 bytes header description
       rVersion <- paste(c(R.Version()$major, R.Version()$minor), collapse=".");
       description <- paste("MATLAB 5.0 MAT-file, Platform: ", .Platform$OS.type, ", Software: R v", rVersion, ", Created on: ", date(), sep="");
-      bfr <- charToInt(unlist(strsplit(description, "")));
+      bfr <- unlist(strsplit(description, split="", fixed=TRUE), use.names=FALSE)
+      bfr <- charToInt(bfr)
       bfr <- c(bfr, rep(32, max(124-length(bfr),0)));
       if (length(bfr) > 124) bfr <- bfr[1:124];
       nbrOfBytes <- writeBinMat(con, as.integer(bfr), size=1);
@@ -246,13 +261,14 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
       #   +---------------------------------------+
 
       verbose && enter(verbose, "writeDataElement()");
+      verbose && str(verbose, object);
 
       writeTag <- function(dataType, nbrOfBytes, compressed=FALSE) {
 ##        verbose && enter(verbose, sprintf("writeTag(%s, nbrOfBytes=%d, compressed=%s)", dataType, nbrOfBytes, compressed));
         knownTypes <- c("miINT8"=8, "miUINT8"=8, "miINT16"=16, "miUINT16"=16, "miINT32"=32, "miUINT32"=32, "miSINGLE"=NA, NA, "miDOUBLE"=64, NA, NA, "miINT64"=64, "miUINT64"=64, "miMATRIX"=NA);
         type <- which(names(knownTypes) == dataType);
         if (length(type) == 0)
-          stop(paste("Unknown Data Element Tag type: ", dataType, sep=""));
+          stop("Unknown Data Element Tag type: ", dataType);
 
         ## Is the number of bytes supported by the MAT file format?
         if (nbrOfBytes > MAX_WRITABLE_BYTES) maxBytesError(nbrOfBytes, knownTypes[type]/8)
@@ -295,7 +311,7 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
         knownClasses <- c("mxCELL_CLASS"=NA, "mxSTRUCT_CLASS"=NA, "mxOBJECT_CLASS"=NA, "mxCHAR_CLASS"=8, "mxSPARSE_CLASS"=NA, "mxDOUBLE_CLASS"=NA, "mxSINGLE_CLASS"=NA, "mxINT8_CLASS"=8, "mxUINT8_CLASS"=8, "mxINT16_CLASS"=16, "mxUINT16_CLASS"=16, "mxINT32_CLASS"=32, "mxUINT32_CLASS"=32);
         classID <- which(names(knownClasses) == class);
         if (length(classID) == 0)
-          stop(paste("Unknown tag type: ", class, sep=""));
+          stop("Unknown tag type: ", class);
 
         flags <- c(2^3*complex, 2^2*global, 2^1*logical, 0);
         flags <- sum(flags);
@@ -348,8 +364,10 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
 
       writeArrayName <- function(name) {
         verbose && enter(verbose, "writeArrayName(): '", name, "'");
-        name <- charToInt(unlist(strsplit(name,"")));
-        nbrOfBytes <- length(name);
+	name <- asSafeMatlabName(name)
+        name <- unlist(strsplit(name, split="", fixed=TRUE), use.names=FALSE)
+        name <- charToInt(name)
+        nbrOfBytes <- length(name)
 
         # NOTE: Compression is not optional (as stated in [1]). /HB 020828
         compressed <- (nbrOfBytes > 0 && nbrOfBytes <= 4);
@@ -427,8 +445,9 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
       writeCharPart <- function(values) {
         verbose && enter(verbose, "writeCharPart(): '", values, "'");
 
-        values <- charToInt(unlist(strsplit(values, "")));
-        values <- as.vector(values);
+        values <- unlist(strsplit(values, split="", fixed=TRUE), use.names=FALSE)
+        values <- charToInt(values)
+        values <- as.vector(values)
 
         sizeOf <- 2
         nbrOfBytes <- length(values) * sizeOf
@@ -500,9 +519,11 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
 
         for (kk in seq_along(fieldNames)) {
           name <- fieldNames[kk];
+          name <- asSafeMatlabName(name)
           if (nchar(name) > maxLength-1)
-            stop(paste("Too long field name: ", name, sep=""));
-          bfr <- charToInt(unlist(strsplit(name, "")));
+            stop("Too long field name: ", name);
+          bfr <- unlist(strsplit(name, split="", fixed=TRUE), use.names=FALSE)
+          bfr <- charToInt(bfr)
           # Append trailing '\0'
           bfr <- c(bfr, 0);
           # Pad with '\0':s
@@ -694,7 +715,14 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
       tagSize <- writeTag(dataType=dataType, nbrOfBytes=nbrOfBytes);
       nbrOfBytes <- tagSize;
 
-      if (is.numeric(value) || is.complex(value)) {
+      verbose && cat(verbose, "Data type: ", sQuote(mode(value)));
+
+      if (is.numeric(value) || is.complex(value) || is.logical(value)) {
+        if (is.logical(value)) {
+	  dim <- dim(value);
+          value <- as.integer(value);
+	  dim(value) <- dim
+	}
         if (is.null(dim(value)))
           value <- as.matrix(value);
         nbrOfBytes <- nbrOfBytes + writeNumericArray(name=name, data=value);
@@ -707,6 +735,8 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
         }
       } else if (is.list(value)) {
         nbrOfBytes <- nbrOfBytes + writeStructure(name=name, structure=value);
+      } else {
+        stop("NON-SUPPORTED DATA TYPE: Do not know how to write objects of this type: ", sQuote(mode(value)))
       }
 
       verbose && exit(verbose);
@@ -729,10 +759,7 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
     } else if (is.numeric(verbose)) {
       verbose <<- Verbose(threshold=verbose);
     } else {
-      verbose <- as.logical(verbose);
-      if (verbose) {
-        verbose <<- Verbose(threshold=-1);
-      }
+      verbose <<- Verbose(threshold=-as.integer(as.logical(verbose)));
     }
 
     # Since writeMat5() is wrapped inside the writeMat() function, we can
@@ -761,10 +788,22 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
     writeAll <- function(con, objects) {
       nbrOfBytes <- writeHeader(con);
 
+      verbose && enter(verbose, "writeAll()")
+      
       for (kk in seq_along(objects)) {
+        verbose && enter(verbose, sprintf("Writing element #%d of %d", kk, length(objects)))
+	
         object <- objects[kk];   # NOT [[kk]], has to be a list!
-        nbrOfBytes <- nbrOfBytes + writeDataElement(con, object);
+        verbose && cat(verbose, "Element name: ", sQuote(names(object)));
+        verbose && str(verbose, object);
+	nbrOfBytesKK <- writeDataElement(con, object);
+        verbose && cat(verbose, "Number of bytes written: ", nbrOfBytesKK);
+        nbrOfBytes <- nbrOfBytes + nbrOfBytesKK
+	
+        verbose && exit(verbose)
       }
+      
+      verbose && exit(verbose)
 
       # Return bytes written
       nbrOfBytes;
@@ -898,8 +937,7 @@ setMethodS3("writeMat", "default", function(con, ..., matVersion="5", onWrite=NU
   if (matVersion == "5") {
     nbrOfBytes <- writeMat5(con, objects=args, onWrite=onWrite)
   } else {
-    stop(paste("Can not write MAT file. Unknown or unsupported MAT version: ",
-                                                         matVersion, sep=""))
+    stop("Can not write MAT file. Unknown or unsupported MAT version: ", matVersion)
   }
 
   ## Close connection (only iff opened above)

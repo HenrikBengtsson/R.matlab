@@ -48,11 +48,35 @@ importFrom("methods", "new")
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # EXPORTS
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Export all public methods, that is, those without a preceeding dot
-# in their names.
-exportPattern("^[^\\.]")
-
+export("evaluate")
+export("evaluate.Matlab")
+export("getOption")
+export("getOption.Matlab")
+export("getVariable")
+export("getVariable.Matlab")
+export("isOpen")
+export("isOpen.Matlab")
+export("Matlab")
+export("R.matlab")
+export("readMat")
+export("setFunction")
+export("setFunction.Matlab")
 export("setOption") # Re-export from R.utils::setOption()
+export("setOption.Matlab")
+export("setVariable")
+export("setVariable.Matlab")
+export("setVerbose")
+export("setVerbose.Matlab")
+export("startServer")
+export("startServer.Matlab")
+export("writeMat")
+
+## DEPRECATED:
+## Exporting because CRAN package CINOEDV 2.0 (2014-11-27) calls
+## readMat.default() and not readMat(). However, this will be
+## removed from the public API of R.matlab in a future version.
+## /HB 2016-07-05
+export("readMat.default")
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -24,7 +24,7 @@
 # \section{Requirements}{
 #   In order for \R to communicate with MATLAB, MATLAB v6 or higher is
 #   needed. It will \emph{not} work with previous versions, because they
-#   do not support Java!\cr
+#   do not support Java.\cr
 #
 #   We use the term \emph{server} to say that MATLAB acts like a server
 #   with regard to \R. Note that it a standard MATLAB session that runs.\cr
@@ -406,9 +406,7 @@ setMethodS3("open", "Matlab", function(con, trials=30, interval=1, timeout = get
   suffix <- sprintf("...failed (after %d tries)", as.integer(count));
 
   throw(sprintf("Failed to connect to MATLAB on host '%s' (port %d) after trying %d times for approximately %.1f seconds.", this$host, as.integer(this$port), count, count*interval));
-
-  return(FALSE);
-});
+})
 
 
 
@@ -450,7 +448,7 @@ setMethodS3("isOpen", "Matlab", function(con, ...) {
 ###########################################################################/**
 # @RdocMethod finalize
 #
-# @title "Finalizes the object if deleted"
+# @title "(internal) Finalizes the object if deleted"
 #
 # \description{
 #   @get "title". If a MATLAB connection is opened, it is closed.
@@ -550,17 +548,18 @@ setMethodS3("close", "Matlab", function(con, ...) {
 ###########################################################################/**
 # @RdocMethod writeCommand
 #
-# @title "Writes (sends) a command to the MATLAB server"
+# @title "(internal) Writes (sends) an R-to-MATLAB command to the MATLAB server"
 #
 # \description{
 #  @get "title".
 #
-#  This method is for internal use only.
+#  \emph{This method is for internal use only.}
 # }
 #
 # @synopsis
 #
 # \arguments{
+#  \item{cmd}{A @character string specifying the command.}
 #  \item{...}{Not used.}
 # }
 #
@@ -576,10 +575,12 @@ setMethodS3("close", "Matlab", function(con, ...) {
 #*/###########################################################################
 setMethodS3("writeCommand", "Matlab", function(this, cmd, ...) {
   getCommandByte <- function(this, cmd) {
-    commands <- c("quit", "", "eval", "send", "receive", "send-remote", "receive-remote", "echo", "evalc");
-    if (!is.element(cmd, commands))
-      return(0L);
-    as.integer(which(commands == cmd) - 2L);
+    commands <- c("quit", "", "eval", "send", "receive", "send-remote", "receive-remote", "echo", "evalc")
+    idx <-  match(cmd, table=commands, nomatch=NA_integer_)
+    if (is.na(idx)) {
+      throw(sprintf("INTERNAL ERROR: Unknown R-to-MATLAB command: %s (known commands are %s", sQuote(cmd), paste(sQuote(setdiff(commands, "")), collapse=", ")))
+    }
+    idx - 2L
   }
 
   b <- getCommandByte(this, cmd);
@@ -598,12 +599,12 @@ setMethodS3("writeCommand", "Matlab", function(this, cmd, ...) {
 ###########################################################################/**
 # @RdocMethod readResult
 #
-# @title "Reads results from the MATLAB server"
+# @title "(internal) Reads results from the MATLAB server"
 #
 # \description{
 #  @get "title".
 #
-#  This method is for internal use only.
+#  \emph{This method is for internal use only.}
 # }
 #
 # @synopsis
@@ -1170,7 +1171,12 @@ setMethodS3("setVerbose", "Matlab", function(this, threshold=0, ...) {
   verbose <- this$.verbose;
   oldThreshold <- getThreshold(verbose);
 
-  if (identical(threshold, FALSE)) {
+  if (is.logical(threshold)) {
+    threshold <- -as.integer(threshold)
+  }
+  stopifnot(is.numeric(threshold))
+  
+  if (threshold >= 0) {
     verbose <- NullVerbose();
   } else {
     verbose <- Verbose();

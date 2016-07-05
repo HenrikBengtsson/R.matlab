@@ -11,10 +11,10 @@
 \alias{Matlab.finalize}
 \alias{finalize,Matlab-method}
 
-\title{Finalizes the object if deleted}
+\title{(internal) Finalizes the object if deleted}
 
 \description{
-  Finalizes the object if deleted. If a MATLAB connection is opened, it is closed.
+  (internal) Finalizes the object if deleted. If a MATLAB connection is opened, it is closed.
 
   Note that you should never have to call this method explicitly. It is
   called automatically whenever the object is removed from memory

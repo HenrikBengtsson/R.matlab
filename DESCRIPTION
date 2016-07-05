@@ -1,5 +1,5 @@
 Package: R.matlab
-Version: 3.5.1
+Version: 3.6.0
 Depends:
   R (>= 2.14.0)
 Imports:
@@ -7,11 +7,11 @@ Imports:
   utils,
   R.methodsS3 (>= 1.7.1),
   R.oo (>= 1.20.0),
-  R.utils (>= 2.2.0)
+  R.utils (>= 2.3.0)
 Suggests:
   Matrix,
   SparseM
-Date: 2016-03-27
+Date: 2016-07-05
 Title: Read and Write MAT Files and Call MATLAB from Within R
 Authors@R: c(
   person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),

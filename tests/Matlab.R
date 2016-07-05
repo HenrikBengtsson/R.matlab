@@ -2,8 +2,104 @@ library("R.matlab")
 
 fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
 fullTest <- fullTest && nzchar(Sys.which("matlab"))
-if (fullTest) {
 
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Test Matlab class regardless of MATLAB installed or not
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+message("Matlab class ...")
+
+readResult <- R.matlab:::readResult
+writeCommand <- R.matlab:::writeCommand
+
+workdir <- tempdir()
+res <- Matlab$startServer(workdir=workdir)
+print(res)
+
+for (remote in c(FALSE, TRUE)) {
+  message(sprintf("- Matlab(remote=%s) ...", remote))
+  
+  matlab <- Matlab(remote=remote)
+  print(matlab)
+  
+  setVerbose(matlab, TRUE)
+  setVerbose(matlab, FALSE)
+  setVerbose(matlab, 0)
+  setVerbose(matlab, -1)
+  setVerbose(matlab, -100)
+  
+  res <- tryCatch({
+    open(matlab, trials=2L, interval=0.1, timeout=0.5)
+  }, error = function(ex) ex)
+  print(res)
+  
+  res <- tryCatch({
+    writeCommand(matlab, "echo")
+  }, error = function(ex) ex)
+  print(res)
+  
+  res <- tryCatch({
+    writeCommand(matlab, "<unknown>")
+  }, error = function(ex) ex)
+  print(res)
+  
+  res <- tryCatch({
+    evaluate(matlab, "x = 1;")
+  }, error = function(ex) ex)
+  print(res)
+  
+  res <- tryCatch({
+    setVariable(matlab, x=2)
+  }, error = function(ex) ex)
+  print(res)
+  
+  res <- tryCatch({
+    getVariable(matlab, "x")
+  }, error = function(ex) ex)
+  print(res)
+  
+  res <- tryCatch({
+    setFunction(matlab, "  \
+      function [y]=foo(x)  \
+        y=x;               \
+    ")
+  }, error = function(ex) ex)
+  print(res)
+
+  ## Not a proper MATLAB function
+  res <- tryCatch({
+    setFunction(matlab, "function [y]=foo")
+  }, error = function(ex) ex)
+  print(res)
+
+  ## Not a MATLAB function
+  res <- tryCatch({
+    setFunction(matlab, "foo bar")
+  }, error = function(ex) ex)
+  print(res)
+
+  options("readResult/maxTries"=2L)
+  options("readResult/interval"=0.1)
+  res <- tryCatch({
+    readResult(matlab)
+  }, error = function(ex) ex)
+  print(res)
+  
+  res <- tryCatch({
+    close(matlab)
+  }, error = function(ex) ex)
+  print(res)
+  
+  rm(list="matlab")
+  gc()
+
+  message(sprintf("- Matlab(remote=%s) ... DONE", remote))  
+}
+
+message("Matlab class ... DONE")
+
+
+if (fullTest) {
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # This example will try to start the MATLAB server on the local machine,
 # and then setup a Matlab object in R for communicating data between R
@@ -43,7 +139,7 @@ print(matlab)
 
 # If you experience any problems, ask for detailed outputs
 # by uncommenting the next line
-# setVerbose(matlab, -2)
+setVerbose(matlab, -2)
 
 # Connect to the MATLAB server.
 isOpen <- open(matlab)

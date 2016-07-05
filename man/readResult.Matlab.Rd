@@ -11,12 +11,12 @@
 \alias{Matlab.readResult}
 \alias{readResult,Matlab-method}
 
-\title{Reads results from the MATLAB server}
+\title{(internal) Reads results from the MATLAB server}
 
 \description{
- Reads results from the MATLAB server.
+ (internal) Reads results from the MATLAB server.
 
- This method is for internal use only.
+ \emph{This method is for internal use only.}
 }
 
 \usage{
