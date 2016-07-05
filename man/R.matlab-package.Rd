@@ -183,7 +183,7 @@ Within R. R package version 3.5.1-9000. https://github.com/HenrikBengtsson/R.mat
 \author{Henrik Bengtsson}
 
 \section{References}{
-[1] H. Bengtsson, \emph{The R.oo package - Object-Oriented Programming with References Using Standard R Code}, In Kurt Hornik, Friedrich Leisch and Achim Zeileis, editors, Proceedings of the 3rd International Workshop on Distributed Statistical Computing (DSC 2003), March 20-22, Vienna, Austria. \url{http://www.ci.tuwien.ac.at/Conferences/DSC-2003/Proceedings/}
+[1] H. Bengtsson, \emph{The R.oo package - Object-Oriented Programming with References Using Standard R Code}, In Kurt Hornik, Friedrich Leisch and Achim Zeileis, editors, Proceedings of the 3rd International Workshop on Distributed Statistical Computing (DSC 2003), March 20-22, Vienna, Austria. \url{https://www.r-project.org/conferences/DSC-2003/Proceedings/}
  \cr
 }
 \keyword{package}
