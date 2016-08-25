@@ -237,7 +237,7 @@ setMethodS3("writeMat", "default", function(con, ..., fixNames=TRUE, matVersion=
       nbrOfBytes <- writeBinMat(con, as.integer(bfr), size=1);
 
       # Write version
-      version <- 256L;
+      version <- 256L;  ## version == 0x0100 [6]
       nbrOfBytes <- nbrOfBytes + writeBinMat(con, version, size=2, endian="little");
 
       # Write endian information
