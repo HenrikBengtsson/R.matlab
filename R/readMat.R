@@ -1195,7 +1195,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
       data <- readMat4Data(con, header);
       verbose && str(verbose, level=-102, data);
 
-      result <- append(result, data);
+      result <- c(result, data);
       data <- NULL; # Not needed anymore
 
       firstFourBytes <- NULL;
@@ -2289,7 +2289,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
         verbose && exit(verbose);
         break;
       }
-      result <- append(result, data);
+      result <- c(result, data);
       verbose && exit(verbose, suffix=paste("...done: '", names(data), "' [",
                    mode(data[[1L]]), ": ", paste(dim(data[[1L]]), collapse="x"),
                                                                 "]", sep=""));
