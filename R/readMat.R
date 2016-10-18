@@ -1271,16 +1271,16 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
       }
 
       if (version == 256) {           # version == 0x0100
-        version = "5";
+        version <- "5";
       } else if (version == 512) {    # version == 0x0200
         ## Not officially documented (as of July 2016), but used in
 	## https://github.com/tbeu/matio and suggested by
 	## Thomas Beutlich in Issue #23
 	## (https://github.com/HenrikBengtsson/R.matlab/issues/23)
-        version = "7.3";
+        version <- "7.3";
       } else {
         warning("Unknown MAT version tag: ", version, ". Will assume version 5.");
-        version = as.character(version);
+        version <- as.character(version);
       }
 
       list(description=description, version=version, endian=detectedEndian);
