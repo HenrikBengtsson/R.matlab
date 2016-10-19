@@ -1195,7 +1195,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
       data <- readMat4Data(con, header);
       verbose && str(verbose, level=-102, data);
 
-      result <- append(result, data);
+      result <- c(result, data);
       data <- NULL; # Not needed anymore
 
       firstFourBytes <- NULL;
@@ -1222,7 +1222,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
     # version of the MAT file we are reading, if it used little or big endian
     # etc.
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    readMat5Header <- function(this, firstFourBytes=NULL) {
+    readMat5or73Header <- function(this, firstFourBytes=NULL) {
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       # "MATLAB uses the first four bytes to determine if a MAT-file uses a
       #  Version 5 format or a Version 4 format. If any of these bytes
@@ -1270,15 +1270,21 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
          version <- 256*low + hi;
       }
 
-      if (version == 256) {         # version == 0x0100
-        version = "5";
+      if (version == 256) {           # version == 0x0100
+        version <- "5";
+      } else if (version == 512) {    # version == 0x0200
+        ## Not officially documented (as of July 2016), but used in
+	## https://github.com/tbeu/matio and suggested by
+	## Thomas Beutlich in Issue #23
+	## (https://github.com/HenrikBengtsson/R.matlab/issues/23)
+        version <- "7.3";
       } else {
         warning("Unknown MAT version tag: ", version, ". Will assume version 5.");
-        version = as.character(version);
+        version <- as.character(version);
       }
 
       list(description=description, version=version, endian=detectedEndian);
-    } # readMat5Header()
+    } # readMat5or73Header()
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # MAT5 CONSTANTS
@@ -2263,12 +2269,16 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
 
     detectedEndian <<- "little";
 
-    header <- readMat5Header(this, firstFourBytes=firstFourBytes);
+    header <- readMat5or73Header(this, firstFourBytes=firstFourBytes);
 
     if (verbose) {
       cat(verbose, level=-100, "Read MAT v5 header:");
       print(verbose, level=-100, header);
       cat(verbose, level=-100, "Endian: ", detectedEndian);
+    }
+
+    if (header$version == "7.3") {
+      stop("Reading of MAT v7.3 files is not supported. If possible, save the data in MATLAB using 'save -V6'.")
     }
 
     result <- list();
@@ -2279,7 +2289,7 @@ setMethodS3("readMat", "default", function(con, maxLength=NULL, fixNames=TRUE, d
         verbose && exit(verbose);
         break;
       }
-      result <- append(result, data);
+      result <- c(result, data);
       verbose && exit(verbose, suffix=paste("...done: '", names(data), "' [",
                    mode(data[[1L]]), ": ", paste(dim(data[[1L]]), collapse="x"),
                                                                 "]", sep=""));

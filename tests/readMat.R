@@ -208,3 +208,16 @@ mat <- readMat(file.path(path, "TextWithNewlines.mat"))
 mystr <- mat$mystr[1,1]
 print(mystr)
 stopifnot(mystr == "hello\nworld\n\nEOM")
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Assert that MAT v7.3 files are detected with informative error
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+res <- tryCatch({
+  readMat(file.path(path, "Matrix-v7.3.mat"))
+}, error = identity)
+print(res)
+stopifnot(
+  inherits(res, "error"),
+  grepl("MAT v7.3 files is not supported", conditionMessage(res))
+)
