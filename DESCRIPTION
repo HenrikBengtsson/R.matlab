@@ -1,5 +1,5 @@
 Package: R.matlab
-Version: 3.6.1
+Version: 3.6.1-9000
 Depends:
   R (>= 2.14.0)
 Imports:
@@ -7,7 +7,7 @@ Imports:
   utils,
   R.methodsS3 (>= 1.7.1),
   R.oo (>= 1.20.0),
-  R.utils (>= 2.3.0)
+  R.utils (>= 2.4.0)
 Suggests:
   Matrix,
   SparseM

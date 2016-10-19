@@ -1,6 +1,10 @@
 Package: R.matlab
 =================
 
+Version: 3.6.1-9000 [2015-10-19]
+o ...
+
+
 Version: 3.6.1 [2015-10-19]
 o ROBUSTNESS: Now readMat() detects when MAT v7.3 files are trying
   to be read and gives an informative error explaining those are
