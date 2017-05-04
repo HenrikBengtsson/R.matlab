@@ -2,741 +2,1170 @@ Package: R.matlab
 =================
 
 Version: 3.6.1-9000 [2015-10-19]
-o ...
 
-
+ o ...
+ 
+ 
 Version: 3.6.1 [2015-10-19]
-o ROBUSTNESS: Now readMat() detects when MAT v7.3 files are trying
-  to be read and gives an informative error explaining those are
-  not supported (Issue #23).  Thanks to Thomas Beutlich (author of
-  C library matio) for (non-official) pointers on how to distinguish
-  MAT v5 from MAT v7.3 files.
-  
 
+NEW FEATURES:
+
+ o ROBUSTNESS: Now readMat() detects when MAT v7.3 files are trying to be read
+   and gives an informative error explaining those are not supported
+   (Issue #23).  Thanks to Thomas Beutlich (author of C library matio) for
+   (non-official) pointers on how to distinguish MAT v5 from MAT v7.3 files.
+   
+ 
 Version: 3.6.0 [2015-07-05]
-o writeMat() gained argument 'fixNames=TRUE' for automatically
-  replacing periods (.) in variable and field names with
-  underscores (_). Thanks to Eugenio Piasini at University College
-  London for suggesting this feature.
-o The MatlabServer.m script now outputs verbose/debug messages to
-  standard error (or more precisely MATLAB file #2) (Issue #27).
-o Internal writeCommand() now gives an informative error if an
-  unknown command is used.  Previously it silently sent a "0L"
-  command to MATLAB.
-o CLEANUP: Exporting only methods parts of the public API.
-o ROBUSTNESS: Increased test coverage to 87% (was 73%).
-o BUG FIX: writeMat() could not write logical elements.  They are
-  now converted to integers as MATLAB does not have a native
-  logical / boolean data type.  Previously, writeMat() silently
-  ignored writing the data section of these logical elements
-  resulting in a MAT file that could not be parsed by MATLAB
-  (although readMat() could).  Thanks to Eugenio Piasini for
-  reporting on this problem.
 
+NEW FEATURES:
 
+ o writeMat() gained argument 'fixNames=TRUE' for automatically replacing
+   periods (.) in variable and field names with underscores (_). Thanks to
+   Eugenio Piasini at University College London for suggesting this feature.
+
+ o The MatlabServer.m script now outputs verbose/debug messages to standard
+   error (or more precisely MATLAB file #2) (Issue #27).
+
+ o Internal writeCommand() now gives an informative error if an unknown command
+   is used.  Previously it silently sent a "0L" command to MATLAB.
+
+SOFTWARE QUALITITY:
+
+ o Increased test coverage to 87% (was 73%).
+
+BUG FIXES:
+
+ o writeMat() could not write logical elements.  They are now converted to
+   integers as MATLAB does not have a native logical / boolean data type.
+   Previously, writeMat() silently ignored writing the data section of these
+   logical elements resulting in a MAT file that could not be parsed by MATLAB
+   (although readMat() could).  Thanks to Eugenio Piasini for reporting on this
+   problem.
+ 
+DEPRECATED AND DEFUNCT:
+
+ o CLEANUP: Exporting only methods parts of the public API.
+
+ 
 Version: 3.5.1 [2015-03-27]
-o CRAN POLICIES/CLEANUP: Dropping reference to deprecated (soon defunct)
-  utils::setInternet2() in help("Matlab").
 
+DEPRECATED AND DEFUNCT:
 
+ o CRAN POLICIES/CLEANUP: Dropping reference to deprecated (soon defunct)
+   utils::setInternet2() in help("Matlab").
+ 
+ 
 Version: 3.5.0 [2015-03-05]
-o ROBUSTNESS: Now readMat() parses (effectively skips) also objects of
-  array class mxOPAQUE_CLASS (=17).  The official 'MAT-File Format R2015b'
-  (Sept 2015) documentation does not describe this type.
-  The parsing/skipping was done by reverse engineering and clever guesses.
-  Thanks to GitHub user 'yakzan' for reporting on this type of MAT files.
-o CLEANUP: Internal fallback method for reading compressed MAT files
-  using Omegahat's Rcompression package is not needed since R 2.10.0 and
-  therefore dropped.
-o ROBUSTNESS: Package test coverage is 82%.
 
+NEW FEATURES:
 
+ o Now readMat() parses (effectively skips) also objects of array class
+   mxOPAQUE_CLASS (=17).  The official 'MAT-File Format R2015b' (Sept 2015)
+   documentation does not describe this type.  The parsing/skipping was done
+   by reverse engineering and clever guesses.  Thanks to GitHub user 'yakzan'
+   for reporting on this type of MAT files.
+    
+SOFTWARE QUALITITY:
+
+ o Package test coverage is 82%.
+
+DEPRECATED AND DEFUNCT:
+
+ o CLEANUP: Internal fallback method for reading compressed MAT files using
+   Omegahat's Rcompression package is not needed since R 2.10.0 and therefore
+   dropped.
+
+ 
 Version: 3.4.0 [2015-02-03]
-o ROBUSTNESS: Now readMat() parses also functional objects of array
-  type (class) 16.  Note that the official 'MAT-File Format R2015b'
-  (Sept 2015) documentation does not describe this type.  I had to
-  implement the parser based on best guess on how the MAT file format
-  works in general, so it might not work in all cases.  Thanks to
-  GitHub user 'anilatx' for reporting on this type of MAT files.
-o ROBUSTNESS: Now writeMat(pathname, ...) writes the MAT file
-  atomically by first writing to a temporary file which is renamed
-  only if successful.
-o ROBUSTNESS: Now writeMat() asserts that a maximum of 2^31-1 bytes
-  are written per variable, otherwise an informative error is thrown.
-  This byte limit is set by the MAT file format definition.  Thanks
-  to GitHub user 'intelinsight' for reporting on this.
-o ROBUSTNESS: Package test coverage is 81%.
 
+NEW FEATURES:
 
+ o ROBUSTNESS: Now readMat() parses also functional objects of array type
+   (class) 16.  Note that the official 'MAT-File Format R2015b' (Sept 2015)
+   documentation does not describe this type.  I had to implement the parser
+   based on best guess on how the MAT file format works in general, so it might
+   not work in all cases.  Thanks to GitHub user 'anilatx' for reporting on
+   this type of MAT files.
+
+ o ROBUSTNESS: Now writeMat(pathname, ...) writes the MAT file atomically by
+   first writing to a temporary file which is renamed only if successful.
+
+ o ROBUSTNESS: Now writeMat() asserts that a maximum of 2^31-1 bytes are
+   written per variable, otherwise an informative error is thrown.  This byte
+   limit is set by the MAT file format definition.  Thanks to GitHub user
+   'intelinsight' for reporting on this.
+
+SOFTWARE QUALITITY:
+
+ o Package test coverage is 81%.
+ 
+ 
 Version: 3.3.0 [2015-09-22]
-o evaluate() gained argument 'capture' for capturing MATLAB output
-  while evaluating MATLAB expressions.  Thanks to Rohan Shah (GitHub
-  user rohan-shah) for contributing code for this.
-o Explicit import of 'methods' and 'utils' functions.
-o ROBUSTNESS: Now the temporary filenames generated by MATLAB also
-  includes the port number in addition to a semi-random sequence
-  string.  This should lower the risk for two MATLAB server using
-  the same temporary filenames.
-o BUG FIX: readMat() gave an error when reading empty sparse matrices.
-  Thanks to Gregory Jefferis at University of Cambridge for the bug
-  report and bug fix.
 
+NEW FEATURES:
 
+ o evaluate() gained argument 'capture' for capturing MATLAB output while
+   evaluating MATLAB expressions.  Thanks to Rohan Shah (GitHub user
+   rohan-shah) for contributing code for this.
+
+ o ROBUSTNESS: Now the temporary filenames generated by MATLAB also includes
+   the port number in addition to a semi-random sequence string.  This should
+   lower the risk for two MATLAB server using the same temporary filenames.
+
+CODE REFACTORING:
+
+ o Explicit import of 'methods' and 'utils' functions.
+
+BUG FIXES:
+
+ o readMat() gave an error when reading empty sparse matrices.  Thanks to
+   Gregory Jefferis at University of Cambridge for the bug report and bug fix.
+ 
+ 
 Version: 3.2.0 [2015-02-24]
-o ROBUSTNESS: Package test coverage is 77%.
-o ROBUSTNESS: Now Matlab$startServer() always overwrites any existing
-  'MatlabServer.m' and 'InputStreamByteWrapper.class' to make sure the
-  most recent versions are always used.  Previously, existing files
-  would be kept, requiring a manual removal in order to use more resent
-  versions of these files.
-o BUG FIX: readMat(..., sparseMatrixClass='matrix') did not return
-  the correct results in all cases.  Added more package tests.
-o BUG FIX: readMat(..., sparseMatrixClass='SparseM') did not handle
-  all-zero sparse matrices.  Added package test for this.
-o BUG FIX: readMat(..., sparseMatrixClass='Matrix') would give "Error
-  in validObject(.Object) : invalid class "dgCMatrix" object: lengths
-  of slots 'i' and 'x' must match", whenever trying to read an sparse
-  matrix with all zeros.  Added package test for this case.
-  Thanks to Abhinav Jauhri at Carnegie Mellon University for reporting
-  on this and donating a test MAT file.
-o BUG FIX: Trying to retrieve a non-existing MATLAB variable using
-  getVariable() would crash the R-to-MATLAB communication if remote=FALSE.
-  Similarly, Trying to evaluate() a MATLAB expression that is invalid or
-  by other means fails would also break the R-to-MATLAB bridge.  The only
-  solution is both cases was to restart R and MATLAB.  Thanks to GitHub
-  user badbye (yalei) for reporting on this.
 
+NEW FEATURES:
 
+ o ROBUSTNESS: Now Matlab$startServer() always overwrites any existing
+   'MatlabServer.m' and 'InputStreamByteWrapper.class' to make sure the most
+   recent versions are always used.  Previously, existing files would be kept,
+   requiring a manual removal in order to use more resent versions of these
+   files.
+
+SOFTWARE QUALITITY:
+
+ o Package test coverage is 77%.
+
+BUG FIXES:
+
+ o readMat(..., sparseMatrixClass='matrix') did not return the correct results
+   in all cases.  Added more package tests.
+
+ o readMat(..., sparseMatrixClass='SparseM') did not handle all-zero sparse
+   matrices.  Added package test for this.
+
+ o readMat(..., sparseMatrixClass='Matrix') would give "Error in 
+   validObject(.Object) : invalid class "dgCMatrix" object: lengths of slots
+   'i' and 'x' must match", whenever trying to read an sparse matrix with all
+   zeros.  Added package test for this case. Thanks to Abhinav Jauhri at
+   Carnegie Mellon University for reporting on this and donating a test MAT
+   file.
+
+ o Trying to retrieve a non-existing MATLAB variable using getVariable() would
+   crash the R-to-MATLAB communication if remote=FALSE.  Similarly, Trying to
+   evaluate() a MATLAB expression that is invalid or by other means fails would
+   also break the R-to-MATLAB bridge.  The only solution is both cases was to
+   restart R and MATLAB.  Thanks to GitHub user badbye (yalei) for the report.
+ 
+ 
 Version: 3.1.1 [2014-10-10]
-o CRAN POLICIES/CLEANUP: Source code file InputStreamByteWrapper.java
-  is no longer *installed* with this package.  It is only the
-  precompiled InputStreamByteWrapper.class file that is installed.
-  Updated documentation accordingly.
-o Resubmitted to CRAN.
 
+CODE REFACTORING:
 
+ o CRAN POLICIES/CLEANUP: Source code file InputStreamByteWrapper.java is no
+   longer *installed* with this package.  It is only the precompiled
+   InputStreamByteWrapper.class file that is installed. Updated documentation
+   accordingly.
+
+ o Resubmitted to CRAN.
+ 
+ 
 Version: 3.1.0 [2014-10-09]
-o Bumped up package dependencies.
-o Submitted to CRAN.
 
+CODE REFACTORING:
 
+ o Bumped up package dependencies.
+
+ o Submitted to CRAN.
+ 
+ 
 Version: 3.0.4 [2014-10-05]
-o BUG FIX: readMat() parsed an mxCELL_CLASS structure incorrectly if
-  one of its names was empty.  Thanks Dieter Menne at Menne Biomed
-  Consulting in Germany for reporting on this.
 
+BUG FIXES:
 
+ o readMat() parsed an mxCELL_CLASS structure incorrectly if one of its names
+   was empty.  Thanks Dieter Menne at Menne Biomed Consulting in Germany for
+   reporting on this.
+ 
+ 
 Version: 3.0.3 [2014-07-24]
-o Added section on parallel MATLAB instances to help('Matlab').
 
+DOCUMENTATION:
 
+ o Added section on parallel MATLAB instances to help('Matlab').
+ 
+ 
 Version: 3.0.2 [2014-06-22]
-o Added argument 'workdir' to Matlab$startServer() for setting the
-  working directory of MATLAB.  Thanks to Steven Jaffe at Morgan
-  Stanley for the suggestion.
-o ROBUSTNESS: Under certain circumstances the MATLAB server script
-  (MatlabServer.m) would try to access variables that were not yet
-  defined. Thanks to Steven Jaffe at Morgan Stanley for spotting this.
 
+NEW FEATURES:
 
+ o Added argument 'workdir' to Matlab$startServer() for setting the working
+   directory of MATLAB.  Thanks to Steven Jaffe at Morgan Stanley for the
+   suggestion.
+
+ o ROBUSTNESS: Under certain circumstances the MATLAB server script
+   (MatlabServer.m) would try to access variables that were not yet defined.
+   Thanks to Steven Jaffe at Morgan Stanley for spotting this.
+ 
+ 
 Version: 3.0.1 [2014-05-18]
-o BUG FIX: Internal uncompressZlib() of readMat() opened several
-  raw connections without closing them.  Added system package test.
-  Thanks Thilo Klein at University of Cambridge, UK, for the report.
 
+BUG FIXES:
 
+ o Internal uncompressZlib() of readMat() opened several raw connections
+   without closing them.  Added system package test.  Thanks Thilo Klein at
+   University of Cambridge, UK, for the report.
+ 
+ 
 Version: 3.0.0 [2014-05-06]
-o MAJOR: readMat() can now read all (zlib) compressed MAT files where it
-  previously gave an error message on: "INTERNAL ERROR:  Failed to
-  decompress data [...] internal error -3 in memDecompress(2)".
 
+SIGNIFICANT CHANGES:
 
+ o MAJOR: readMat() can now read all (zlib) compressed MAT files where it
+   previously gave an error message on: "INTERNAL ERROR:  Failed to
+   decompress data [...] internal error -3 in memDecompress(2)".
+ 
+ 
 Version: 2.4.0 [2014-04-29]
-o BUG FIX: When reading non-UTF-encoded strings (e.g. miUINT32), readMat()
-  would drop any characters that were not in the ASCII set (0,32-127).
-  This was overly conservative as it should at least have kept 7-bit ASCII
-  characters (in 0-127), e.g. newline characters were dropped. This bug
-  was introduced in R.matlab v1.2.0 (2008-02-12) when adding support for
-  UTF-* strings via iconv().  Now we keep all 8-bit ASCII characters,
-  which is also what the Matlab file format documentation suggests are
-  used in non-UTF-encoded text matrices.
-  Thanks to Steven Pav (San Francisco, CA) for reporting on this.
 
+BUG FIXES:
 
+ o When reading non-UTF-encoded strings (e.g. miUINT32), readMat() would drop
+   any characters that were not in the ASCII set (0,32-127). This was overly
+   conservative as it should at least have kept 7-bit ASCII characters (in
+   0-127), e.g. newline characters were dropped. This bug was introduced in
+   R.matlab v1.2.0 (2008-02-12) when adding support for UTF-* strings via
+   iconv().  Now we keep all 8-bit ASCII characters, which is also what the
+   Matlab file format documentation suggests are used in non-UTF-encoded text
+   matrices. Thanks to Steven Pav (San Francisco, CA) for reporting on this.
+ 
+ 
 Version: 2.3.1 [2014-04-26]
-o Now package is byte-compiled by default.
-o SPEEDUP: MAT5 mxCHAR_CLASS structures are now read slighly faster.
 
+CODE REFACTORING:
 
+ o Now package is byte-compiled by default.
+ 
+ o SPEEDUP: MAT5 mxCHAR_CLASS structures are now read slighly faster.
+
+ 
 Version: 2.3.0 [2014-02-21]
-o ROBUSTNESS: Now the package runs the garbage collector if unloaded
-  in order to make sure finalize() is called on any deleted Matlab
-  objects.
 
+BUG FIXES:
 
+ o ROBUSTNESS: Now the package runs the garbage collector if unloaded in order
+   to make sure finalize() is called on any deleted Matlab objects.
+ 
+ 
 Version: 2.2.4 [2014-02-17]
-o BUG FIX: setOption() for Matlab gave ''Error in UseMethod("setOption") :
-  no applicable method for 'setOption' applied to an object of class
-  "c('Options', 'Object')"''.  Added a package system test for this.
-  Thanks to Griet Laenen at KU Leuven for reporting on this.
 
+BUG FIXES:
 
+ o setOption() for Matlab gave ''Error in UseMethod("setOption") : no
+   applicable method for 'setOption' applied to an object of class
+   "c('Options', 'Object')"''.  Added a package system test for this.
+   Thanks to Griet Laenen at KU Leuven for reporting on this.
+ 
+ 
 Version: 2.2.3 [2014-02-03]
-o BACKWARD COMPATIBILITY: The inference on the type of compression
-  used in the error message when uncompression failed would itself
-  generate an error on R (< 3.0.0).
-o Bumped up package dependencies.
+
+CODE REFACTORING:
+
+ o Bumped up package dependencies.
+ 
+BUG FIXES:
+
+ o BACKWARD COMPATIBILITY: The inference on the type of compression used in the
+   error message when uncompression failed would itself generate an error on
+   R (< 3.0.0).
 
 
 Version: 2.2.2 [2014-01-28]
-o Added option 'R.matlab::readMat/v4/textMatrixCollapse' controlling
-  whether MAT v4 text matrixes are collapsed into strings by row
-  ("byrow"; default), by column ("bycolumn") or not at all ("none").
-o Whenever there is an uncompress error in readMat(), it now tries to
-  infer what type of compression the buffer has by inspecting the first
-  two bytes and include the type in the error message.
-o BUG FIX: readMat(..., drop="singletonLists") would throw an error
-  if the singleton list dropped contained NULL and that NULL was
-  assigned to an element of an outer list, resulting in that element
-  being dropped.
 
+NEW FEATURES:
 
+ o Added option 'R.matlab::readMat/v4/textMatrixCollapse' controlling whether
+   MAT v4 text matrixes are collapsed into strings by row ("byrow"; default),
+   by column ("bycolumn") or not at all ("none").
+
+ o Whenever there is an uncompress error in readMat(), it now tries to infer
+   what type of compression the buffer has by inspecting the first two bytes
+   and include the type in the error message.
+
+BUG FIXES:
+
+ o readMat(..., drop="singletonLists") would throw an error if the singleton
+   list dropped contained NULL and that NULL was assigned to an element of an
+   outer list, resulting in that element being dropped.
+ 
+ 
 Version: 2.2.1 [2014-01-28]
-o ROBUSTNESS: Now Matlab$startServer() asserts that all MATLAB server
-  files that are indeed successfully copied, iff missing.
-o CLEANUP: open() for Matlab no longer generates warnings on
-  "socketConnection(...) ... cannot be opened", which occured while
-  waiting/polling for the Matlab server to startup and respond.
 
+NEW FEATURES:
 
+ o ROBUSTNESS: Now Matlab$startServer() asserts that all MATLAB server files
+   that are indeed successfully copied, iff missing.
+
+ o CLEANUP: open() for Matlab no longer generates warnings on
+   "socketConnection(...) ... cannot be opened", which occured while
+   waiting/polling for the Matlab server to startup and respond.
+ 
+ 
 Version: 2.2.0 [2014-01-21]
-o DOCUMENTATION: Updated list of Matlab versions for which the
-  package has been confirmed to work with.
-o BUG FIX: The MatlabServer.m script would incorrectly consider
-  Matlab v8 and above as Matlab v6.  Thanks to Frank Stephen at NREL
-  for reporting on this and providing a patch.
-o Bumped up package dependencies.
 
+DOCUMENTATION:
 
+ o Updated list of Matlab versions for which the
+   package has been confirmed to work with.
+
+CODE REFACTORING:
+
+ o Bumped up package dependencies.
+
+BUG FIXES:
+
+ o The MatlabServer.m script would incorrectly consider
+   Matlab v8 and above as Matlab v6.  Thanks to Frank Stephen at NREL
+   for reporting on this and providing a patch.
+ 
+ 
 Version: 2.1.0 [2013-11-29]
-o CLEANUP: Now package only imports R.oo (no longer attaches it).
-  Also, the package now imports R.utils (used to suggest and attach
-  it when needed).  These updates make the package more "silent".
-o CLEANUP: Dropped obsolete autoload():s.
-o Now the 'R.matlab' Package object is also available when the
-  package is only loaded (but not attached).
-o ROBUSTNESS: Added package system test asserting that readMat()
-  can be called without attaching the package.
 
+CODE REFACTORING:
 
+ o CLEANUP: Now package only imports R.oo (no longer attaches it).
+   Also, the package now imports R.utils (used to suggest and attach
+   it when needed).  These updates make the package more "silent".
+
+ o CLEANUP: Dropped obsolete autoload():s.
+
+NEW FEATURES:
+
+ o Now the 'R.matlab' Package object is also available when the
+   package is only loaded (but not attached).
+
+ o ROBUSTNESS: Added package system test asserting that readMat()
+   can be called without attaching the package.
+ 
+ 
 Version: 2.0.7 [2013-11-28]
-o Now the 'INTERNAL ERROR' message readMat() throws on failed
-  decompression also includes the first and last bytes of the data
-  block that it tried to decompress.  This will further help
-  troubleshooting.
 
+NEW FEATURES:
 
+ o Now the 'INTERNAL ERROR' message readMat() throws on failed
+   decompression also includes the first and last bytes of the data
+   block that it tried to decompress.  This will further help
+   troubleshooting.
+ 
+ 
 Version: 2.0.6 [2013-09-20]
-o ROBUSTNESS: Forgot to import R.methodsS3::appendVarArgs().
 
+CODE REFACTORING:
 
+ o ROBUSTNESS: Forgot to import R.methodsS3::appendVarArgs().
+ 
+ 
 Version: 2.0.5 [2013-09-16]
-o ROBUSTNESS: Added one explicit import from the 'utils' package.
 
+CODE REFACTORING:
 
+ o ROBUSTNESS: Added one explicit import from the 'utils' package.
+ 
+ 
 Version: 2.0.4 [2013-09-11]
-o CONSISTENCY:  Added argument 'drop' to readMat() to control how
-  singleton dimensions of for instance nested lists are dropped or not.
-  The defaults are now such that R.matlab v2.0.4 is consistent with
-  R.matlab v1.7.1 (R.matlab v2.0.0-2.0.3 were not).  Thanks to
-  Claudia Beleites at IPHT Jena, Germany for reporting on this.
-o Bumped up package dependencies.
 
+NEW FEATURES:
 
+ o CONSISTENCY:  Added argument 'drop' to readMat() to control how
+   singleton dimensions of for instance nested lists are dropped or not.
+   The defaults are now such that R.matlab v2.0.4 is consistent with
+   R.matlab v1.7.1 (R.matlab v2.0.0-2.0.3 were not).  Thanks to
+   Claudia Beleites at IPHT Jena, Germany for reporting on this.
+
+ o Bumped up package dependencies.
+ 
+ 
 Version: 2.0.3 [2013-09-10]
-o WORKAROUND/BUG FIX: readMat() would an error when parsing an empty
-  'mxCHAR_CLASS' matrix with a 0x0 dimension.  It is not clear whether
-  this is a valid MAT v5 structure or not, but I've added a workaround.
-  Thanks Claudia Beleites at IPHT Jena, Germany for reporting on this.
 
+BUG FIXES:
 
+ o WORKAROUND/BUG FIX: readMat() would an error when parsing an empty
+   'mxCHAR_CLASS' matrix with a 0x0 dimension.  It is not clear whether
+   this is a valid MAT v5 structure or not, but I've added a workaround.
+   Thanks Claudia Beleites at IPHT Jena, Germany for reporting on this.
+ 
+ 
 Version: 2.0.2 [2013-07-17]
-o DOCUMENTATION: Added section of '-v7.3' MAT files to help("readMat").
 
+DOCUMENTATION:
 
+ o Added section of '-v7.3' MAT files to help("readMat").
+ 
+ 
 Version: 2.0.1 [2013-07-11]
-o Updated all documentation and messages to use 'MATLAB' instead
-  of 'Matlab'.
-o Now the 'INTERNAL ERROR' message that people forward to the package
-  maintainer also includes the version of the R.matlab package.
-o Bumped up package dependencies.
 
+NEW FEATURES:
 
+ o Now the 'INTERNAL ERROR' message that people forward to the package
+   maintainer also includes the version of the R.matlab package.
+
+DOCUMENTATION:
+
+ o Updated all documentation and messages to use 'MATLAB' instead
+   of 'Matlab'.
+
+CODE REFACTORING:
+
+ o Bumped up package dependencies.
+ 
+ 
 Version: 2.0.0 [2013-05-25]
-o SPEEDUP: Made readMat() significant faster. More than 15x speedup(!)
-  is observed on MAT files with many small structures.  This was
-  achieved by (i) dramatically decreasing the amount of memory allocation
-  and garbage collection needed by the internal raw buffer mechanism,
-  by (ii) dropping an internal rm() calls that was called very often,
-  as well as by (iii) minimizing the number of times local functions and
-  objects are created.
-o Now readMat() also accepts a raw vector as input.
-o Now readMat() no longer generates warnings reporting on "In readBin(
-  con = rawBufferT, what = what, size = size, n = n, signed = signed,  :
-  'signed = FALSE' is only valid for integers of sizes 1 and 2."
-o DOCUMENTATION: Restructured help("readMat").  Added a section on
-  'Speed performance'.
 
+SIGNIFICANT CHANGES:
 
+ o SPEEDUP: Made readMat() significant faster. More than 15x speedup(!)
+   is observed on MAT files with many small structures.  This was
+   achieved by (i) dramatically decreasing the amount of memory allocation
+   and garbage collection needed by the internal raw buffer mechanism,
+   by (ii) dropping an internal rm() calls that was called very often,
+   as well as by (iii) minimizing the number of times local functions and
+   objects are created.
+
+NEW FEATURES:
+
+ o Now readMat() also accepts a raw vector as input.
+
+ o Now readMat() no longer generates warnings reporting on "In readBin(
+   con = rawBufferT, what = what, size = size, n = n, signed = signed,  :
+   'signed = FALSE' is only valid for integers of sizes 1 and 2."
+
+DOCUMENTATION:
+
+ o Restructured help("readMat").  Added a section on 'Speed performance'.
+ 
+ 
 Version: 1.7.1 [2013-05-20]
-o CRAN POLICY: Now all Rd \usage{} lines are at most 90 characters long.
 
+DOCUMENTATION:
 
+ o CRAN POLICY: Now all Rd \usage{} lines are at most 90 characters long.
+ 
+ 
 Version: 1.7.0 [2013-04-15]
-o readMat() now support reading 64-bit integers [array type (class)
-  'mxINT64_CLASS' and 'mxUINT64_CLASS'] on machines/versions of R
-  with .Machine$sizeof.long >= 8 or .Machine$sizeof.longlong >= 8.
-o Package utilizes new startupMessage() of R.oo.
-o ROBUSTNESS: Now nearly all S3 methods are declared properly in
-  the namespace.
 
+NEW FEATURES:
 
+ o readMat() now support reading 64-bit integers [array type (class)
+   'mxINT64_CLASS' and 'mxUINT64_CLASS'] on machines/versions of R
+   with .Machine$sizeof.long >= 8 or .Machine$sizeof.longlong >= 8.
+
+ o Package utilizes new startupMessage() of R.oo.
+
+CODE REFACTORING:
+
+ o ROBUSTNESS: Now nearly all S3 methods are declared properly in
+   the namespace.
+ 
+ 
 Version: 1.6.4 [2013-03-08]
-o Added an Authors@R field to the DESCRIPTION.
-o DOCUMENTATION: Updated the help usage section for all static methods.
 
+DOCUMENTATION:
 
+ o Updated the help usage section for all static methods.
+
+CODE REFACTORING:
+
+ o Added an Authors@R field to the DESCRIPTION.
+ 
+ 
 Version: 1.6.3 [2013-01-17]
-o Bumped up package dependencies.
 
+CODE REFACTORING:
 
+ o Bumped up package dependencies.
+ 
+ 
 Version: 1.6.2 [2012-12-02]
-o CLEANUP: R CMD check no longer warns on global assignments.
-o Bumped up package dependencies.
 
+CODE REFACTORING:
 
+ o CLEANUP: R CMD check no longer warns on global assignments.
+
+ o Bumped up package dependencies.
+ 
+ 
 Version: 1.6.1 [2012-06-30]
-o Updated package dependencies.
 
+CODE REFACTORING:
 
+ o Updated package dependencies.
+ 
+ 
 Version: 1.6.0 [2012-06-07]
-o BUG FIX: readMat() could not read sparse matrices containing logical
-  values, only numerics.  This was because the 'logical' bit in the
-  Array Flags was not utilized by readMat(), which in turn was because
-  the file format documentation is rather vague on how to use that bit.
-  This means that readMat() now represents sparse logical matrices
-  using logical values, except when sparseMatrixClass="SparseM",
-  because SparseM matrices can only hold numeric values.
-  Thanks to Irtisha Sinhg at Cornell University for reporting on this.
 
+BUG FIXES:
 
+ o readMat() could not read sparse matrices containing logical
+   values, only numerics.  This was because the 'logical' bit in the
+   Array Flags was not utilized by readMat(), which in turn was because
+   the file format documentation is rather vague on how to use that bit.
+   This means that readMat() now represents sparse logical matrices
+   using logical values, except when sparseMatrixClass="SparseM",
+   because SparseM matrices can only hold numeric values.
+   Thanks to Irtisha Sinhg at Cornell University for reporting on this.
+ 
+ 
 Version: 1.5.9 [2012-05-05]
-o Now readMat() decompression error messages are more informative.
-o Now it is possible to specify the decompression method for readMat().
 
+NEW FEATURES:
 
+ o Now it is possible to specify the decompression method for readMat().
+ 
+ o Now readMat() decompression error messages are more informative.
+ 
+ 
 Version: 1.5.8 [2012-04-16]
-o Package now only *imports* R.methodsS3.
 
+CODE REFACTORING:
 
+ o Package now only *imports* R.methodsS3.
+ 
+ 
 Version: 1.5.7 [2012-04-13]
-o The 'Rcompression' update in v1.5.5 introduced a bug, causing
-  the loading of that package to fail.
 
+BUG FIXES:
 
+ o The 'Rcompression' update in v1.5.5 introduced a bug, causing the loading
+   of that package to fail.
+ 
+ 
 Version: 1.5.6 [2012-04-02]
-o BUG FIX: readMat(..., verbose=-111) would give an error on object
-  'zraw' not being found.
 
+BUG FIXES:
 
+ o readMat(..., verbose=-111) would give an error on object
+   'zraw' not being found.
+ 
+ 
 Version: 1.5.5 [2012-04-01]
-o ROBUSTNESS: Move most of the test code that was in the examples
-  of readMat() and writeMat() to formal system tests of the package,
-  and made those examples simpler.
-o CLEANUP: Removed 'Rcompression' from set of "Suggests" packages,
-  because since R v2.10.0 (Oct 2009) we can use memDecompress() of
-  the 'base' package instead.  However, just in case someone is still
-  running older versions of R, readMat() does indeed still look for
-  'Rcompression' as a fallback.
 
+SOFTWARE QUALITY:
 
+ o ROBUSTNESS: Move most of the test code that was in the examples
+   of readMat() and writeMat() to formal system tests of the package,
+   and made those examples simpler.
+
+DEPRECATED AND DEFUNCT:
+
+ o CLEANUP: Removed 'Rcompression' from set of "Suggests" packages,
+   because since R v2.10.0 (Oct 2009) we can use memDecompress() of
+   the 'base' package instead.  However, just in case someone is still
+   running older versions of R, readMat() does indeed still look for
+   'Rcompression' as a fallback.
+ 
+ 
 Version: 1.5.4 [2012-03-06]
-o CRAN POLICY: Removed all internal copies of 'base' functions
-  that have .Internal() calls.
 
+CODE REFACTORING:
 
+ o CRAN POLICY: Removed all internal copies of 'base' functions
+   that have .Internal() calls.
+ 
+ 
 Version: 1.5.3 [2011-12-08]
-o DOCUMENTATION: Added a section to help(Matlab) on how to connect
-  through firewalls.  Thanks Bas de Regt at University of Adelaide
-  for the suggestion.
 
+DOCUMENTATION:
 
+ o Added a section to help(Matlab) on how to connect
+   through firewalls.  Thanks Bas de Regt at University of Adelaide
+   for the suggestion.
+ 
+ 
 Version: 1.5.2 [2011-11-02]
-o CLEANUP: Fixed an R CMD check NOTE that would show up in R v2.15.0 devel.
 
+CODE REFACTORING:
 
+ o CLEANUP: Fixed an R CMD check NOTE that would show up in R v2.15.0 devel.
+ 
+ 
 Version: 1.5.1 [2011-09-27]
-o The version 1.5.0 that was submitted to CRAN did not include the
-  adjustments for startup messages.  Thus, resubmitting this one
-  to CRAN.
-o Updated the R and package dependencies.
 
+CODE REFACTORING:
 
+ o The version 1.5.0 that was submitted to CRAN did not include the
+   adjustments for startup messages.  Thus, resubmitting this one
+   to CRAN.
+
+ o Updated the R and package dependencies.
+ 
+ 
 Version: 1.5.0 [2011-09-24]
-o GENERALIZATION: Now readMat() utilizes base::memDecompress() to
-  uncompress compressed data structures, unless running R v2.9.x or
-  before, in case Rcompression::uncompress() is used, iff installed.
-  R v2.10.0 was released October 2009.  Thanks Stephen Eglen at
-  University of Cambridge for reminding me about memDecompress().
-o CLEANUP: Now using packageStartupMessage() instead of cat().
 
+NEW FEATURES:
 
+ o GENERALIZATION: Now readMat() utilizes base::memDecompress() to
+   uncompress compressed data structures, unless running R v2.9.x or
+   before, in case Rcompression::uncompress() is used, iff installed.
+   R v2.10.0 was released October 2009.  Thanks Stephen Eglen at
+   University of Cambridge for reminding me about memDecompress().
+
+ o CLEANUP: Now using packageStartupMessage() instead of cat().
+ 
+ 
 Version: 1.4.0 [2011-07-25]
-o ROBUSTNESS: Added an example of verbose output to example(readMat).
-o Added a namespace to the package, which will be more or less
-  a requirement in the next major release of R.
-o CLEANUP: Now all references to the Rcompression package is within
-  the local uncompress() function of readMat().  This makes the code
-  more modular making it easier to implement alternatives to
-  Rcompression::uncompress().
 
+CODE REFACTORING:
 
+ o Added a namespace to the package, which will be more or less
+   a requirement in the next major release of R.
+
+ o CLEANUP: Now all references to the Rcompression package is within
+   the local uncompress() function of readMat().  This makes the code
+   more modular making it easier to implement alternatives to
+   Rcompression::uncompress().
+
+DOCUMENTATION:
+
+ o Added an example of verbose output to example(readMat).
+
+ 
 Version: 1.3.7 [2011-02-01]
-o ROBUSTNESS: Now using argument 'imaginary' (not 'imag') in calls
-  to complex().
 
+CODE REFACTORING:
 
+ o ROBUSTNESS: Now using argument 'imaginary' (not 'imag') in calls
+   to complex().
+ 
+ 
 Version: 1.3.6 [2010-10-29]
-o ROBUSTNESS: Now writeMat() gives an error if duplicated object
-  names are used, e.g. writeMat(..., A=1, B=2, A=3).
-o ROBUSTNESS: Now writeMat() gives an error, not a warning, if
-  there are non-named objects.
-o BUG FIX: The test for non-named objects to writeMat() did not
-  work correctly.  Thanks Claudia Beleites for the report.
 
+NEW FEATURES:
 
+ o ROBUSTNESS: Now writeMat() gives an error if duplicated object
+   names are used, e.g. writeMat(..., A=1, B=2, A=3).
+
+ o ROBUSTNESS: Now writeMat() gives an error, not a warning, if
+   there are non-named objects.
+
+BUG FIXES:
+
+ o The test for non-named objects to writeMat() did not
+   work correctly.  Thanks Claudia Beleites for the report.
+ 
+ 
 Version: 1.3.5 [2010-10-28]
-o DOCUMENTATION: Clarified in the help of writeMat() that it can
-  only write 'uncompressed' MAT files.
-o ROBUSTNESS: Although readMat() can read non-named objects, in
-  Matlab it is only the 'load()' function call that can read it
-  but not the plain 'load' call.  Because of this, writeMat()
-  will now give a warning if it detects non-named objects.  For
-  instance, in writeMat("foo.mat", x=a, y) the object 'a' is
-  named (as "x") whereas 'y' is not.  To name the objects and
-  avoid the warning, use writeMat("foo.mat", x=a, y=y).  Thanks
-  Claudia Beleites at University of Trieste for reporting on this.
 
+NEW FEATURES:
 
+ o ROBUSTNESS: Although readMat() can read non-named objects, in
+   Matlab it is only the 'load()' function call that can read it
+   but not the plain 'load' call.  Because of this, writeMat()
+   will now give a warning if it detects non-named objects.  For
+   instance, in writeMat("foo.mat", x=a, y) the object 'a' is
+   named (as "x") whereas 'y' is not.  To name the objects and
+   avoid the warning, use writeMat("foo.mat", x=a, y=y).  Thanks
+   Claudia Beleites at University of Trieste for reporting on this.
+
+DOCUMENTATION:
+
+ o Clarified in the help of writeMat() that it can
+   only write 'uncompressed' MAT files.
+
+ 
 Version: 1.3.4 [2010-10-26]
-o DOCUMENTATION: Clarified and corrected some sentences in help(Matlab).
-o DOCUMENTATION: Added Matlab 7.11.0.584 (R2010b) to the list of
-  confirmed version that are compatible with R.matlab.
-o BUG FIX: The MatlabServer.m script incorrectly referred to the
-  InputStreamByteWrapper class as java.io.InputStreamByteWrapper. This
-  hopefully solves previously reports on obtaining "??? Undefined variable
-  "java" or class "java.io.InputStreamByteWrapper". Error in ==>
-  MatlabServer at 262 reader = java.io.InputStreamByteWrapper(4096);".
-  This bug was introduced in R.matlab v1.2.5 (2009-08-25).
-  Thanks Kenvor Cothey at GMO LCC for reporting on this.
 
+DOCUMENTATION:
 
+ o Clarified and corrected some sentences in help(Matlab).
+
+ o Added Matlab 7.11.0.584 (R2010b) to the list of
+   confirmed version that are compatible with R.matlab.
+
+BUG FIXES:
+
+ o The MatlabServer.m script incorrectly referred to the
+   InputStreamByteWrapper class as java.io.InputStreamByteWrapper. This
+   hopefully solves previously reports on obtaining "??? Undefined variable
+   "java" or class "java.io.InputStreamByteWrapper". Error in ==>
+   MatlabServer at 262 reader = java.io.InputStreamByteWrapper(4096);".
+   This bug was introduced in R.matlab v1.2.5 (2009-08-25).
+   Thanks Kenvor Cothey at GMO LCC for reporting on this.
+ 
+ 
 Version: 1.3.3 [2010-09-18]
-o BUG FIX: readMat() would throw an exception on 'Error in dim(matrix)
-  <- dimensionsArray$dim : dims [product 1] do not match the length of
-  object [0]' in rare cases related to empty strings.  Not sure if
-  those cases are legal, but added an ad hoc workaround for them.
-  Thanks Claude Flene at University of Turku for reporting this.
 
+BUG FIXES:
 
+ o readMat() would throw an exception on 'Error in dim(matrix)
+   <- dimensionsArray$dim : dims [product 1] do not match the length of
+   object [0]' in rare cases related to empty strings.  Not sure if
+   those cases are legal, but added an ad hoc workaround for them.
+   Thanks Claude Flene at University of Turku for reporting this.
+ 
+ 
 Version: 1.3.2 [2010-08-28]
-o Now the MatlabServer script reports it's version when started.
-o DOCUMENTATION: Removed some minor ambiguities in help(Matlab) and
-  updated example(Matlab) with some more troubleshooting statements.
-o DOCUMENTATION: Added Matlab 7.4.0 (R2007a), 7.7.0.471 (R2008b), and
-  7.10.0.499 (R2010a) to the list of confirmed version that are
-  compatible with R.matlab.  Thanks Ajay Tripathy at UC Berkeley and
-  Marco Colombo at University of Edinburgh for reporting this.
-o BUG FIX: Now MatlabServer.m saves variables using the function form,
-  i.e. save().  This solves the problem of having single quotation marks
-  in the pathname. Thanks Michael Q. Fan at NC State University for
-  reporting this problem.
 
+NEW FEATURES:
 
+ o Now the MatlabServer script reports it's version when started.
+
+DOCUMENTATION:
+
+ o Removed some minor ambiguities in help(Matlab) and
+   updated example(Matlab) with some more troubleshooting statements.
+
+ o Added Matlab 7.4.0 (R2007a), 7.7.0.471 (R2008b), and
+   7.10.0.499 (R2010a) to the list of confirmed version that are
+   compatible with R.matlab.  Thanks Ajay Tripathy at UC Berkeley and
+   Marco Colombo at University of Edinburgh for reporting this.
+
+BUG FIXES:
+
+ o Now MatlabServer.m saves variables using the function form,
+   i.e. save().  This solves the problem of having single quotation marks
+   in the pathname. Thanks Michael Q. Fan at NC State University for
+   reporting this problem.
+ 
+ 
 Version: 1.3.1 [2010-04-20]
-o DOCUMENTATION: Minor update to argument 'fixNames' of help(readMat).
-  Thanks Stephen Eglen (University of Cambridge) for the suggestion.
 
+DOCUMENTATION:
 
+ o Minor update to argument 'fixNames' of help(readMat).
+   Thanks Stephen Eglen (University of Cambridge) for the suggestion.
+ 
+ 
 Version: 1.3.0 [2010-02-03]
-o GENERALIZATION: Now readMat() can read also nested miMATRIX structures.
-  Issue reported by Jonathan Chard at Mango Solutions, UK.
 
+NEW FEATURES:
 
+ o GENERALIZATION: Now readMat() can read also nested miMATRIX structures.
+   Issue reported by Jonathan Chard at Mango Solutions, UK.
+ 
+ 
 Version: 1.2.6 [2009-10-16]
-o MEMORY OPTIMIZATION: For very large compressed data objects, there
-  would not be enough memory to allocate the internal buffer resulting
-  in an error.  Before this buffer was initiated to be 10 times the size
-  of the compressed data.  If that fails, now readMat() tries smaller
-  and smaller initial buffers, before giving in up.  Also, it now starts
-  with a buffer 3 (not 10) times the compressed size.
-  Thanks to Michael Sumner for reporting this problem.
 
+NEW FEATURES:
 
+ o MEMORY OPTIMIZATION: For very large compressed data objects, there
+   would not be enough memory to allocate the internal buffer resulting
+   in an error.  Before this buffer was initiated to be 10 times the size
+   of the compressed data.  If that fails, now readMat() tries smaller
+   and smaller initial buffers, before giving in up.  Also, it now starts
+   with a buffer 3 (not 10) times the compressed size.
+   Thanks to Michael Sumner for reporting this problem.
+ 
+ 
 Version: 1.2.5 [2009-08-25]
-o BUG FIX: The Matlab server script (MatlabServer.m) gave the error
-  "Undefined function or method 'ServerSocket' for input arguments
-  of type 'double'.", when launching it via Matlab$startServer(). It
-  seems like import java.net.* etc. does not work. A workaround is to
-  specify the full path for all Java classes, e.g. java.net.ServerSocket.
-  Thanks Nicolas Stadler for reporting this issue.
 
+BUG FIXES:
 
+ o The Matlab server script (MatlabServer.m) gave the error
+   "Undefined function or method 'ServerSocket' for input arguments
+   of type 'double'.", when launching it via Matlab$startServer(). It
+   seems like import java.net.* etc. does not work. A workaround is to
+   specify the full path for all Java classes, e.g. java.net.ServerSocket.
+   Thanks Nicolas Stadler for reporting this issue.
+ 
+ 
 Version: 1.2.4 [2008-10-29]
-o If onWrite == NULL, then there is no longer an outer two-pass scan
-  for figuring out the size of MAT structure.  However, instead each
-  internal writeDataElement() has to do a two-pass scan in order to
-  figure out the number of bytes before writing each element.
-o BUG FIX: Arrays with more than two dimension would be written
-  as vectors.  Thanks Minho Chae for reporting this.
-o BUG FIX: From v1.2.2, writeMat() would generate corrupt MAT files.
-  Reverted writeMat() back to v1.2.1 and updated as above.
 
+NEW FEATURES:
 
+ o If onWrite == NULL, then there is no longer an outer two-pass scan
+   for figuring out the size of MAT structure.  However, instead each
+   internal writeDataElement() has to do a two-pass scan in order to
+   figure out the number of bytes before writing each element.
+
+BUG FIXES:
+
+ o Arrays with more than two dimension would be written
+   as vectors.  Thanks Minho Chae for reporting this.
+
+ o From v1.2.2, writeMat() would generate corrupt MAT files.
+   Reverted writeMat() back to v1.2.1 and updated as above.
+ 
+ 
 Version: 1.2.3 [2008-07-20]
-o Updated example(readMat) so that it gives no error if
-  the optional 'Rcompression' package is not installed.
 
+DOCUMENTATION:
 
+ o Updated example(readMat) so that it gives no error if
+   the optional 'Rcompression' package is not installed.
+ 
+ 
 Version: 1.2.2 [2008-07-12]
-o Now the first pass in writeMat() that counts the number of
-  bytes to be written is skipped if argument 'onWrite' is
-  not given.  This means that writing to file, which is the
-  most common use case, will no longer involve the counting.
-  Thank to Adam Grossman at Stanford University for suggesting
-  the modification and providing initial code.  He reports
-  a substantial speedup in writing large files (38MB file).
-o CLEAN UP: Removed internal debugging/asserting code.
-o Renamed the HISTORY file to NEWS.
 
+NEW FEATURES:
 
+ o Now the first pass in writeMat() that counts the number of
+   bytes to be written is skipped if argument 'onWrite' is
+   not given.  This means that writing to file, which is the
+   most common use case, will no longer involve the counting.
+   Thank to Adam Grossman at Stanford University for suggesting
+   the modification and providing initial code.  He reports
+   a substantial speedup in writing large files (38MB file).
+
+CODE REFACTORING:
+
+ o CLEAN UP: Removed internal debugging/asserting code.
+
+ o Renamed the HISTORY file to NEWS.
+ 
+ 
 Version: 1.2.1 [2008-05-08]
-o In readMat()/writeMat() we use an internal character vector
-  to represent the 8-bit ASCII character set.  However, in R
-  one cannot represent ASCII 0x00 - it resolves to an empty
-  string, and from R v2.8.0 we will get a warning if we try.
-  For now, we have replaced the ASCII for 0x00 with the empty
-  string (unless before R v2.6.0).  We might want to move
-  away from using this ASCII vector for intToChar()/charToInt()
-  and instead make use of intToUtf8()/utf8ToInt() or
-  alternatively just rawToChar()/charToRaw().
 
+BUG FIXES:
 
+ o In readMat()/writeMat() we use an internal character vector
+   to represent the 8-bit ASCII character set.  However, in R
+   one cannot represent ASCII 0x00 - it resolves to an empty
+   string, and from R v2.8.0 we will get a warning if we try.
+   For now, we have replaced the ASCII for 0x00 with the empty
+   string (unless before R v2.6.0).  We might want to move
+   away from using this ASCII vector for intToChar()/charToInt()
+   and instead make use of intToUtf8()/utf8ToInt() or
+   alternatively just rawToChar()/charToRaw().
+ 
+ 
 Version: 1.2.0 [2008-02-12]
-o Added support for reading compressed MAT files.  It requires
-  that the 'Rcompression' package (Omegahat.org) is available.
-o Added support for also returning sparse matrices according to
-  the representations given by either the 'Matrix' or the
-  'SparseM' package.
-o Added simple UTF-* string support.  Conversion should be
-  accurate when the R installation supports iconv.
-o Added mat-files/StructWithSparseMatrix-v4.mat from JR.
-o Credits for all of the above new feature goes to Jason Riedy
-  at the Computer Science Dept, UC Berkeley.  Thanks also to
-  Duncan Temple-Lang at UC Davis for the Rcompression package.
 
+NEW FEATURES:
 
+ o Added support for reading compressed MAT files.  It requires
+   that the 'Rcompression' package (Omegahat.org) is available.
+
+ o Added support for also returning sparse matrices according to
+   the representations given by either the 'Matrix' or the
+   'SparseM' package.
+
+ o Added simple UTF-* string support.  Conversion should be
+   accurate when the R installation supports iconv.
+
+ o Added mat-files/StructWithSparseMatrix-v4.mat from JR.
+
+ o Credits for all of the above new feature goes to Jason Riedy
+   at the Computer Science Dept, UC Berkeley.  Thanks also to
+   Duncan Temple-Lang at UC Davis for the Rcompression package.
+ 
+ 
 Version: 1.1.4 [2007-04-19]
-o Added a "hint" to error message 'Tag type not supported:
-  miCOMPRESSED' to clarify that readMat() does not support
-  compressed MAT files.
 
+NEW FEATURES:
 
+ o Added a "hint" to error message 'Tag type not supported:
+   miCOMPRESSED' to clarify that readMat() does not support
+   compressed MAT files.
+ 
+ 
 Version: 1.1.3 [2007-04-07]
-o Update so that package passes R CMD check R v2.5.0.
-o Replaced Sys.putenv() with new Sys.setenv() (to be
-  deprecated in R v2.5.0).
+
+CODE REFACTORING:
+
+ o Update so that package passes R CMD check R v2.5.0.
+
+ o Replaced Sys.putenv() with new Sys.setenv() (to be
+   deprecated in R v2.5.0).
+
 
 Version: 1.1.3 [2006-12-28]
-o The example in help(Matlab) is now using default values for
-  'host' and 'port' making the example less confusing.
-o Now open() throws an error if connection to Matlab failed
-  (before FALSE was returned).
-o Extended the accepted range of ports to [1023,66535].
-o Added more details on available options in setOption() and how
-  to avoid time outs.
 
+NEW FEATURES:
 
+ o Now open() throws an error if connection to Matlab failed
+   (before FALSE was returned).
+
+ o Extended the accepted range of ports to [1023,66535].
+
+DOCUMENTATION:
+
+ o Added more details on available options in setOption() and how
+   to avoid time outs.
+
+ o The example in help(Matlab) is now using default values for
+   'host' and 'port' making the example less confusing.
+ 
+ 
 Version: 1.1.2 [2006-05-08]
-o BUG FIX: When the port for the Matlab server (MATLABSERVER_PORT) was
-  out of range, a Matlab syntax error occurred, i.e "... Line: 109
-  Column: 45 ")" expected, "identifier" found.'.  Thanks Alexander
-  Nervedi for reporting this.
 
+BUG FIXES:
 
+ o When the port for the Matlab server (MATLABSERVER_PORT) was
+   out of range, a Matlab syntax error occurred, i.e "... Line: 109
+   Column: 45 ")" expected, "identifier" found.'.  Thanks Alexander
+   Nervedi for reporting this.
+ 
+ 
 Version: 1.1.1 [2006-01-21]
-o Added argument 'port' to Matlab$startServer(..., port=NULL) to
-  start the Matlab server such that it listens to another port than
-  the default 9999.  Internally the server first tries to obtain
-  the port number by environment variable 'MATLABSERVER_PORT'.
-  This feature was requested by Wang Yu at Iowa State University.
-o Another version has been added to the list of Matlab versions that
-  are confirmed to work with R.matlab. See ?Matlab.
 
+NEW FEATURES:
 
+ o Added argument 'port' to Matlab$startServer(..., port=NULL) to
+   start the Matlab server such that it listens to another port than
+   the default 9999.  Internally the server first tries to obtain
+   the port number by environment variable 'MATLABSERVER_PORT'.
+   This feature was requested by Wang Yu at Iowa State University.
+
+DOCUMENTATION:
+
+ o Another version has been added to the list of Matlab versions that
+   are confirmed to work with R.matlab. See ?Matlab.
+ 
+ 
 Version: 1.1.0 [2005-06-29]
-o BUG FIX: Forgot to "implement" miSINGLE, i.e. to set 'knownTypes'
-  and 'knownWhats' for this. Thanks to Craig Aumann for the report.
-o BUG FIX: readMat() did not read 'complex' matrices in MAT v5
-  correctly.  Thanks again to Chris Sims for the bug report.
-o BUG FIX: readMat() did not read 'text' matrices in MAT v4
-  correctly.  Thanks to Chris Sims, Princeton University, for
-  for the patch.
-o If using the Matlab class, the package requires the R.utils
-  where the classes Java and Verbose was moved. The methods for
-  dealing with user options in the Matlab class are provided by
-  the Options class also in R.utils. Similarly, if verbose != FALSE
-  in readMat() or writeMat(), then the R.utils package is required.
 
+CODE REFACTORING:
 
+ o If using the Matlab class, the package requires the R.utils
+   where the classes Java and Verbose was moved. The methods for
+   dealing with user options in the Matlab class are provided by
+   the Options class also in R.utils. Similarly, if verbose != FALSE
+   in readMat() or writeMat(), then the R.utils package is required.
+
+BUG FIXES:
+
+ o Forgot to "implement" miSINGLE, i.e. to set 'knownTypes'
+   and 'knownWhats' for this. Thanks to Craig Aumann for the report.
+
+ o readMat() did not read 'complex' matrices in MAT v5
+   correctly.  Thanks again to Chris Sims for the bug report.
+
+ o readMat() did not read 'text' matrices in MAT v4
+   correctly.  Thanks to Chris Sims, Princeton University, for
+   for the patch.
+ 
+ 
 Version: 1.0.3 [2005-05-26]
-o Added support for used defined options to Matlab objects via
-  methods setOption() and getOption(). Current supported options
-  are "readResult/maxTries" and "readResult/interval" to provide
-  a "workaround" for the problem with timeout errors in evaluate().
-  Thanks Thomas Romary, France, for (re-)reporting this problem.
-o Added class Options. This will probably move to another package
-  whenever it becomes stable and widely used.
 
+NEW FEATURES:
 
+ o Added support for user-defined options to Matlab objects via
+   methods setOption() and getOption(). Current supported options
+   are "readResult/maxTries" and "readResult/interval" to provide
+   a "workaround" for the problem with timeout errors in evaluate().
+   Thanks Thomas Romary, France, for (re-)reporting this problem.
+
+ o Added class Options. This will probably move to another package
+   whenever it becomes stable and widely used.
+ 
+ 
 Version: 1.0.2 [2005-05-03]
-o Now Matlab struct's are read into an R structure.
-o BUG FIX: Reading empty struct:s (and cells) tried to read one
-  field because seq(0) and not seq(length=0) was used. Updated all
-  occurrences of this problem.
-o Replaces package directory misc/ with two new directories
-  mat-files/ and externals/.
 
+NEW FEATURES:
 
+ o Now Matlab struct's are read into an R structure.
+
+CODE REFACTORING:
+
+ o Replaces package directory misc/ with two new directories
+   mat-files/ and externals/.
+
+BUG FIXES:
+
+ o Reading empty struct:s (and cells) tried to read one
+   field because seq(0) and not seq(length=0) was used. Updated all
+   occurrences of this problem.
+ 
+ 
 Version: 1.0.1 [2005-04-08]
-o BUG FIX: readMat() failed to read some Matlab struct's because
-  of a parsing error.
-o BUG FIX: Internally in readMat() - in readMat5DataStructure() it
-  might be data readTag() returns a tag referring to a data block
-  of zero length (nbrOfBytes == 0). Now list(NULL) is returned in
-  this case.
-o BUG FIX: The MatlabServer script did (indeed) not work with
-  Matlab v7; the wrong version was included.
-  Thanks Patrick Drechsler, University of Wuerzburg for reporting
-  the above two problems.
-o Minor additions to help pages.
 
+DOCUMENTATION:
 
+ o Minor additions to help pages.
+
+BUG FIXES:
+
+ o readMat() failed to read some Matlab struct's because
+   of a parsing error.
+
+ o Internally in readMat() - in readMat5DataStructure() it
+   might be data readTag() returns a tag referring to a data block
+   of zero length (nbrOfBytes == 0). Now list(NULL) is returned in
+   this case.
+
+ o The MatlabServer script did (indeed) not work with
+   Matlab v7; the wrong version was included.
+   Thanks Patrick Drechsler, University of Wuerzburg for reporting
+   the above two problems.
+ 
+ 
 Version: 1.0 [2005-02-25]
-o Moved to CRAN.
 
+SIGNFICANT CHANGES:
 
+ o Moved to CRAN.
+ 
+ 
 Version: 0.94 [2005-02-24]
-o Updated the MatlabServer.m script to automatically set the Java
-  classpath for Matlab v7 and higher. This will assure that
-  InputStreamByteWrapper.class is found as long as it is in
-  the same directory as the *.m script. Thanks Yichun Wei at
-  University of Southern California for suggesting this and
-  also for suggesting additional help instructions.
-o Added a Wishlist and an Acknowledgements section to "about".
-o Added more information on how to start the Matlab server.
 
+NEW FEATURES:
 
+ o Updated the MatlabServer.m script to automatically set the Java
+   classpath for Matlab v7 and higher. This will assure that
+   InputStreamByteWrapper.class is found as long as it is in
+   the same directory as the *.m script. Thanks Yichun Wei at
+   University of Southern California for suggesting this and
+   also for suggesting additional help instructions.
+
+DOCUMENTATION:
+
+ o Added a Wishlist and an Acknowledgements section to "about".
+
+ o Added more information on how to start the Matlab server.
+ 
+ 
 Version: 0.93 [2005-02-20]
-o Added autoload("hasVarArgs") to 000.R.
-o Updated the Matlab example to be more explicit about problems
-  with Matlab$startServer() and Matlab v7.
 
+DOCUMENTATION:
 
+ o Updated the Matlab example to be more explicit about problems
+   with Matlab$startServer() and Matlab v7.
+
+CODE REFACTORING:
+
+ o Added autoload("hasVarArgs") to 000.R.
+ 
+ 
 Version: 0.92 [2005-02-17]
-o Package now passes R CMD check on R v2.1.0 devel without warnings.
-o Added appendVarArgs=TRUE to setMethodS3(), which specifies that
-  '...' should be added, if missing.
-o Add argument '...' to all methods to make it even more consistent
-  with any generic function. This is also done for a few methods
-  in the R base packages.
-o BUG FIX: readMat() would not read non-signed bytes correctly.
 
+CODE REFACTORING:
 
+ o Package now passes R CMD check on R v2.1.0 devel without warnings.
+
+ o Added appendVarArgs=TRUE to setMethodS3(), which specifies that
+   '...' should be added, if missing.
+
+ o Add argument '...' to all methods to make it even more consistent
+   with any generic function. This is also done for a few methods
+   in the R base packages.
+
+BUG FIXES:
+
+ o readMat() would not read non-signed bytes correctly.
+ 
+ 
 Version: 0.91 [2005-02-11]
-o Package passes R CMD check on R v2.1.0 devel too.
-o Moved the Java class from R.io to this package, since it is
-  currently only used here. It is used for reading and writing
-  Java bytes, ints and (UTF) strings when communicating with Matlab.
-o Updated description of package. Preparing for moving to CRAN.
-o Added Rdoc comments to internal Verbose classes.
 
+DOCMENTATION:
 
+ o Updated description of package. Preparing for moving to CRAN.
+
+ o Added Rdoc comments to internal Verbose classes.
+ 
+CODE REFACTORING:
+
+ o Package passes R CMD check on R v2.1.0 devel too.
+
+ o Moved the Java class from R.io to this package, since it is
+   currently only used here. It is used for reading and writing
+   Java bytes, ints and (UTF) strings when communicating with Matlab.
+
+ 
 Version: 0.8 [2004-02-24]
-o Added a setVerbose() method to the Matlab class, which allows the
-  user to get details at various levels of the Matlab process.
-o WORK AROUND: It sometimes happens that the reply from Matlab is not
-  transferred "quick enough" and even if the connection should block we
-  receive NULL giving an error. The work around for now is to try to
-  read the answer again. The symptom was that an error in readResult()
-  complain about "if (answer == 0)" where answer was of length 0.
-o Added support for reading sparse matrices. Sparse matrices
-  are expanded to regular matrices, which means that some may
-  be too large to be loaded.
-o BUG FIX: The header of MAT v4 files was not parsed correctly,
-  which made MAT v4 files unrecognized and assumed to be
-  MAT v5 files which in turn could not be read.
-o BUG FIX: Used "sparce" instead of "sparse" in MOPT[4] tag (MAT v4),
-  which most likely would generate an error for such structure.
 
+NEW FEATURES:
 
+ o Added a setVerbose() method to the Matlab class, which allows the
+   user to get details at various levels of the Matlab process.
+
+ o Added support for reading sparse matrices. Sparse matrices
+   are expanded to regular matrices, which means that some may
+   be too large to be loaded.
+
+BUG FIXES:
+
+ o WORKAROUND: It sometimes happens that the reply from Matlab is not
+   transferred "quick enough" and even if the connection should block we
+   receive NULL giving an error. The workaround for now is to try to
+   read the answer again. The symptom was that an error in readResult()
+   complain about "if (answer == 0)" where answer was of length 0.
+
+ o The header of MAT v4 files was not parsed correctly,
+   which made MAT v4 files unrecognized and assumed to be
+   MAT v5 files which in turn could not be read.
+
+ o Used "sparce" instead of "sparse" in MOPT[4] tag (MAT v4),
+   which most likely would generate an error for such structure.
+ 
+ 
 Version: 0.7 [2003-12-02]
-o BUG FIX: Introduced a bug that made files written with big endian
-  not to work. The reason was that "<-" was used instead of "<<-"
-  in one new method. I do not like "<<-", but that is how it works.
 
+BUG FIXES:
 
+ o Introduced a bug that made files written with big endian
+   not to work. The reason was that "<-" was used instead of "<<-"
+   in one new method. I do not like "<<-", but that is how it works.
+ 
+ 
 Version: 0.6 [2003-11-25]
-o Created an readMat() that can read both MAT v4 and MAT v5 files.
-  The MAT v4 reader was kindly provided by Andy Jacobson at the
-  Princeton University.
-o writeMat() was created for consistency, but it does only support
-  MAT version 5.
-o Note that I have now chosen to rename readMAT() and writeMAT()
-  to readMat() and writeMat(), respectively. This is in line with
-  the RCC, cf. readHtml() instead of readHTML(). If you really need
-  readMAT() and writeMAT() you can easily write your own wrappers.
 
+NEW FEATURES:
 
+ o Created an readMat() that can read both MAT v4 and MAT v5 files.
+   The MAT v4 reader was kindly provided by Andy Jacobson at the
+   Princeton University.
+
+ o writeMat() was created for consistency, but it does only support
+   MAT version 5.
+
+ o Note that I have now chosen to rename readMAT() and writeMAT()
+   to readMat() and writeMat(), respectively. This is in line with
+   the RCC, cf. readHtml() instead of readHTML(). If you really need
+   readMAT() and writeMAT() you can easily write your own wrappers.
+ 
+ 
 Version: 0.5 [2003-04-04]
-o I forgot to remove some debug code that outputs information about
-  the Description comment every time a MAT file is read. Removed.
 
+CODE REFACTORING:
 
+ o I forgot to remove some debug code that outputs information about
+   the Description comment every time a MAT file is read. Removed.
+ 
+ 
 Version: 0.4 [2003-01-16]
-o Now require(R.io) is loaded with the package and not when the first
-  Matlab client/server method is called. The former approach was a little
-  bit annoying.
-o BUG FIX: The Matlab client/server implementation was broken due to
-  bugs introduced in the Java class of the R.io package. Correcting
-  these bugs made the Matlab part work again.
 
+CODE REFACTORING:
 
+ o Now require(R.io) is loaded with the package and not when the first
+   Matlab client/server method is called. The former approach was a little
+   bit annoying.
+
+BUG FIXES:
+
+ o The Matlab client/server implementation was broken due to
+   bugs introduced in the Java class of the R.io package. Correcting
+   these bugs made the Matlab part work again.
+ 
+ 
 Version: 0.3 [2002-11-11]
-o BUG FIX: readMAT() would not work because getBits() previously in
-  package R.oo was removed. getBits() is now added as a local
-  function inside readMAT().
-o Made all methods \keyword{internal}.
 
+DOCUMENTATION:
 
+ o Made all methods \keyword{internal}.
+
+BUG FIXES:
+
+ o readMAT() would not work because getBits() previously in
+   package R.oo was removed. getBits() is now added as a local
+   function inside readMAT().
+ 
+ 
 Version: 0.2 [2002-10-23]
-o Upgraded to make use of Rx.oo.
 
+CODE REFACTORING:
 
+ o Upgraded to make use of Rx.oo.
+ 
+ 
 Version: 0.1 [2002-09-03]
-o Initial methods are readMAT() and writeMAT() for reading and
-  writing Matlab MAT file structures.
-o Initial class is Matlab, which provides static methods for
-  communicating with running Matlab server.
-o Package created.
 
+NEW FEATURES:
+
+ o Initial methods are readMAT() and writeMAT() for reading and
+   writing Matlab MAT file structures.
+
+ o Initial class is Matlab, which provides static methods for
+   communicating with running Matlab server.
+
+ o Package created.
