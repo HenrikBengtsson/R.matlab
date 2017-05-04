@@ -4,33 +4,51 @@
 
 |setting  |value                        |
 |:--------|:----------------------------|
-|version  |R version 3.3.1 (2016-06-21) |
+|version  |R version 3.4.0 (2017-04-21) |
 |system   |x86_64, linux-gnu            |
 |ui       |X11                          |
 |language |en                           |
 |collate  |en_US.UTF-8                  |
-|tz       |SystemV/PST8PDT              |
-|date     |2016-10-19                   |
+|tz       |America/Los_Angeles          |
+|date     |2017-05-03                   |
 
 ## Packages
 
 |package     |*  |version    |date       |source                              |
 |:-----------|:--|:----------|:----------|:-----------------------------------|
-|R.matlab    |   |3.6.0-9000 |2016-10-19 |local (HenrikBengtsson/R.matlab@NA) |
-|R.methodsS3 |   |1.7.1      |2016-02-16 |CRAN (R 3.3.1)                      |
-|R.oo        |   |1.20.0     |2016-02-17 |CRAN (R 3.3.1)                      |
-|R.utils     |   |2.4.0      |2016-09-14 |cran (@2.4.0)                       |
-|SparseM     |   |1.72       |2016-09-06 |cran (@1.72)                        |
+|R.matlab    |   |3.6.1-9000 |2017-05-04 |local (HenrikBengtsson/R.matlab@NA) |
+|R.methodsS3 |   |1.7.1      |2016-02-16 |cran (@1.7.1)                       |
+|R.oo        |   |1.21.0     |2016-11-01 |cran (@1.21.0)                      |
+|R.utils     |   |2.5.0      |2016-11-07 |cran (@2.5.0)                       |
+|SparseM     |   |1.77       |2017-04-23 |cran (@1.77)                        |
 
 # Check results
-14 packages
+18 packages
 
 ## AnalyzeFMRI (1.1-16)
 Maintainer: P Lafaye de Micheaux <lafaye@dms.umontreal.ca>
 
-0 errors | 1 warning  | 4 notes
+1 error  | 1 warning  | 5 notes
 
 ```
+checking examples ... ERROR
+Running examples in ‘AnalyzeFMRI-Ex.R’ failed
+The error most likely occurred in:
+
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: Threshold.Bonferroni
+> ### Title: Calculates Bonferroni Threshold
+> ### Aliases: Threshold.Bonferroni
+> ### Keywords: utilities
+> 
+> ### ** Examples
+> 
+> Threshold.Bonferroni(0.05, 1000)
+Error in if (type == "Normal") return(qnorm(1 - p.val/n)) : 
+  the condition has length > 1
+Calls: Threshold.Bonferroni
+Execution halted
+
 checking whether package ‘AnalyzeFMRI’ can be installed ... WARNING
 Found the following significant warnings:
   Warning: no DISPLAY variable so Tk is not available
@@ -88,6 +106,15 @@ Rd file 'threeDto4D.Rd':
      # path.fonc <- "/network/home/lafayep/Stage/Data/map284/functional/MondrianApril2007/preprocessing/1801/smoothed/"
 
 These lines will be truncated in the PDF manual.
+
+checking compiled code ... NOTE
+File ‘AnalyzeFMRI/libs/AnalyzeFMRI.so’:
+  Found no calls to: ‘R_registerRoutines’, ‘R_useDynamicSymbols’
+
+It is good practice to register native routines and to disable symbol
+search.
+
+See ‘Writing portable packages’ in the ‘Writing R Extensions’ manual.
 ```
 
 ## CINOEDV (2.0)
@@ -183,9 +210,32 @@ Bug reports: https://github.com/PMassicotte/eemR/issues
 ## fda (2.4.4)
 Maintainer: J. O. Ramsay <ramsay@psych.mcgill.ca>
 
-0 errors | 0 warnings | 4 notes
+1 error  | 0 warnings | 4 notes
 
 ```
+checking examples ... ERROR
+Running examples in ‘fda-Ex.R’ failed
+The error most likely occurred in:
+
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: density.fd
+> ### Title: Compute a Probability Density Function
+> ### Aliases: density.fd
+> ### Keywords: smooth
+> 
+... 18 lines ...
+Iteration  Criterion  Neg. Log L  Grad. Norm
+      0    89.587973 89.587973  4.604874
+      1    62.3490391 62.3490391  0.8397873
+      2    58.611230 58.611230  0.374036
+      3    57.8930196 57.8930196  0.1253422
+      4    57.6821675 57.6821675  0.1296681
+      5    57.4458456 57.4458456  0.1785299
+Error in if (limwrd) ind <- 1 else limwrd <- TRUE : 
+  the condition has length > 1
+Calls: density.fd -> stepchk
+Execution halted
+
 checking dependencies in R code ... NOTE
 'library' or 'require' calls in package code:
   ‘R.matlab’ ‘RCurl’ ‘nlme’ ‘quadprog’
@@ -222,43 +272,43 @@ Consider adding
 to your NAMESPACE file.
 
 checking Rd cross-references ... NOTE
-Packages unavailable to check Rd xrefs: ‘Ecfun’, ‘FinTS’, ‘demography’
+Packages unavailable to check Rd xrefs: ‘Ecfun’, ‘ifultools’, ‘FinTS’, ‘demography’
 ```
 
 ## geometry (0.3-6)
 Maintainer: David C. Sterratt <david.c.sterratt@ed.ac.uk>  
 Bug reports: https://r-forge.r-project.org/tracker/?group_id=1149
 
+0 errors | 0 warnings | 1 note 
+
+```
+checking compiled code ... NOTE
+File ‘geometry/libs/geometry.so’:
+  Found no calls to: ‘R_registerRoutines’, ‘R_useDynamicSymbols’
+
+It is good practice to register native routines and to disable symbol
+search.
+
+See ‘Writing portable packages’ in the ‘Writing R Extensions’ manual.
+```
+
+## hNMF (0.2)
+Maintainer: Nicolas Sauwen <nicolas.sauwen@openanalytics.eu>
+
 0 errors | 0 warnings | 0 notes
 
-## hyperSpec (0.98-20150304)
+## hyperSpec (0.98-20161118)
 Maintainer: Claudia Beleites <chemometrie@beleites.de>
 
-0 errors | 0 warnings | 1 note 
+0 errors | 0 warnings | 2 notes
 
 ```
 checking R code for possible problems ... NOTE
 Warning: local assignments to syntactic functions: ~
 Warning: local assignments to syntactic functions: ~
-.cut.ticks: no visible global function definition for ‘head’
-.jdx.TABULAR.PAC: no visible global function definition for ‘head’
-.jdx.hdr.concentrations: no visible global function definition for
-  ‘modifyList’
-.jdx.readhdr: no visible global function definition for ‘maintainer’
-.labels: no visible global function definition for ‘modifyList’
-.levelplot: no visible global function definition for ‘modifyList’
-... 56 lines ...
-  ‘modifyList’
-plot,hyperSpec-character: no visible global function definition for
-  ‘modifyList’
-Undefined global functions or variables:
-  chull col2rgb colorRampPalette head maintainer modifyList read.table
-  relist rgb str tail unstack write.table
-Consider adding
-  importFrom("grDevices", "chull", "col2rgb", "colorRampPalette", "rgb")
-  importFrom("utils", "head", "maintainer", "modifyList", "read.table",
-             "relist", "str", "tail", "unstack", "write.table")
-to your NAMESPACE file.
+
+checking Rd cross-references ... NOTE
+Package unavailable to check Rd xrefs: ‘reshape’
 ```
 
 ## KATforDCEMRI (0.740)
@@ -294,14 +344,25 @@ Consider adding
 to your NAMESPACE file.
 ```
 
-## oXim (1.0.1)
-Maintainer: Wencheng Lau-Medrano <luis.laum@gmail.com>
+## MethylMix (2.2.0)
+Maintainer: Olivier Gevaert <olivier.gevaert@gmail.com>
 
 0 errors | 0 warnings | 0 notes
 
-## poweRlaw (0.60.3)
+## oXim (1.2.1)
+Maintainer: Wencheng Lau-Medrano <luis.laum@gmail.com>  
+Bug reports: https://github.com/LuisLauM/oXim/issues
+
+0 errors | 0 warnings | 0 notes
+
+## poweRlaw (0.70.0)
 Maintainer: Colin Gillespie <csgillespie@gmail.com>  
 Bug reports: https://github.com/csgillespie/poweRlaw/issues
+
+0 errors | 0 warnings | 0 notes
+
+## Rcoclust (0.1.1)
+Maintainer: R. Priam <rpriam@gmail.com>
 
 0 errors | 0 warnings | 0 notes
 
@@ -309,7 +370,7 @@ Bug reports: https://github.com/csgillespie/poweRlaw/issues
 Maintainer: David C. Sterratt <david.c.sterratt@ed.ac.uk>  
 Bug reports: https://github.com/davidcsterratt/retistruct/issues
 
-0 errors | 0 warnings | 1 note 
+0 errors | 0 warnings | 2 notes
 
 ```
 checking R code for possible problems ... NOTE
@@ -334,7 +395,21 @@ computeTearRelationships: no visible global function definition for
   importFrom("utils", "install.packages", "packageDescription",
              "read.csv", "write.csv")
 to your NAMESPACE file.
+
+checking compiled code ... NOTE
+File ‘retistruct/libs/retistruct.so’:
+  Found no calls to: ‘R_registerRoutines’, ‘R_useDynamicSymbols’
+
+It is good practice to register native routines and to disable symbol
+search.
+
+See ‘Writing portable packages’ in the ‘Writing R Extensions’ manual.
 ```
+
+## scalpel (1.0.0)
+Maintainer: Ashley Petersen <ashleyjpete@gmail.com>
+
+0 errors | 0 warnings | 0 notes
 
 ## sisal (0.46)
 Maintainer: Mikko Korpela <mvkorpel@iki.fi>
@@ -344,13 +419,24 @@ Maintainer: Mikko Korpela <mvkorpel@iki.fi>
 ## SLOPE (0.1.3)
 Maintainer: Evan Patterson <epatters@stanford.edu>
 
-0 errors | 0 warnings | 0 notes
+0 errors | 0 warnings | 1 note 
 
-## TRONCO (2.6.0)
+```
+checking compiled code ... NOTE
+File ‘SLOPE/libs/SLOPE.so’:
+  Found no calls to: ‘R_registerRoutines’, ‘R_useDynamicSymbols’
+
+It is good practice to register native routines and to disable symbol
+search.
+
+See ‘Writing portable packages’ in the ‘Writing R Extensions’ manual.
+```
+
+## TRONCO (2.8.0)
 Maintainer: BIMIB Group <tronco@disco.unimib.it>  
 Bug reports: https://github.com/BIMIB-DISCo/TRONCO
 
-0 errors | 1 warning  | 1 note 
+0 errors | 1 warning  | 0 notes
 
 ```
 checking examples ... WARNING
@@ -362,23 +448,6 @@ Note that CRAN packages must never use more than two cores
 simultaneously during their checks.
 Examples with CPU or elapsed time > 5s
                   user system elapsed
-tronco.bootstrap 0.168  0.012  12.384
-
-checking R code for possible problems ... NOTE
-Found the following assignments to the global environment:
-File ‘TRONCO/R/capri.hypotheses.R’:
-  assign("lifting.genotypes", genotypes, envir = .GlobalEnv)
-  assign("lifting.annotations", annotations, envir = .GlobalEnv)
-  assign("lifting.edges", NULL, envir = .GlobalEnv)
-  assign("fisher.pvalues", NULL, envir = .GlobalEnv)
-  assign("lifting.genotypes", roll.back.lifting.genotypes, envir = .GlobalEnv)
-  assign("lifting.annotations", roll.back.lifting.annotations, 
-    envir = .GlobalEnv)
-  assign("lifting.edges", roll.back.lifting.edges, envir = .GlobalEnv)
-  assign("fisher.pvalues", roll.back.fisher.pvalues, envir = .GlobalEnv)
-  assign("lifting.edges", lifting.edges.temp, envir = .GlobalEnv)
-  assign("fisher.pvalues", fisher.pvalues.temp, envir = .GlobalEnv)
-  assign("fisher.pvalues", fisher.pvalues.temp, envir = .GlobalEnv)
-  assign("fisher.pvalues", fisher.pvalues.temp, envir = .GlobalEnv)
+tronco.bootstrap 0.104   0.02  13.063
 ```
 
