@@ -1,12 +1,12 @@
 Package: R.matlab
 =================
 
-Version: 3.6.1-9000 [2015-10-19]
+Version: 3.6.1-9000 [2017-05-04]
 
  o ...
  
  
-Version: 3.6.1 [2015-10-19]
+Version: 3.6.1 [2016-10-19]
 
 NEW FEATURES:
 
@@ -16,7 +16,7 @@ NEW FEATURES:
    how to distinguish MAT v5 from MAT v7.3 files.
    
  
-Version: 3.6.0 [2015-07-05]
+Version: 3.6.0 [2016-07-05]
 
 NEW FEATURES:
 
@@ -48,14 +48,14 @@ DEPRECATED AND DEFUNCT:
  o CLEANUP: Exporting only methods parts of the public API.
 
  
-Version: 3.5.1 [2015-03-27]
+Version: 3.5.1 [2016-03-27]
 
 DOCUMENTATION:
 
  o Dropping reference to deprecated utils::setInternet2() in help("Matlab").
  
  
-Version: 3.5.0 [2015-03-05]
+Version: 3.5.0 [2016-03-05]
 
 NEW FEATURES:
 
@@ -76,7 +76,7 @@ CODE REFACTORING:
    dropped.
 
  
-Version: 3.4.0 [2015-02-03]
+Version: 3.4.0 [2016-02-03]
 
 NEW FEATURES:
 
