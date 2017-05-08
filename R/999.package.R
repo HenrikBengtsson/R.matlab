@@ -44,7 +44,8 @@
 # \section{To get started}{
 #   To get started, see:
 #   \enumerate{
-#     \item @see "readMat" and @see "writeMat" - For reading and writing MAT files (MATLAB is \emph{not} needed).
+#     \item @see "readMat" and @see "writeMat" - For reading and writing
+#           MAT files (MATLAB is \emph{not} needed).
 #     \item @see "Matlab" - To start MATLAB and communicate with it from \R.
 #   }
 # }

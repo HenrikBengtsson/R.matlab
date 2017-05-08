@@ -623,7 +623,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
 
       n <- length(bfr)
       res <- c(res, bfr)
-      bfr <- NULL;  # Not needed anymore
+      bfr <- NULL  # Not needed anymore
 
       # Done?
       if (n < BFR.SIZE) break
@@ -957,7 +957,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
         # "32-bit signed integer"
         header$what <- integer()
         header$size <- 4L
-        header$signed <- TRUE;  # Ignored by readBin() because 32-bit ints are always signed!
+        header$signed <- TRUE  # Ignored by readBin() because 32-bit ints are always signed!
       } else if (MOPT3 == 3L) {
         # "16-bit signed integer"
         header$what <- integer()
@@ -1091,7 +1091,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
           data <- complex(real = real, imaginary = imag)
         } else {
           data <- real
-          real <- NULL; # Not needed anymore
+          real <- NULL # Not needed anymore
         }
 
         # Make into a matrix or an array
@@ -1111,7 +1111,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
           i <- as.integer(data[, 1L])
           j <- as.integer(data[, 2L])
           s <- data[, 3L]
-          data <- NULL; # Not needed anymore
+          data <- NULL # Not needed anymore
 
           if (verbose) {
             str(verbose, level = -102, header)
@@ -1150,11 +1150,11 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
             # Instead of applying row-by-row, we calculate the position of each
             # sparse element in an hardcoded fashion.
             pos <- (j-1L)*n + i
-            i <- j <- NULL; # Not needed anymore
+            i <- j <- NULL # Not needed anymore
 
             data <- matrix(0, nrow = n, ncol = m)
             data[pos] <- s
-            pos <- s <- NULL; # Not needed anymore
+            pos <- s <- NULL # Not needed anymore
           }
         }
       } else {
@@ -1196,7 +1196,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
       verbose && str(verbose, level = -102, data)
 
       result <- c(result, data)
-      data <- NULL; # Not needed anymore
+      data <- NULL # Not needed anymore
 
       firstFourBytes <- NULL
     } # repeat
@@ -1478,10 +1478,10 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
                     length(unzraw)/length(zraw), length(zraw), length(unzraw))
 
             pushBackRawMat(con, unzraw)
-            unzraw <- NULL; # Not needed anymore
+            unzraw <- NULL # Not needed anymore
           }, error = function(ex) {
             msg <- ex$message
-            env <- globalenv(); # To please 'R CMD check'
+            env <- globalenv()  # To please 'R CMD check'
             assign("R.matlab.debug.zraw", zraw, envir = env)
 
             # Guess type of compression by inspecting the header bytes
@@ -1520,7 +1520,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
               throw(msg)
             }
           }) # tryCatch()
-          zraw <- NULL; # Not needed anymore
+          zraw <- NULL  # Not needed anymore
 
           tag <- mat5ReadTag(this)
         } # if (tag$type == "miCOMPRESSED")
@@ -2027,12 +2027,12 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
 
           ## Deal with odd MATLAB(tm) discrepancies.
           nzmax <- min(nzmax, jc[ncol+1L])
-          if (nzmax < length(ir)) { ir <- ir[1:nzmax]; }
-          if (nzmax < length(pr)) { pr <- pr[1:nzmax]; }
+          if (nzmax < length(ir)) { ir <- ir[1:nzmax] }
+          if (nzmax < length(pr)) { pr <- pr[1:nzmax] }
           if (arrayFlags$complex) {
-            if (nzmax < length(pi)) { pi <- pi[1:nzmax]; }
+            if (nzmax < length(pi)) { pi <- pi[1:nzmax] }
             pr <- complex(real = pr, imaginary = pi)
-            pi <- NULL; # Not needed anymore
+            pi <- NULL # Not needed anymore
           }
         } # if (nzmax > 0)
 

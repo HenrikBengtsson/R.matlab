@@ -104,7 +104,7 @@ $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCa
 
 \section{Starting the MATLAB server from within \R}{
   The MATLAB server may be started from within \R by
-  calling \code{Matlab$startServer()}. By default 'matlab' is called;
+  calling \code{Matlab$startServer()}. By default 'matlab' is called
   if named differently set \code{options(matlab = "matlab6.5")}, say.
   \emph{The method is experimental and may not work on your system.}
   By default the MATLAB server listens for connections on port 9999.

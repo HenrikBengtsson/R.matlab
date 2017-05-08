@@ -124,7 +124,7 @@ tryCatch({
 # beforehand how many bytes are available. This can be done by using
 # the 'onWrite' argument.
 onWrite <- function(x)
-  writeBin(x$length, con = x$con, size = 4, endian = "little");
+  writeBin(x$length, con = x$con, size = 4, endian = "little")
   writeMat(con, A = A, B = B, onWrite = onWrite)
 }
 }

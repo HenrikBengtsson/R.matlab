@@ -57,7 +57,8 @@
 \section{To get started}{
   To get started, see:
   \enumerate{
-    \item \code{\link{readMat}}() and \code{\link{writeMat}}() - For reading and writing MAT files (MATLAB is \emph{not} needed).
+    \item \code{\link{readMat}}() and \code{\link{writeMat}}() - For reading and writing
+          MAT files (MATLAB is \emph{not} needed).
     \item \code{\link{Matlab}} - To start MATLAB and communicate with it from \R.
   }
 }

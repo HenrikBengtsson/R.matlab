@@ -1,9 +1,7 @@
-## covr: skip=all
-
 .onUnload <- function(libpath) {
   # Force finalize() on Matlab objects
   gc()
-} # .onUnload()
+}
 
 .onLoad <- function(libname, pkgname) {
   ns <- getNamespace(pkgname)
