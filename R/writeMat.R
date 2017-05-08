@@ -69,7 +69,7 @@
 #   in the second pass, after calling \code{onWrite()}, the data is written.
 # }
 #
-# \examples{@include "../incl/writeMat.Rex"
+# \examples{@include "../incl/writeMat.R"
 #
 # \dontrun{
 # # When writing to a stream connection the receiver needs to know on

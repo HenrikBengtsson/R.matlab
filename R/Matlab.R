@@ -186,7 +186,7 @@
 #   share variables.
 # }
 #
-# \examples{\dontrun{@include "../incl/Matlab.Rex"}}
+# \examples{\dontrun{@include "../incl/Matlab.R"}}
 #
 # @author
 #
@@ -1084,7 +1084,7 @@ setMethodS3("setVariable", "Matlab", function(this, ..., remote = this$remote) {
 #   Returns nothing.
 # }
 #
-# \examples{\dontrun{@include "../incl/Matlab.setFunction.Rex"}}
+# \examples{\dontrun{@include "../incl/Matlab.setFunction.R"}}
 #
 # @author
 #

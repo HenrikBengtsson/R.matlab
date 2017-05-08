@@ -23,7 +23,7 @@ Matlab$startServer()
 #       THEN add 'externals' subdirectory to the MATLAB path
 
 #  (Where is the 'externals' subdirectory?)
-print(system.file("externals", package="R.matlab"))
+print(system.file("externals", package = "R.matlab"))
 
 #       THEN from within MATLAB,
 #            issue MATLAB command "MatlabServer"
@@ -61,7 +61,7 @@ print(matlab)
 # 4.  Sample uses of the MATLAB server
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 # 4.1 Run MATLAB expressions on the MATLAB server
-evaluate(matlab, "A=1+2;", "B=ones(2,20);")
+evaluate(matlab, "A = 1+2;", "B = ones(2,20);")
 
 # 4.2 Ask MATLAB to display a value (without transferring it to R)
 evaluate(matlab, "A")
@@ -72,9 +72,9 @@ cat("Received variables:\n")
 str(data)
 
 # 4.4 Set variables in MATLAB
-ABCD <- matrix(rnorm(10000), ncol=100)
+ABCD <- matrix(rnorm(10000), ncol = 100)
 str(ABCD)
-setVariable(matlab, ABCD=ABCD)
+setVariable(matlab, ABCD = ABCD)
 
 # 4.5 Retrieve what we just set
 data <- getVariable(matlab, "ABCD")
@@ -82,17 +82,17 @@ cat("Received variables:\n")
 str(data)
 
 # 4.6 Create a function (M-file) on the MATLAB server
-setFunction(matlab, "          \
-  function [win,aver]=dice(B)  \
-  %Play the dice game B times  \
-  gains=[-1,2,-3,4,-5,6];      \
-  plays=unidrnd(6,B,1);        \
-  win=sum(gains(plays));       \
-  aver=win/B;                  \
+setFunction(matlab, "            \
+  function [win,aver] = dice(B)  \
+  %Play the dice game B times    \
+  gains = [-1,2,-3,4,-5,6];      \
+  plays = unidrnd(6,B,1);        \
+  win = sum(gains(plays));       \
+  aver = win/B;                  \
 ");
 
 # 4.7 Use the MATLAB function just created
-evaluate(matlab, "[w,a]=dice(1000);")
+evaluate(matlab, "[w,a] = dice(1000);")
 res <- getVariable(matlab, c("w", "a"))
 print(res)
 
@@ -118,13 +118,13 @@ str(data)
 # 5.2 Try to evaluate a MATLAB expression that fails
 #     (will result in an informative error)
 tryCatch({
-  res <- evaluate(matlab, "C=1+unknown;")
+  res <- evaluate(matlab, "C = 1+unknown;")
   res
 }, error = function(ex) {
   print(ex)
 })
 # Confirm that things still work
-res <- evaluate(matlab, "C=1+2;")
+res <- evaluate(matlab, "C = 1+2;")
 print(res)
 data <- getVariable(matlab, "C")
 cat("Received variables:\n")

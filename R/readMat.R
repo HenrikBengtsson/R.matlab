@@ -99,7 +99,7 @@
 #  MAT file structure.
 # }
 #
-# @examples "../incl/readMat.Rex"
+# @examples "../incl/readMat.R"
 #
 # \author{
 #   Henrik Bengtsson.
