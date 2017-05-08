@@ -2252,7 +2252,8 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
       } else {
         verbose && printf(verbose, level = -3, "Reading (outer) %.0f integers\n", tag$nbrOfBytes)
         ## FIXME: Is this really correct?, cf. Issue #30. /HB 2015-12-29
-        ## Should it be: data <- mat5ReadMiMATRIX(this, tag)
+        ## Should it be?: data <- mat5ReadMiMATRIX(this, tag)
+        ## FIXME: Add test for the statement /HB 2017-05-07
         data <- readBinMat(con, what = integer(), size = 1L, n = tag$nbrOfBytes, signed = tag$signed)
         verbose && str(verbose, level = -50, data)
       }

@@ -606,11 +606,15 @@ setMethodS3("writeMat", "default", function(con, ..., fixNames = TRUE, matVersio
         for (kk in seq_along(structure)) {
           field <- structure[[kk]]
           verbose && printf(verbose, "Field %s:\n", sQuote(names(structure)[kk]))
+          verbose && str(verbose, field)
+
           ## FIXME: The following turns vectors and arrays into
           ## one-column matrices, cf. Issue #30. /HB 2015-12-29
-          field <- as.matrix(field)
+#          field <- as.matrix(field)
+          if (!is.array(field)) field <- as.array(field)
+          
           field <- list(field)
-          ## Should we add? names(field) <- names(structure)[kk]
+          ## Should we add?  names(field) <- names(structure)[kk]
           nbrOfBytes <- nbrOfBytes + writeDataElement(con, field)
         }
 
