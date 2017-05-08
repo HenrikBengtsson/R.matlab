@@ -11,4 +11,3 @@ setFunction(matlab, code)
 evaluate(matlab, "[w,a] = dice(1000);")
 res <- getVariable(matlab, c("w", "a"))
 print(res)
-

@@ -11,4 +11,3 @@ data <- R.matlab::readMat(file.path(path, "NestedMiMATRIX,problem4,v5,compressed
 
 # ...no connections are left open
 stopifnot(identical(getAllConnections(), cons0))
-
