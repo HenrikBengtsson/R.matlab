@@ -4,10 +4,10 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Methods in 'base'
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-getOption <- appendVarArgs(getOption);
+getOption <- appendVarArgs(getOption)
 
 # USED TO DO: isOpen <- appendVarArgs(isOpen)
-isOpen <- function(...) UseMethod("isOpen");
+isOpen <- function(...) UseMethod("isOpen")
 setMethodS3("isOpen", "default", function(...) {
-  base::isOpen(...);
+  base::isOpen(...)
 })

@@ -8,7 +8,7 @@ message("Startup and shutdown code ...")
 
 pkgname <- "R.matlab"
 libname <- pkgname
-libpath <- dirname(system.file(package=pkgname))
+libpath <- dirname(system.file(package = pkgname))
 
 res <- tryCatch({
   .onUnload(libpath)

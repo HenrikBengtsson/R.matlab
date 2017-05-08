@@ -56,7 +56,7 @@
 #   \url{http://www.omegahat.net/RMatlab/}.
 #   To call R from MATLAB on Windows (only), see \emph{MATLAB R-link}
 #   by Robert Henson available at the MATLAB Central File Exchange
-#   (\url{http://www.mathworks.com/matlabcentral/fileexchange/loadFile.do?objectId=5051}).
+#   (\url{http://www.mathworks.com/matlabcentral/fileexchange/loadFile.do?objectId = 5051}).
 # }
 #
 # \section{How to cite this package}{
@@ -72,7 +72,7 @@
 #   see their help. For communication with a MATLAB server, use
 #   \preformatted{
 #    matlab <- Matlab()
-#    setVerbose(matlab, threshold=-2)
+#    setVerbose(matlab, threshold = -2)
 #   }
 #   The lower the threshold is the more information you will see.\cr
 #
@@ -96,8 +96,8 @@
 #   \emph{Solution:}
 #   Increase the total waiting time by setting the above options, e.g.
 #   \preformatted{
-#    setOption(matlab, "readResult/interval", 10); # Default is 1 second
-#    setOption(matlab, "readResult/maxTries", 30*(60/10)); # ~30 minutes
+#    setOption(matlab, "readResult/interval", 10)     # Default is 1 second
+#    setOption(matlab, "readResult/maxTries", 30 * (60 / 10)) # ~30 minutes
 #   }
 # }
 #
