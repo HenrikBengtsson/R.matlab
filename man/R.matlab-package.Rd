@@ -76,7 +76,7 @@
   Whenever using this package, please cite as\cr
 
   \preformatted{
-Henrik Bengtsson (2016). R.matlab: Read and Write MAT Files and Call MATLAB from
+Henrik Bengtsson (2017). R.matlab: Read and Write MAT Files and Call MATLAB from
 Within R. R package version 3.6.1-9000. https://github.com/HenrikBengtsson/R.matlab
 }
 \emph{}
@@ -90,7 +90,7 @@ Within R. R package version 3.6.1-9000. https://github.com/HenrikBengtsson/R.mat
   see their help. For communication with a MATLAB server, use
   \preformatted{
    matlab <- Matlab()
-   setVerbose(matlab, threshold=-2)
+   setVerbose(matlab, threshold = -2)
   }
   The lower the threshold is the more information you will see.\cr
 
@@ -114,8 +114,8 @@ Within R. R package version 3.6.1-9000. https://github.com/HenrikBengtsson/R.mat
   \emph{Solution:}
   Increase the total waiting time by setting the above options, e.g.
   \preformatted{
-   setOption(matlab, "readResult/interval", 10); # Default is 1 second
-   setOption(matlab, "readResult/maxTries", 30*(60/10)); # ~30 minutes
+   setOption(matlab, "readResult/interval", 10)     # Default is 1 second
+   setOption(matlab, "readResult/maxTries", 30 * (60 / 10)) # ~30 minutes
   }
 }
 

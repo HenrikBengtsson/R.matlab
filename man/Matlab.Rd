@@ -86,12 +86,12 @@ $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCa
 }
 
 \section{Remote and non-remote connections}{
-  When a remote connection (argument \code{remote=TRUE}) is used,
+  When a remote connection (argument \code{remote = TRUE}) is used,
   data is send to and from MATLAB via a data stream. This is needed
   when \R is running on a host with a seperated file system than
   the one MATLAB is running on.
 
-  If not connection "remotely" (\code{remote=FALSE}), data is
+  If not connection "remotely" (\code{remote = FALSE}), data is
   communicated via the file system, that is, by saving and reading
   it to temporary MAT files. \cr
 
@@ -105,11 +105,11 @@ $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCa
 \section{Starting the MATLAB server from within \R}{
   The MATLAB server may be started from within \R by
   calling \code{Matlab$startServer()}. By default 'matlab' is called;
-  if named differently set \code{options(matlab="matlab6.5")}, say.
+  if named differently set \code{options(matlab = "matlab6.5")}, say.
   \emph{The method is experimental and may not work on your system.}
   By default the MATLAB server listens for connections on port 9999.
   For other ports, set argument \code{port}, e.g.
-  \code{Matlab$startServer(port=9998)}.
+  \code{Matlab$startServer(port = 9998)}.
 
   Note that the code will \emph{not} halt and wait for MATLAB to get
   started. Thus, you have to make sure you will wait long enough for
@@ -131,7 +131,7 @@ $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCa
   \bold{To be done once:}\cr
   In MATLAB, add the path to the directory where MatlabServer.m sits.
   See \code{help pathtool} in MATLAB on how to do this.
-  In R you can type \code{system.file("externals", package="R.matlab")}
+  In R you can type \code{system.file("externals", package = "R.matlab")}
   to find out the path to MatlabServer.m.
 
   \bold{For MATLAB v6 only:} Contrary to MATLAB v7 and above, MATLAB v6
@@ -142,7 +142,7 @@ $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCa
   \emph{current directory}, and append the \emph{path} (the directory)
   of InputStreamByteWrapper.class to the end of classpath.txt.
   The path of InputStreamByteWrapper.class can be identified by
-  \code{system.file("java", package="R.matlab")} in R.\cr
+  \code{system.file("java", package = "R.matlab")} in R.\cr
 
   \bold{Lazy alternative:} Instead of setting path and classpaths,
   you may try to copy the MatlabServer.m and InputStreamByteWrapper.class
@@ -237,16 +237,16 @@ Trying to open server socket (port 9999)...done.
   \preformatted{
    > library('R.matlab')
    ## Start two seperate MATLAB servers
-   > Matlab$startServer(port=9997)
-   > Matlab$startServer(port=9999)
+   > Matlab$startServer(port = 9997)
+   > Matlab$startServer(port = 9999)
 
    ## Connect to each of them
-   > matlab1 <- Matlab(port=9997); open(matlab1)
-   > matlab2 <- Matlab(port=9999); open(matlab2)
+   > matlab1 <- Matlab(port = 9997); open(matlab1)
+   > matlab2 <- Matlab(port = 9999); open(matlab2)
 
    ## Evaluate expression in each of them
-   > evaluate(matlab1, "x=1+2; x")
-   > evaluate(matlab2, "y=1+2; y")
+   > evaluate(matlab1, "x = 1+2; x")
+   > evaluate(matlab2, "y = 1+2; y")
   }
 
   Note that the two MATLAB instance neither communicate nor

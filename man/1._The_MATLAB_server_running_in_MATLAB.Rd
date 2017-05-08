@@ -474,7 +474,7 @@ quit;
  The Java class InputStreamByteWrapper is needed in order for MATLAB to
  \emph{receive} \emph{data} via a data stream. \R sends data via a data
  stream if, and only if, the connection was setup for "remote"
- communication, that is, with argument \code{remote=TRUE}).
+ communication, that is, with argument \code{remote = TRUE}).
 
  \preformatted{
  

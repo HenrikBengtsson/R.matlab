@@ -151,19 +151,17 @@ if (requireNamespace("SparseM")) {
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Assert that compressed files can be read
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-if (getRversion() >= "2.10.0") {
-  # A particular compressed file
-  pathname <- file.path(path, "StructWithSparseMatrix-v4,compressed.mat")
-  mat4 <- readMat(pathname, sparseMatrixClass = "matrix", verbose = -120)
+# A particular compressed file
+pathname <- file.path(path, "StructWithSparseMatrix-v4,compressed.mat")
+mat4 <- readMat(pathname, sparseMatrixClass = "matrix", verbose = -120)
 
-  # All compressed files
-  pattern <- ",compressed[.]mat$"
-  pathnames <- list.files(pattern = pattern, path = path, full.names = TRUE)
-  for (pathname in pathnames) {
-    cat("Reading MAT file: ", basename(pathname), "\n", sep = "")
-    mat <- readMat(pathname)
-    print(mat)
-  }
+# All compressed files
+pattern <- ",compressed[.]mat$"
+pathnames <- list.files(pattern = pattern, path = path, full.names = TRUE)
+for (pathname in pathnames) {
+  cat("Reading MAT file: ", basename(pathname), "\n", sep = "")
+  mat <- readMat(pathname)
+  print(mat)
 }
 
 

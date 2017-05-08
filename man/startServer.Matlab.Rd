@@ -61,7 +61,7 @@
   telling wether MATLAB was successfully started or not.
 
   To specify the full path to the matlab software set the \code{matlab}
-  option, e.g. \code{options(matlab="/opt/bin/matlab6.1")}. If no such
+  option, e.g. \code{options(matlab = "/opt/bin/matlab6.1")}. If no such
   option exists, the value \code{"matlab"} will be used.
 
   The MATLAB server relies on two files:

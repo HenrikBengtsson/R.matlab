@@ -4,7 +4,11 @@ Package: R.matlab
 Version: 3.6.1-9000 [2017-05-04]
 
  o ...
- 
+
+CODE REFACTORING:
+
+ o CLEANUP: Drop code conditional on non-supported old versions of R.
+
  
 Version: 3.6.1 [2016-10-19]
 

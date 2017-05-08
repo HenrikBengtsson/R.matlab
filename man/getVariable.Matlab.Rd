@@ -16,7 +16,7 @@
 \description{
   Gets one or several MATLAB variables from the MATLAB server.
   The transfer of the data can be done locally via a temporary file
-  (\code{remote=FALSE}) or through the socket \code{\link[base:connections]{connection}} (\code{remote=TRUE}),
+  (\code{remote = FALSE}) or through the socket \code{\link[base:connections]{connection}} (\code{remote = TRUE}),
   which is always available.
 }
 
