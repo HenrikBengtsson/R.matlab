@@ -4,7 +4,8 @@ library("methods")
 path <- system.file("mat-files", package = "R.matlab")
 
 
-equals <- function(target, current, ..., check.attributes = FALSE, assert = TRUE) {
+equals <- function(target, current, ..., check.attributes = FALSE,
+                   assert = TRUE) {
   ## AD HOC: 'SparseM' matrices gives an error on
   ##         as.matrix() if covr::package_coverage().
   if ("covr" %in% loadedNamespaces()) {
@@ -13,7 +14,8 @@ equals <- function(target, current, ..., check.attributes = FALSE, assert = TRUE
   }
   target <- as.matrix(target)
   current <- as.matrix(current)
-  eq <- all.equal(target = target, current = current, check.attributes = check.attributes, ...)
+  eq <- all.equal(target = target, current = current,
+                  check.attributes = check.attributes, ...)
   if (!isTRUE(eq)) {
     print(eq)
     str(list(target, current))
@@ -187,10 +189,10 @@ cat("Field names: ", paste(fields, collapse = ", "), "\n", sep = "")
 print(s)
 
 # Get field 'type'
-print(s["type", ,])
+print(s["type", , ])
 
 # Get substructure s(:, 2)
-print(s[, ,2])
+print(s[, , 2])
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

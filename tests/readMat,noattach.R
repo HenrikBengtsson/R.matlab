@@ -7,7 +7,8 @@ if (!identical(as.vector(data$A), as.double(126:255)))
 cons0 <- getAllConnections()
 
 # Compressed data blocks - display raw bytes
-data <- R.matlab::readMat(file.path(path, "NestedMiMATRIX,problem4,v5,compressed.mat"), verbose = -120)
+pathname <- file.path(path, "NestedMiMATRIX,problem4,v5,compressed.mat")
+data <- R.matlab::readMat(pathname, verbose = -120)
 
 # ...no connections are left open
 stopifnot(identical(getAllConnections(), cons0))

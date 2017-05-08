@@ -128,7 +128,8 @@ writeMat(filename, data = data)
 data2 <- readMat(filename)$data
 str(data2)
 ## FIXME: https://github.com/HenrikBengtsson/R.matlab/issues/30
-## stopifnot(all.equal(data2$A, data$A), all.equal(data2$X, data$X), all.equal(data2, data))
+## stopifnot(all.equal(data2$A, data$A), all.equal(data2$X, data$X),
+##           all.equal(data2, data))
 unlink(filename)
 
 message("writeMat() - multidimensional arrays ... DONE")
@@ -246,14 +247,14 @@ unlink(filename)
 filename <- paste(tempfile(), ".mat", sep = "")
 res <- tryCatch({
   writeMat(filename, expr = substitute(x <- 2))
-}, error = function(ex) ex)
+}, error = identity)
 print(res)
 unlink(filename)
 
 filename <- paste(tempfile(), ".mat", sep = "")
 res <- tryCatch({
   writeMat(filename, formula = y ~ x)
-}, error = function(ex) ex)
+}, error = identity)
 print(res)
 unlink(filename)
 
@@ -261,7 +262,7 @@ unlink(filename)
 filename <- paste(tempfile(), ".mat", sep = "")
 res <- tryCatch({
   writeMat(filename, x = 1, matVersion = "99")
-}, error = function(ex) ex)
+}, error = identity)
 print(res)
 unlink(filename)
 
