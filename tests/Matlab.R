@@ -59,9 +59,9 @@ for (remote in c(FALSE, TRUE)) {
   print(res)
   
   res <- tryCatch({
-    setFunction(matlab, "  \
-      function [y] = foo(x)  \
-        y = x;               \
+    setFunction(matlab, "   \
+      function [y] = foo(x) \
+        y = x;              \
     ")
   }, error = function(ex) ex)
   print(res)
@@ -156,7 +156,7 @@ print(matlab)
 # Sample uses of the MATLAB server
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Run MATLAB expressions on the MATLAB server
-evaluate(matlab, "A = 1+2;", "B = ones(2,20);")
+evaluate(matlab, "A = 1+2;", "B = ones(2, 20);")
 
 # Ask MATLAB to display a value (without transferring it to R)
 evaluate(matlab, "A")
@@ -177,17 +177,17 @@ cat("Received variables:\n")
 str(data)
 
 # Create a function (M-file) on the MATLAB server
-setFunction(matlab, "          \
-  function [win,aver] = dice(B)  \
-  %Play the dice game B times  \
-  gains = [-1,2,-3,4,-5,6];      \
-  plays = unidrnd(6,B,1);        \
+setFunction(matlab, "            \
+  function [win, aver] = dice(B) \
+  %Play the dice game B times    \
+  gains = [-1, 2, -3, 4, -5, 6]; \
+  plays = unidrnd(6, B, 1);      \
   win = sum(gains(plays));       \
   aver = win/B;                  \
 ");
 
 # Use the MATLAB function just created
-evaluate(matlab, "[w,a] = dice(1000);")
+evaluate(matlab, "[w, a] = dice(1000);")
 res <- getVariable(matlab, c("w", "a"))
 print(res)
 

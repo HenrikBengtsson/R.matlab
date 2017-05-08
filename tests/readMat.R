@@ -156,7 +156,7 @@ pathname <- file.path(path, "StructWithSparseMatrix-v4,compressed.mat")
 mat4 <- readMat(pathname, sparseMatrixClass = "matrix", verbose = -120)
 
 # All compressed files
-pattern <- ",compressed[.]mat$"
+pattern <- ", compressed[.]mat$"
 pathnames <- list.files(pattern = pattern, path = path, full.names = TRUE)
 for (pathname in pathnames) {
   cat("Reading MAT file: ", basename(pathname), "\n", sep = "")
@@ -169,7 +169,7 @@ for (pathname in pathnames) {
 # Example of a MATLAB struct
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # File was created by
-# s = struct('type',{'big','little'},  'color','red',  'x',{3,4})
+# s = struct('type', {'big', 'little'},  'color', 'red',  'x', {3, 4})
 #  1x2 struct array with fields:
 #      type
 #      color
@@ -187,10 +187,10 @@ cat("Field names: ", paste(fields, collapse = ", "), "\n", sep = "")
 print(s)
 
 # Get field 'type'
-print(s["type",,])
+print(s["type", ,])
 
-# Get substructure s(:,2)
-print(s[,,2])
+# Get substructure s(:, 2)
+print(s[, ,2])
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -203,7 +203,7 @@ bs <- readMat(file.path(path, "unsignedByte.mat"), verbose = TRUE)
 # Assert that newlines are preserved in text strings
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 mat <- readMat(file.path(path, "TextWithNewlines.mat"))
-mystr <- mat$mystr[1,1]
+mystr <- mat$mystr[1, 1]
 print(mystr)
 stopifnot(mystr == "hello\nworld\n\nEOM")
 

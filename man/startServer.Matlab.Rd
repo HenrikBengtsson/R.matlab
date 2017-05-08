@@ -34,7 +34,7 @@
  \item{matlab}{An optional \code{\link[base]{character}} string specifying the name of
    the matlab command, if different from \code{"matlab"}. An absolute
    path are possible.}
- \item{port}{An optional \code{\link[base]{integer}} in [1023,65535].
+ \item{port}{An optional \code{\link[base]{integer}} in [1023, 65535].
    If given, the environment variable \code{MATLABSERVER_PORT} is
    set specifying which port the MATLAB server should listen to for
    clients trying to connect.  The default port is 9999.}

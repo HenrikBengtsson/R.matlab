@@ -84,7 +84,7 @@
 #
 # \section{About MAT files saved in MATLAB using '-v7.3'}{
 #  MAT v7.3 files, saved using for instance \code{save('foo.mat', '-v7.3')},
-#  stores the data in the Hierarchical Data Format (HDF5) [6,7], which
+#  stores the data in the Hierarchical Data Format (HDF5) [6, 7], which
 #  is a format not supported by this function/package.
 #  However, there exist other R packages that can parse HDF5, e.g.
 #  CRAN package \pkg{h5} and Bioconductor package \pkg{rhdf5}.
@@ -171,38 +171,38 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
   # Extracted from the R.oo package.
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ASCII <- c(
-    "",    "\001","\002","\003","\004","\005","\006","\007", # 000-007
-    "\010","\011","\012","\013","\014","\015","\016","\017", # 010-017
-    "\020","\021","\022","\023","\024","\025","\026","\027", # 020-027
-    "\030","\031","\032","\033","\034","\035","\036","\037", # 030-037
-    "\040","\041","\042","\043","\044","\045","\046","\047", # 040-047
-    "\050","\051","\052","\053","\054","\055","\056","\057", # 050-057
-    "\060","\061","\062","\063","\064","\065","\066","\067", # 060-067
-    "\070","\071","\072","\073","\074","\075","\076","\077", # 070-077
-    "\100","\101","\102","\103","\104","\105","\106","\107", # 100-107
-    "\110","\111","\112","\113","\114","\115","\116","\117", # 110-117
-    "\120","\121","\122","\123","\124","\125","\126","\127", # 120-127
-    "\130","\131","\132","\133","\134","\135","\136","\137", # 130-137
-    "\140","\141","\142","\143","\144","\145","\146","\147", # 140-147
-    "\150","\151","\152","\153","\154","\155","\156","\157", # 150-157
-    "\160","\161","\162","\163","\164","\165","\166","\167", # 160-167
-    "\170","\171","\172","\173","\174","\175","\176","\177", # 170-177
-    "\200","\201","\202","\203","\204","\205","\206","\207", # 200-207
-    "\210","\211","\212","\213","\214","\215","\216","\217", # 210-217
-    "\220","\221","\222","\223","\224","\225","\226","\227", # 220-227
-    "\230","\231","\232","\233","\234","\235","\236","\237", # 230-237
-    "\240","\241","\242","\243","\244","\245","\246","\247", # 240-247
-    "\250","\251","\252","\253","\254","\255","\256","\257", # 250-257
-    "\260","\261","\262","\263","\264","\265","\266","\267", # 260-267
-    "\270","\271","\272","\273","\274","\275","\276","\277", # 270-277
-    "\300","\301","\302","\303","\304","\305","\306","\307", # 300-307
-    "\310","\311","\312","\313","\314","\315","\316","\317", # 310-317
-    "\320","\321","\322","\323","\324","\325","\326","\327", # 320-327
-    "\330","\331","\332","\333","\334","\335","\336","\337", # 330-337
-    "\340","\341","\342","\343","\344","\345","\346","\347", # 340-347
-    "\350","\351","\352","\353","\354","\355","\356","\357", # 350-357
-    "\360","\361","\362","\363","\364","\365","\366","\367", # 360-367
-    "\370","\371","\372","\373","\374","\375","\376","\377"  # 370-377
+    "",     "\001", "\002", "\003", "\004", "\005", "\006", "\007", # 000-007
+    "\010", "\011", "\012", "\013", "\014", "\015", "\016", "\017", # 010-017
+    "\020", "\021", "\022", "\023", "\024", "\025", "\026", "\027", # 020-027
+    "\030", "\031", "\032", "\033", "\034", "\035", "\036", "\037", # 030-037
+    "\040", "\041", "\042", "\043", "\044", "\045", "\046", "\047", # 040-047
+    "\050", "\051", "\052", "\053", "\054", "\055", "\056", "\057", # 050-057
+    "\060", "\061", "\062", "\063", "\064", "\065", "\066", "\067", # 060-067
+    "\070", "\071", "\072", "\073", "\074", "\075", "\076", "\077", # 070-077
+    "\100", "\101", "\102", "\103", "\104", "\105", "\106", "\107", # 100-107
+    "\110", "\111", "\112", "\113", "\114", "\115", "\116", "\117", # 110-117
+    "\120", "\121", "\122", "\123", "\124", "\125", "\126", "\127", # 120-127
+    "\130", "\131", "\132", "\133", "\134", "\135", "\136", "\137", # 130-137
+    "\140", "\141", "\142", "\143", "\144", "\145", "\146", "\147", # 140-147
+    "\150", "\151", "\152", "\153", "\154", "\155", "\156", "\157", # 150-157
+    "\160", "\161", "\162", "\163", "\164", "\165", "\166", "\167", # 160-167
+    "\170", "\171", "\172", "\173", "\174", "\175", "\176", "\177", # 170-177
+    "\200", "\201", "\202", "\203", "\204", "\205", "\206", "\207", # 200-207
+    "\210", "\211", "\212", "\213", "\214", "\215", "\216", "\217", # 210-217
+    "\220", "\221", "\222", "\223", "\224", "\225", "\226", "\227", # 220-227
+    "\230", "\231", "\232", "\233", "\234", "\235", "\236", "\237", # 230-237
+    "\240", "\241", "\242", "\243", "\244", "\245", "\246", "\247", # 240-247
+    "\250", "\251", "\252", "\253", "\254", "\255", "\256", "\257", # 250-257
+    "\260", "\261", "\262", "\263", "\264", "\265", "\266", "\267", # 260-267
+    "\270", "\271", "\272", "\273", "\274", "\275", "\276", "\277", # 270-277
+    "\300", "\301", "\302", "\303", "\304", "\305", "\306", "\307", # 300-307
+    "\310", "\311", "\312", "\313", "\314", "\315", "\316", "\317", # 310-317
+    "\320", "\321", "\322", "\323", "\324", "\325", "\326", "\327", # 320-327
+    "\330", "\331", "\332", "\333", "\334", "\335", "\336", "\337", # 330-337
+    "\340", "\341", "\342", "\343", "\344", "\345", "\346", "\347", # 340-347
+    "\350", "\351", "\352", "\353", "\354", "\355", "\356", "\357", # 350-357
+    "\360", "\361", "\362", "\363", "\364", "\365", "\366", "\367", # 360-367
+    "\370", "\371", "\372", "\373", "\374", "\375", "\376", "\377"  # 370-377
   );
 
 
@@ -436,7 +436,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
   ## use that instead.
   if (capabilities("iconv")) {
     utfs <- grep("UTF", iconvlist(), value = TRUE);
-    ## The convertUTF{16,32} routines below work in big-endian, so
+    ## The convertUTF{16, 32} routines below work in big-endian, so
     ## look for UTF-16BE or UTF16BE, etc..
     utf16 <- head(grep("UTF-?16BE", utfs, value = TRUE), n = 1L);
     if (length(utf16) > 0L) {
@@ -552,9 +552,9 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
     byte2 <- zraw[2L];
     for (type in names(known)) {
       bytes <- known[[type]];
-      a <- (byte1 == bytes[1L,])
-      b <- (byte2 == bytes[2L,])
-      if (any((byte1 == bytes[1L,] & byte2 == bytes[2L,])))
+      a <- (byte1 == bytes[1L, ])
+      b <- (byte2 == bytes[2L, ])
+      if (any((byte1 == bytes[1L, ] & byte2 == bytes[2L, ])))
         return(type);
     } # for (type ...)
 
@@ -728,7 +728,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
     # MOPT[1] "indicates the numeric format of binary numbers on the machine
     #          that wrote the file.
     #          0 IEEE Little Endian (PC, 386, 486, DEC Risc)
-    #          1 IEEE Big Endian (Macintosh, SPARC, Apollo,SGI, HP 9000/300,
+    #          1 IEEE Big Endian (Macintosh, SPARC, Apollo, SGI, HP 9000/300,
     #            other Motorola)
     #          2 VAX D-float  [don't know how to read these]
     #          3 VAX G-float  [don't know how to read these]
@@ -738,7 +738,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
     if (MOPT1 == 0L)
       mStr <- "IEEE Little Endian (PC, 386, 486, DEC Risc)"
     else if (MOPT1 == 1L)
-      mStr <- "IEEE Big Endian (Macintosh, SPARC, Apollo,SGI, HP 9000/300, other Motorola)"
+      mStr <- "IEEE Big Endian (Macintosh, SPARC, Apollo, SGI, HP 9000/300, other Motorola)"
     else if (MOPT1 == 2L)
       mStr <- "VAX D-float"
     else if (MOPT1 == 3L)
@@ -746,7 +746,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
     else if (MOPT1 == 4L)
       mStr <- "Cray"
     else
-      mStr <- sprintf("<Unknown value of MOPT[1]. Not in range [0,4]: %d.>", as.integer(MOPT1));
+      mStr <- sprintf("<Unknown value of MOPT[1]. Not in range [0, 4]: %d.>", as.integer(MOPT1));
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # MOPT[2] "is always 0 (zero) and is reserved for future use."
@@ -794,7 +794,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
     else if (MOPT3 == 5L)
       pStr <- "8-bit unsigned integer"
     else
-      pStr <- sprintf("<Unknown value of MOPT[3]. Not in range [0,5]: %d.>", as.integer(MOPT3));
+      pStr <- sprintf("<Unknown value of MOPT[3]. Not in range [0, 5]: %d.>", as.integer(MOPT3));
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # MOPT[4]  "indicates the matrix type according to the following table:
@@ -813,7 +813,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
     else if (MOPT4 == 2L)
       tStr <- "Sparse matrix"
     else
-      tStr <- sprintf("<Unknown value of MOPT[4]. Not in range [0,2]: %d.>", as.integer(MOPT4));
+      tStr <- sprintf("<Unknown value of MOPT[4]. Not in range [0, 2]: %d.>", as.integer(MOPT4));
 
 
     moptStr <- paste("MOPT[1]: ", mStr, ". MOPT[2]: ", oStr, ". MOPT[3]: ", pStr, ". MOPT[4]: ", tStr, ".", sep = "");
@@ -823,7 +823,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Function to convert four signed or unsigned integers in big or little
-  # endian order into a (MOPT) vector c(M,O,P,T) of unsigned integers.
+  # endian order into a (MOPT) vector c(M, O, P, T) of unsigned integers.
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   getMOPT <- function(fourBytes) {
     if (length(fourBytes) != 4L)
@@ -896,7 +896,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
       # MOPT[1] "indicates the numeric format of binary numbers on the machine
       #          that wrote the file.
       #          0 IEEE Little Endian (PC, 386, 486, DEC Risc)
-      #          1 IEEE Big Endian (Macintosh, SPARC, Apollo,SGI, HP 9000/300,
+      #          1 IEEE Big Endian (Macintosh, SPARC, Apollo, SGI, HP 9000/300,
       #            other Motorola)
       #          2 VAX D-float  [don't know how to read these]
       #          3 VAX G-float  [don't know how to read these]
@@ -910,7 +910,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
       } else if (MOPT1 %in% 2:4) {
         stop("Looks like a MAT v4 file, but the storage format of numerics (VAX D-float, VAX G-float or Cray) is not supported. Currently only IEEE numeric formats in big or little endian are supported.");
       } else {
-        stop("Unknown first byte in MOPT header (not in [0,4]): ", paste(MOPT, collapse = ", "));
+        stop("Unknown first byte in MOPT header (not in [0, 4]): ", paste(MOPT, collapse = ", "));
       }
 
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -974,7 +974,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
         header$size <- 1L;
         header$signed <- FALSE;
       } else {
-        stop("Unknown third byte in MOPT header (not in [0,5]): ", paste(MOPT, collapse = ", "));
+        stop("Unknown third byte in MOPT header (not in [0, 5]): ", paste(MOPT, collapse = ", "));
       }
 
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -995,7 +995,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
       } else if (MOPT4 == 2L) {
         header$matrixType <- "sparse";
       } else {
-###        stop("Unknown fourth byte in MOPT header (not in [0,2]): ", paste(MOPT, collapse = ", "));
+###        stop("Unknown fourth byte in MOPT header (not in [0, 2]): ", paste(MOPT, collapse = ", "));
       }
 
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1099,7 +1099,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
 
         if (header$matrixType == "sparse") {
           # From help sparse in MATLAB:
-          # "S = SPARSE(i,j,s,m,n,nzmax) uses the rows of [i,j,s] to generate an
+          # "S = SPARSE(i, j, s, m, n, nzmax) uses the rows of [i, j, s] to generate an
           #  m-by-n sparse matrix with space allocated for nzmax nonzeros.  The
           #  two integer index vectors, i and j, and the real or complex entries
           #  vector, s, all have the same length, nnz, which is the number of
@@ -1107,10 +1107,10 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
           #  which have duplicate values of i and j are added together."
 
           # The last entry in 'data' is (only) used to specify the size of the
-          # matrix, i.e. to infer (m,n).
-          i <- as.integer(data[,1L]);
-          j <- as.integer(data[,2L]);
-          s <- data[,3L];
+          # matrix, i.e. to infer (m, n).
+          i <- as.integer(data[, 1L]);
+          j <- as.integer(data[, 2L]);
+          s <- data[, 3L];
           data <- NULL; # Not needed anymore
 
           if (verbose) {
@@ -1121,7 +1121,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
           }
 
           # When saving a sparse matrix, MATLAB is making sure that one can infer
-          # the size of the m-by-n sparse matrix for the index matrix [i,j]. If
+          # the size of the m-by-n sparse matrix for the index matrix [i, j]. If
           # there are no non-zero elements in the last row or last column, MATLAB
           # saves a zero elements in such case.
           n <- max(i);
@@ -1435,7 +1435,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
             tmp <- type;
           }
           if (type+1L < 1L || type+1L > NBR_OF_KNOWN_TYPES)
-            stop("Unknown data type. Not in range [1,", NBR_OF_KNOWN_TYPES, "]: ", type);
+            stop("Unknown data type. Not in range [1, ", NBR_OF_KNOWN_TYPES, "]: ", type);
 
           # Treat unsigned values too.
           padding <- 4L - ((nbrOfBytes-1L) %% 4L + 1L);
@@ -1548,7 +1548,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
       #
       class <- arrayFlags %% 256;
       if (class < 1L || class > NBR_OF_KNOWN_ARRAY_FLAGS) {
-        stop("Unknown array type (class). Not in [1,", NBR_OF_KNOWN_ARRAY_FLAGS, "]: ", class);
+        stop("Unknown array type (class). Not in [1, ", NBR_OF_KNOWN_ARRAY_FLAGS, "]: ", class);
       }
 
       symbol <- NAMES_OF_KNOWN_ARRAY_FLAGS[class];
@@ -1997,7 +1997,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
 
           # Note that the indices for MAT v5 sparse arrays start at 0 (not 1).
           if (any(ir < 0L) || (nrow > 0 && any(ir > nrow-1L))) {
-            stop("MAT v5 file format error: Some elements in row vector 'ir' (sparse arrays) are out of range [0,", nrow-1L, "].");
+            stop("MAT v5 file format error: Some elements in row vector 'ir' (sparse arrays) are out of range [0, ", nrow-1L, "].");
           }
 
           #  "* jc - points to an integer array of length N+1 that contains..."
@@ -2049,7 +2049,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
           # The "sparse" values
           # x = pr
 
-          # (from,to) indices for each column (=> length(p) == ncol+1)
+          # (from, to) indices for each column (=> length(p) == ncol+1)
           p <- as.integer(jc)
 
           # Row indices
@@ -2058,7 +2058,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
           if (length(pr) == 0L && i == 0L) i <- integer(0L)
 
           # Matrix dimension
-          Dim <- as.integer(c(nrow,ncol))
+          Dim <- as.integer(c(nrow, ncol))
 
           if (verbose && isVisible(verbose, level = -102)) {
             verbose && cat(verbose, "x = pr:");
@@ -2067,7 +2067,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
             verbose && str(verbose, p);
             verbose && cat(verbose, "i:");
             verbose && str(verbose, i);
-            verbose && printf(verbose, "Dim = c(%d,%d)\n", Dim[1L], Dim[2L]);
+            verbose && printf(verbose, "Dim = c(%d, %d)\n", Dim[1L], Dim[2L]);
           }
 
           matrix <- new(className, x = pr, p = p, i = i, Dim = Dim);
@@ -2129,7 +2129,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
           each <- djc[cols]
           ic <- rep(cols, times = each)
           djc <- cols <- each <- jc <- NULL
-          ## (ir,ic) -> ii matrix indices (column first)
+          ## (ir, ic) -> ii matrix indices (column first)
           ii <- (ic-1L)*nrow + ir + 1L
           ir <- ic <- NULL
           matrix[ii] <- pr;

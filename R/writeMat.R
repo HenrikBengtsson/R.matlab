@@ -29,7 +29,7 @@
 #     object specifying how much verbose/debug information is written to
 #     standard output. If a Verbose object, how detailed the information is
 #     is specified by the threshold level of the object. If a numeric, the
-#     value is used to set the threshold of a new Verbose object. If @TRUE,
+#     value is used to set the threshold of a new Verbose object. If @TRUE, 
 #     the threshold is set to -1 (minimal). If @FALSE, no output is written
 #     (and neither is the \link[R.utils:R.utils-package]{R.utils} package required).
 #   }
@@ -163,38 +163,38 @@ setMethodS3("writeMat", "default", function(con, ..., fixNames = TRUE, matVersio
   # Extracted from the R.oo package. Also inside readMat().
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ASCII <- c(
-    "",    "\001","\002","\003","\004","\005","\006","\007", # 000-007
-    "\010","\011","\012","\013","\014","\015","\016","\017", # 010-017
-    "\020","\021","\022","\023","\024","\025","\026","\027", # 020-027
-    "\030","\031","\032","\033","\034","\035","\036","\037", # 030-037
-    "\040","\041","\042","\043","\044","\045","\046","\047", # 040-047
-    "\050","\051","\052","\053","\054","\055","\056","\057", # 050-057
-    "\060","\061","\062","\063","\064","\065","\066","\067", # 060-067
-    "\070","\071","\072","\073","\074","\075","\076","\077", # 070-077
-    "\100","\101","\102","\103","\104","\105","\106","\107", # 100-107
-    "\110","\111","\112","\113","\114","\115","\116","\117", # 110-117
-    "\120","\121","\122","\123","\124","\125","\126","\127", # 120-127
-    "\130","\131","\132","\133","\134","\135","\136","\137", # 130-137
-    "\140","\141","\142","\143","\144","\145","\146","\147", # 140-147
-    "\150","\151","\152","\153","\154","\155","\156","\157", # 150-157
-    "\160","\161","\162","\163","\164","\165","\166","\167", # 160-167
-    "\170","\171","\172","\173","\174","\175","\176","\177", # 170-177
-    "\200","\201","\202","\203","\204","\205","\206","\207", # 200-207
-    "\210","\211","\212","\213","\214","\215","\216","\217", # 210-217
-    "\220","\221","\222","\223","\224","\225","\226","\227", # 220-227
-    "\230","\231","\232","\233","\234","\235","\236","\237", # 230-237
-    "\240","\241","\242","\243","\244","\245","\246","\247", # 240-247
-    "\250","\251","\252","\253","\254","\255","\256","\257", # 250-257
-    "\260","\261","\262","\263","\264","\265","\266","\267", # 260-267
-    "\270","\271","\272","\273","\274","\275","\276","\277", # 270-277
-    "\300","\301","\302","\303","\304","\305","\306","\307", # 300-307
-    "\310","\311","\312","\313","\314","\315","\316","\317", # 310-317
-    "\320","\321","\322","\323","\324","\325","\326","\327", # 320-327
-    "\330","\331","\332","\333","\334","\335","\336","\337", # 330-337
-    "\340","\341","\342","\343","\344","\345","\346","\347", # 340-347
-    "\350","\351","\352","\353","\354","\355","\356","\357", # 350-357
-    "\360","\361","\362","\363","\364","\365","\366","\367", # 360-367
-    "\370","\371","\372","\373","\374","\375","\376","\377"  # 370-377
+    "",     "\001", "\002", "\003", "\004", "\005", "\006", "\007", # 000-007
+    "\010", "\011", "\012", "\013", "\014", "\015", "\016", "\017", # 010-017
+    "\020", "\021", "\022", "\023", "\024", "\025", "\026", "\027", # 020-027
+    "\030", "\031", "\032", "\033", "\034", "\035", "\036", "\037", # 030-037
+    "\040", "\041", "\042", "\043", "\044", "\045", "\046", "\047", # 040-047
+    "\050", "\051", "\052", "\053", "\054", "\055", "\056", "\057", # 050-057
+    "\060", "\061", "\062", "\063", "\064", "\065", "\066", "\067", # 060-067
+    "\070", "\071", "\072", "\073", "\074", "\075", "\076", "\077", # 070-077
+    "\100", "\101", "\102", "\103", "\104", "\105", "\106", "\107", # 100-107
+    "\110", "\111", "\112", "\113", "\114", "\115", "\116", "\117", # 110-117
+    "\120", "\121", "\122", "\123", "\124", "\125", "\126", "\127", # 120-127
+    "\130", "\131", "\132", "\133", "\134", "\135", "\136", "\137", # 130-137
+    "\140", "\141", "\142", "\143", "\144", "\145", "\146", "\147", # 140-147
+    "\150", "\151", "\152", "\153", "\154", "\155", "\156", "\157", # 150-157
+    "\160", "\161", "\162", "\163", "\164", "\165", "\166", "\167", # 160-167
+    "\170", "\171", "\172", "\173", "\174", "\175", "\176", "\177", # 170-177
+    "\200", "\201", "\202", "\203", "\204", "\205", "\206", "\207", # 200-207
+    "\210", "\211", "\212", "\213", "\214", "\215", "\216", "\217", # 210-217
+    "\220", "\221", "\222", "\223", "\224", "\225", "\226", "\227", # 220-227
+    "\230", "\231", "\232", "\233", "\234", "\235", "\236", "\237", # 230-237
+    "\240", "\241", "\242", "\243", "\244", "\245", "\246", "\247", # 240-247
+    "\250", "\251", "\252", "\253", "\254", "\255", "\256", "\257", # 250-257
+    "\260", "\261", "\262", "\263", "\264", "\265", "\266", "\267", # 260-267
+    "\270", "\271", "\272", "\273", "\274", "\275", "\276", "\277", # 270-277
+    "\300", "\301", "\302", "\303", "\304", "\305", "\306", "\307", # 300-307
+    "\310", "\311", "\312", "\313", "\314", "\315", "\316", "\317", # 310-317
+    "\320", "\321", "\322", "\323", "\324", "\325", "\326", "\327", # 320-327
+    "\330", "\331", "\332", "\333", "\334", "\335", "\336", "\337", # 330-337
+    "\340", "\341", "\342", "\343", "\344", "\345", "\346", "\347", # 340-347
+    "\350", "\351", "\352", "\353", "\354", "\355", "\356", "\357", # 350-357
+    "\360", "\361", "\362", "\363", "\364", "\365", "\366", "\367", # 360-367
+    "\370", "\371", "\372", "\373", "\374", "\375", "\376", "\377"  # 370-377
   );
 
   # We removed ASCII 0x00, because it represents an empty string in
@@ -232,7 +232,7 @@ setMethodS3("writeMat", "default", function(con, ..., fixNames = TRUE, matVersio
       description <- paste("MATLAB 5.0 MAT-file, Platform: ", .Platform$OS.type, ", Software: R v", rVersion, ", Created on: ", date(), sep = "");
       bfr <- unlist(strsplit(description, split = "", fixed = TRUE), use.names = FALSE)
       bfr <- charToInt(bfr)
-      bfr <- c(bfr, rep(32, max(124-length(bfr),0)));
+      bfr <- c(bfr, rep(32, max(124-length(bfr), 0)));
       if (length(bfr) > 124) bfr <- bfr[1:124];
       nbrOfBytes <- writeBinMat(con, as.integer(bfr), size = 1);
 
@@ -333,11 +333,11 @@ setMethodS3("writeMat", "default", function(con, ..., fixNames = TRUE, matVersio
       } # writeArrayFlags()
 
 
-      writeDimensionsArray <- function(dim = c(1,1)) {
+      writeDimensionsArray <- function(dim = c(1, 1)) {
         nbrOfDimensions <- length(dim);
         nbrOfBytes <- nbrOfDimensions*4;
 
-        verbose && enter(verbose, "writeDimensionsArray(): dim = c(", paste(dim, collapse = ","), ")");
+        verbose && enter(verbose, "writeDimensionsArray(): dim = c(", paste(dim, collapse = ", "), ")");
 
         # Pad bytes?
         padding <- 8 - ((nbrOfBytes-1) %% 8 + 1);
@@ -584,7 +584,7 @@ setMethodS3("writeMat", "default", function(con, ..., fixNames = TRUE, matVersio
           stop("writeCharArray() only supports one string at the time.");
 
         nbrOfBytes <- writeArrayFlags(class = "mxCHAR_CLASS", complex = FALSE, global = FALSE, logical = FALSE);
-        nbrOfBytes <- nbrOfBytes + writeDimensionsArray(dim = c(1,nchar(data)));
+        nbrOfBytes <- nbrOfBytes + writeDimensionsArray(dim = c(1, nchar(data)));
         nbrOfBytes <- nbrOfBytes + writeArrayName(name = name);
         nbrOfBytes <- nbrOfBytes + writeCharPart(data);
 
@@ -599,7 +599,7 @@ setMethodS3("writeMat", "default", function(con, ..., fixNames = TRUE, matVersio
         verbose && enter(verbose, sprintf("writeStructure(name = %s)", sQuote(name)));
 
         nbrOfBytes <- writeArrayFlags(class = "mxSTRUCT_CLASS", complex = FALSE, global = FALSE, logical = FALSE);
-        nbrOfBytes <- nbrOfBytes + writeDimensionsArray(dim = c(1,1));
+        nbrOfBytes <- nbrOfBytes + writeDimensionsArray(dim = c(1, 1));
         nbrOfBytes <- nbrOfBytes + writeArrayName(name = name);
         nbrOfBytes <- nbrOfBytes + writeFieldNameLength(maxLength = 32);
         nbrOfBytes <- nbrOfBytes + writeFieldNames(names(structure), maxLength = 32);
@@ -697,7 +697,7 @@ setMethodS3("writeMat", "default", function(con, ..., fixNames = TRUE, matVersio
 #      # Get the number of bytes
 #      nbrOfBytes <- length(value) * sizeOf
 
-      # "For data elements representing "MATLAB arrays", (type miMATRIX),
+      # "For data elements representing "MATLAB arrays", (type miMATRIX), 
       # the value of the Number Of Bytes field includes padding bytes in
       # the total. For all other MAT-file data types, the value of the
       # Number of Bytes field does *not* include padding bytes."
@@ -810,7 +810,7 @@ setMethodS3("writeMat", "default", function(con, ..., fixNames = TRUE, matVersio
     } # writeAll()
 
 
-    # When writing to streams, that is, to other connections than files,
+    # When writing to streams, that is, to other connections than files, 
     # we have to "send over" the number of bytes first to inform the
     # receiver how big the succeeding streamed MAT object is.
     # In order to accomplish this, we first have to count the number of
@@ -864,7 +864,7 @@ setMethodS3("writeMat", "default", function(con, ..., fixNames = TRUE, matVersio
 ###     names2 <- as.character(substitute(args));
 ###     names2 <- names2[idxs];
 ###
-###     # Check which are syntactically valid R names,
+###     # Check which are syntactically valid R names, 
 ###     # e.g. not just writeMat(..., 1:10).
 ###     isValid <- sapply(names2, FUN = function(name) {
 ###       expr <- parse(text = sprintf("%s <- NULL;", name));

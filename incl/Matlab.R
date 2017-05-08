@@ -61,7 +61,7 @@ print(matlab)
 # 4.  Sample uses of the MATLAB server
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 # 4.1 Run MATLAB expressions on the MATLAB server
-evaluate(matlab, "A = 1+2;", "B = ones(2,20);")
+evaluate(matlab, "A = 1+2;", "B = ones(2, 20);")
 
 # 4.2 Ask MATLAB to display a value (without transferring it to R)
 evaluate(matlab, "A")
@@ -83,16 +83,16 @@ str(data)
 
 # 4.6 Create a function (M-file) on the MATLAB server
 setFunction(matlab, "            \
-  function [win,aver] = dice(B)  \
+  function [win, aver] = dice(B) \
   %Play the dice game B times    \
-  gains = [-1,2,-3,4,-5,6];      \
-  plays = unidrnd(6,B,1);        \
+  gains = [-1, 2, -3, 4, -5, 6]; \
+  plays = unidrnd(6, B, 1);      \
   win = sum(gains(plays));       \
   aver = win/B;                  \
 ");
 
 # 4.7 Use the MATLAB function just created
-evaluate(matlab, "[w,a] = dice(1000);")
+evaluate(matlab, "[w, a] = dice(1000);")
 res <- getVariable(matlab, c("w", "a"))
 print(res)
 

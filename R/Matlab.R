@@ -29,7 +29,7 @@
 #   We use the term \emph{server} to say that MATLAB acts like a server
 #   with regard to \R. Note that it a standard MATLAB session that runs.\cr
 #
-#   Also, the starting of the MatlabServer is simplier from MATLAB v7,
+#   Also, the starting of the MatlabServer is simplier from MATLAB v7, 
 #   although it is pretty straightforward for MATLAB v6 too.
 #   It is easier in MATLAB v7 and above, because the Java class required
 #   for remote-data-transfer can be automatically/dynamically added to
@@ -38,7 +38,7 @@
 # }
 #
 # \section{Remote and non-remote connections}{
-#   When a remote connection (argument \code{remote = TRUE}) is used,
+#   When a remote connection (argument \code{remote = TRUE}) is used, 
 #   data is send to and from MATLAB via a data stream. This is needed
 #   when \R is running on a host with a seperated file system than
 #   the one MATLAB is running on.
@@ -48,7 +48,7 @@
 #   it to temporary MAT files. \cr
 #
 #   Troubleshooting: If "remote" transfers are used, the
-#   InputStreamByteWrapper Java class must be found by MATLAB,
+#   InputStreamByteWrapper Java class must be found by MATLAB, 
 #   otherwise an error will occur in MATLAB as soon as data is
 #   send from \R to MATLAB. In all other cases, the above Java class
 #   is \emph{not} needed.
@@ -87,7 +87,7 @@
 #   to find out the path to MatlabServer.m.
 #
 #   \bold{For MATLAB v6 only:} Contrary to MATLAB v7 and above, MATLAB v6
-#   cannot find the InputStreamByteWrapper class automatically. Instead,
+#   cannot find the InputStreamByteWrapper class automatically. Instead, 
 #   the so called Java classpath has to be set manually. In MATLAB, type
 #   \code{which('classpath.txt')} to find where the default
 #   MATLAB classpath.txt file is located. Copy this file to the
@@ -96,7 +96,7 @@
 #   The path of InputStreamByteWrapper.class can be identified by
 #   \code{system.file("java", package = "R.matlab")} in R.\cr
 #
-#   \bold{Lazy alternative:} Instead of setting path and classpaths,
+#   \bold{Lazy alternative:} Instead of setting path and classpaths, 
 #   you may try to copy the MatlabServer.m and InputStreamByteWrapper.class
 #   to the current directory from which MATLAB is then started.
 #
@@ -123,20 +123,20 @@
 # \section{Confirmed MATLAB versions}{
 #   This package has been confirmed to work \emph{successfully} out of
 #   the box together with the following MATLAB versions:
-#   MATLAB v6.1.0.450 (R12.1) [Jun 2001],
-#   MATLAB v6.5.0.180913a (R13) [Jul 2002],
-#   MATLAB v7.0.0.19901 (R14) [Jun 2004],
-#   MATLAB v7.0.1.24704 (R14SP1) [Oct 2004],
-#   MATLAB v7.0.4.365 (R14SP2) [Mar 2005],
-#   MATLAB v7.2.0.232 (R2006a) [Mar 2006],
-#   MATLAB v7.4.0 (R2007a) [Mar 2007]],
-#   MATLAB v7.7.0.471 (R2008b) [Oct 2008],
-#   MATLAB v7.10.0.499 (R2010a) [Mar 2010],
-#   MATLAB v7.11.0.584 (R2010b) [Sep 2010],
-#   MATLAB v7.14.0.739 (R2012a) [Mar 2012],
+#   MATLAB v6.1.0.450 (R12.1) [Jun 2001], 
+#   MATLAB v6.5.0.180913a (R13) [Jul 2002], 
+#   MATLAB v7.0.0.19901 (R14) [Jun 2004], 
+#   MATLAB v7.0.1.24704 (R14SP1) [Oct 2004], 
+#   MATLAB v7.0.4.365 (R14SP2) [Mar 2005], 
+#   MATLAB v7.2.0.232 (R2006a) [Mar 2006], 
+#   MATLAB v7.4.0 (R2007a) [Mar 2007]], 
+#   MATLAB v7.7.0.471 (R2008b) [Oct 2008], 
+#   MATLAB v7.10.0.499 (R2010a) [Mar 2010], 
+#   MATLAB v7.11.0.584 (R2010b) [Sep 2010], 
+#   MATLAB v7.14.0.739 (R2012a) [Mar 2012], 
 #   MATLAB v8.2.0.701 (R2013b) [Sep 2013], and
 #   MATLAB v8.4.0 (R2014b) [Oct 2014].
-#   If you successfully use a different/higher MATLAB version,
+#   If you successfully use a different/higher MATLAB version, 
 #   please tell us, so we can share it here.
 #
 #   It does \emph{not} work with MATLAB v5 or before.
@@ -163,7 +163,7 @@
 # \section{Multiple parallel MATLAB instances}{
 #   You can launch multiple parallel MATLAB instance using this interface.
 #   This can be done in separate R sessions or in a single one.  As long
-#   as each MATLAB server/session is communicating on a separate port,
+#   as each MATLAB server/session is communicating on a separate port, 
 #   there is no limitation in the number of parallel MATLAB instances
 #   that can be used.  Example:
 #
@@ -204,12 +204,12 @@ setConstructorS3("Matlab", function(host = "localhost", port = 9999, remote = !(
   }
 
 
-  extend(Object(), "Matlab",
-    con      = NULL,
-    host     = as.character(host),
-    port     = as.integer(port),
-    remote   = as.logical(remote),
-    .options = Options(),
+  extend(Object(), "Matlab", 
+    con      = NULL, 
+    host     = as.character(host), 
+    port     = as.integer(port), 
+    remote   = as.logical(remote), 
+    .options = Options(), 
     .verbose = NullVerbose()
   )
 })
@@ -245,11 +245,11 @@ setMethodS3("as.character", "Matlab", function(x, ...) {
   this <- x;
 
   s <- sprintf("%s: The MATLAB host is '%s' and communication goes via port %d.", class(this)[1], this$host, this$port);
-  s <- sprintf("%s Objects are passed via the %s (remote = %s).", s,
-         (if (this$remote) "socket connection" else "local file system"),
+  s <- sprintf("%s Objects are passed via the %s (remote = %s).", s, 
+         (if (this$remote) "socket connection" else "local file system"), 
          as.character(this$remote)
        );
-  s <- sprintf("%s The connection to the MATLAB server is %s.", s,
+  s <- sprintf("%s The connection to the MATLAB server is %s.", s, 
          (if (isOpen(this)) "opened" else "closed (not opened)")
        );
   s;
@@ -693,7 +693,7 @@ setMethodS3("readResult", "Matlab", function(this, ...) {
 #  \item{matlab}{An optional @character string specifying the name of
 #    the matlab command, if different from \code{"matlab"}. An absolute
 #    path are possible.}
-#  \item{port}{An optional @integer in [1023,65535].
+#  \item{port}{An optional @integer in [1023, 65535].
 #    If given, the environment variable \code{MATLABSERVER_PORT} is
 #    set specifying which port the MATLAB server should listen to for
 #    clients trying to connect.  The default port is 9999.}
@@ -726,7 +726,7 @@ setMethodS3("readResult", "Matlab", function(this, ...) {
 #   The MATLAB server relies on two files:
 #   1) MatlabServer.m and 2) InputStreamByteWrapper.class
 #   These files exists in the externals/ and java/ directories of this
-#   package. However, if they do not exist in the current directory,
+#   package. However, if they do not exist in the current directory, 
 #   which is the directory where MATLAB is started, copies of them will
 #   automatically be made.
 # }
@@ -743,7 +743,7 @@ setMethodS3("startServer", "Matlab", function(this, matlab = getOption("matlab")
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'port':
   if (!is.null(port)) {
-    port <- Arguments$getInteger(port, range = c(1023,65535));
+    port <- Arguments$getInteger(port, range = c(1023, 65535));
     Sys.setenv("MATLABSERVER_PORT" = port);
   }
 
@@ -832,7 +832,7 @@ setMethodS3("startServer", "Matlab", function(this, matlab = getOption("matlab")
 #  If an error occurred in MATLAB an exception will be thrown. This
 #  exception can be caught by \code{\link[base:conditions]{tryCatch}()}.
 #
-#  If you receive error message \emph{Expected an 'answer' from MATLAB,
+#  If you receive error message \emph{Expected an 'answer' from MATLAB, 
 #  but kept receiving nothing}, see "Troubleshooting" under ?R.matlab.
 # }
 #
@@ -843,7 +843,7 @@ setMethodS3("startServer", "Matlab", function(this, matlab = getOption("matlab")
 #     strings are given they will be concatenated with the separator
 #     \code{collapse}.}
 #   \item{collapse}{Separator to be used to concatenate expressions.}
-#   \item{capture}{If @TRUE, MATLAB output is captured into a string,
+#   \item{capture}{If @TRUE, MATLAB output is captured into a string, 
 #     otherwise not.}
 # }
 #
@@ -897,7 +897,7 @@ setMethodS3("evaluate", "Matlab", function(this, ..., collapse = ";", capture = 
 # \description{
 #   Gets one or several MATLAB variables from the MATLAB server.
 #   The transfer of the data can be done locally via a temporary file
-#   (\code{remote = FALSE}) or through the socket @connection (\code{remote = TRUE}),
+#   (\code{remote = FALSE}) or through the socket @connection (\code{remote = TRUE}), 
 #   which is always available.
 # }
 #
@@ -985,7 +985,7 @@ setMethodS3("getVariable", "Matlab", function(this, variables, remote = this$rem
 # \description{
 #   Sets one or several \R variables on the MATLAB server.
 #   The transfer of the data can be done locally via a temporary file
-#   (\code{remote = FALSE}) or through the socket @connection (\code{remote = TRUE}),
+#   (\code{remote = FALSE}) or through the socket @connection (\code{remote = TRUE}), 
 #   which is always available.
 # }
 #
@@ -1073,7 +1073,7 @@ setMethodS3("setVariable", "Matlab", function(this, ..., remote = this$remote) {
 # \arguments{
 #  \item{code}{The MATLAB function definition.}
 #  \item{name}{Optional name of the function, which will defined the
-#     name of the M-file where the function is stored. If @NULL,
+#     name of the M-file where the function is stored. If @NULL, 
 #     the name is extracted from the code.}
 #  \item{collapse}{The string that the code lines, if there are more than
 #     one, is going to be concattenated with.}

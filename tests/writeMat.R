@@ -7,7 +7,7 @@ message("writeMat() - basic objects ...")
 A <- matrix(1:27, nrow = 9, ncol = 3)
 B <- as.matrix(1:10)
 C <- matrix(c(TRUE, FALSE, FALSE, TRUE), nrow = 2, ncol = 2)
-D <- array(1:18, dim = c(2,3,3))
+D <- array(1:18, dim = c(2, 3, 3))
 
 Cint <- local({ mode(C) <- "integer"; C })
 truth <- list(A = A, B = B, C = Cint, D = D)
@@ -113,7 +113,7 @@ message("writeMat() - character objects ... DONE")
 message("writeMat() - multidimensional arrays ...")
 
 filename <- paste(tempfile(), ".mat", sep = "")
-X <- array(1:24, dim = c(2,3,4))
+X <- array(1:24, dim = c(2, 3, 4))
 writeMat(filename, X = X)
 data <- readMat(filename)
 str(data)
@@ -122,7 +122,7 @@ unlink(filename)
 
 filename <- paste(tempfile(), ".mat", sep = "")
 A <- 1:4
-X <- array(1:24, dim = c(2,3,4))
+X <- array(1:24, dim = c(2, 3, 4))
 data <- list(A = A, X = X)
 writeMat(filename, data = data)
 data2 <- readMat(filename)$data
