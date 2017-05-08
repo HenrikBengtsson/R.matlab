@@ -89,7 +89,7 @@ setFunction(matlab, "            \
   plays = unidrnd(6, B, 1);      \
   win = sum(gains(plays));       \
   aver = win/B;                  \
-");
+")
 
 # 4.7 Use the MATLAB function just created
 evaluate(matlab, "[w, a] = dice(1000);")
