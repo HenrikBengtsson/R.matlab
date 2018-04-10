@@ -1194,7 +1194,7 @@ setMethodS3("setVerbose", "Matlab", function(this, threshold = 0, ...) {
   if (is.logical(threshold)) {
     threshold <- -as.integer(threshold)
   }
-  stopifnot(is.numeric(threshold))
+  stop_if_not(is.numeric(threshold))
   
   if (threshold >= 0) {
     verbose <- NullVerbose()

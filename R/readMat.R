@@ -246,7 +246,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
       rawBuffer <<- rawBuffer[idxs]
       rawBufferOffset <<- 0L
     }
-    ### stopifnot(rawBufferOffset == 0L)
+    ### stop_if_not(rawBufferOffset == 0L)
     NULL
   } # shortenRawBuffer()
 
@@ -291,9 +291,9 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
       return(raw(0L))
     }
     # Sanity check
-    ### stopifnot(nbrOfBytes <= nTotal)
+    ### stop_if_not(nbrOfBytes <= nTotal)
     idxs <- seq.int(from = rawBufferOffset+1L, to = rawBufferOffset+nbrOfBytes, by = 1L)
-    ### stopifnot(length(idxs) == nbrOfBytes)
+    ### stop_if_not(length(idxs) == nbrOfBytes)
     rawBuffer[idxs]
   }
 
@@ -303,7 +303,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
     if (eaten < nAvail) {
       rawBufferOffset <<- rawBufferOffset + eaten
       # Sanity check
-      ### stopifnot(rawBufferOffset <= nTotal)
+      ### stop_if_not(rawBufferOffset <= nTotal)
     } else if (eaten == nAvail) {
       rawBuffer <<- raw(0L)
       rawBufferOffset <<- 0L
@@ -340,7 +340,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
     bfr <- readBin(con = rawBufferT, what = what, size = size, n = n, signed = signed, endian = endian)
     nbfr <- length(bfr)
     if (nbfr > 0L) {
-      ### stopifnot(nbfr == n && nbfr*size == nbrOfBytes)
+      ### stop_if_not(nbfr == n && nbfr*size == nbrOfBytes)
       eatRawBuffer(nbfr*size)
     }
 
@@ -362,7 +362,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
     # Extract the subset to read
     bfr <- readRawBuffer(nchars)
 
-    ### stopifnot(length(bfr) == nchars)
+    ### stop_if_not(length(bfr) == nchars)
 
     # Coerce to a string
     bfr <- rawToChar(bfr)
@@ -1341,7 +1341,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
       "miUTF16" = integer(),
       "miUTF32" = integer()
     )
-    stopifnot(length(KNOWN_WHATS) == NBR_OF_KNOWN_TYPES)
+    stop_if_not(length(KNOWN_WHATS) == NBR_OF_KNOWN_TYPES)
 
     # Known array types [5] and the number of bytes they occupy.
     # NOTE: The index corresponds to its encoded value.
@@ -1469,7 +1469,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
             printf(verbose, level = -110, "zraw [%d bytes; compression type: %s]: %s\n", length(zraw), type, hpaste(zraw, maxHead = 8, maxTail = 8))
           }
           # Sanity check
-          stopifnot(identical(length(zraw), n))
+          stop_if_not(identical(length(zraw), n))
           tryCatch({
             unzraw <- uncompress(zraw, type = type, asText = FALSE)
 
@@ -1786,7 +1786,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
 
       verbose && cat(verbose, level = -100, "Reading ", len, " values each of ", sizeOf, " bytes. In total ", tag$nbrOfBytes, " bytes.")
 
-      ## stopifnot(is.finite(tag$nbrOfBytes), is.finite(tag$sizeOf))
+      ## stop_if_not(is.finite(tag$nbrOfBytes), is.finite(tag$sizeOf))
 
       value <- readBinMat(con, what = what, size = sizeOf, n = len, signed = tag$signed)
       verbose && str(verbose, level = -102, value)
@@ -2120,8 +2120,8 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
           #    Note: This is *not* how MAT v4 works.
 
           ## jc[N] = number of non-zero entries
-##          stopifnot(all(jc <= length(pr)))
-##          stopifnot(jc[length(jc)] == length(pr))
+##          stop_if_not(all(jc <= length(pr)))
+##          stop_if_not(jc[length(jc)] == length(pr))
 
           ## Infer column indices 'ic' from 'jc'
           djc <- diff(jc)
@@ -2310,7 +2310,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
 
   # Argument 'drop':
   if (is.logical(drop)) {
-    stopifnot(length(drop) == 1L)
+    stop_if_not(length(drop) == 1L)
     if (drop) {
       # Use defaults
       drop <- eval(formals(sys.function(sys.parent()))$drop)
