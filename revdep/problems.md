@@ -1,128 +1,129 @@
-# Setup
+# AnalyzeFMRI
 
-## Platform
+Version: 1.1-17
 
-|setting  |value                        |
-|:--------|:----------------------------|
-|version  |R version 3.3.1 (2016-06-21) |
-|system   |x86_64, linux-gnu            |
-|ui       |X11                          |
-|language |en                           |
-|collate  |en_US.UTF-8                  |
-|tz       |SystemV/PST8PDT              |
-|date     |2016-10-19                   |
+## In both
 
-## Packages
+*   checking whether package ‘AnalyzeFMRI’ can be installed ... WARNING
+    ```
+    Found the following significant warnings:
+      Warning: no DISPLAY variable so Tk is not available
+      Warning: loading Rplot failed
+    See ‘/home/hb/repositories/R.matlab/revdep/checks/AnalyzeFMRI/new/AnalyzeFMRI.Rcheck/00install.out’ for details.
+    ```
 
-|package     |*  |version    |date       |source                              |
-|:-----------|:--|:----------|:----------|:-----------------------------------|
-|R.matlab    |   |3.6.0-9000 |2016-10-19 |local (HenrikBengtsson/R.matlab@NA) |
-|R.methodsS3 |   |1.7.1      |2016-02-16 |CRAN (R 3.3.1)                      |
-|R.oo        |   |1.20.0     |2016-02-17 |CRAN (R 3.3.1)                      |
-|R.utils     |   |2.4.0      |2016-09-14 |cran (@2.4.0)                       |
-|SparseM     |   |1.72       |2016-09-06 |cran (@1.72)                        |
+# DATforDCEMRI
 
-# Check results
-2 packages with problems
+Version: 0.55
 
-## AnalyzeFMRI (1.1-16)
-Maintainer: P Lafaye de Micheaux <lafaye@dms.umontreal.ca>
+## In both
 
-0 errors | 1 warning  | 4 notes
+*   checking package dependencies ... NOTE
+    ```
+    Depends: includes the non-default packages:
+      ‘xtable’ ‘akima’ ‘R.oo’ ‘R.methodsS3’ ‘matlab’ ‘lattice’ ‘locfit’
+      ‘grid’
+    Adding so many packages to the search path is excessive and importing
+    selectively is preferable.
+    ```
 
-```
-checking whether package ‘AnalyzeFMRI’ can be installed ... WARNING
-Found the following significant warnings:
-  Warning: no DISPLAY variable so Tk is not available
-See ‘/home/hb/repositories/R.matlab/revdep/checks/AnalyzeFMRI.Rcheck/00install.out’ for details.
+*   checking DESCRIPTION meta-information ... NOTE
+    ```
+    Deprecated license: CC BY-NC-SA 3.0
+    ```
 
-checking DESCRIPTION meta-information ... NOTE
-Malformed Title field: should not end in a period.
+*   checking dependencies in R code ... NOTE
+    ```
+    'library' or 'require' calls to packages already attached by Depends:
+      ‘R.methodsS3’ ‘R.oo’ ‘akima’ ‘graphics’ ‘grid’ ‘lattice’ ‘locfit’
+      ‘matlab’ ‘xtable’
+      Please remove these calls from your code.
+    'library' or 'require' call to ‘R.matlab’ in package code.
+      Please use :: or requireNamespace() instead.
+      See section 'Suggested packages' in the 'Writing R Extensions' manual.
+    Packages in Depends field not imported from:
+      ‘R.methodsS3’ ‘R.oo’ ‘akima’ ‘grid’ ‘lattice’ ‘locfit’ ‘matlab’
+      ‘xtable’
+      These packages need to be imported from (in the NAMESPACE file)
+      for when this namespace is loaded but not attached.
+    ```
 
-checking top-level files ... NOTE
-Non-standard files/directories found at top level:
-  ‘niftidoc’ ‘tst.hdr’ ‘tst.img’
+*   checking R code for possible problems ... NOTE
+    ```
+    ...
+    DAT : DATrun: no visible global function definition for ‘graphics.off’
+    DAT : DATrun: no visible global function definition for ‘pdf’
+    DAT : DATrun: no visible global function definition for ‘layout’
+    DAT : DATrun: no visible global function definition for ‘par’
+    DAT : DATrun: no visible global function definition for ‘plot’
+    DAT : DATrun: no visible global function definition for ‘frame’
+    DAT : DATrun: no visible global function definition for ‘lines’
+    DAT : DATrun: no visible global function definition for ‘dev.off’
+    DAT : DATrun: no visible global function definition for ‘writeMat’
+    DAT: no visible binding for global variable ‘DAT.simData’
+    Undefined global functions or variables:
+      DAT.simData colorRampPalette dev.new dev.off dev.set frame
+      graphics.off image layout lines locator locfit.robust median palette
+      par pdf plot preplot rot90 text writeMat
+    Consider adding
+      importFrom("grDevices", "colorRampPalette", "dev.new", "dev.off",
+                 "dev.set", "graphics.off", "palette", "pdf")
+      importFrom("graphics", "frame", "image", "layout", "lines", "locator",
+                 "par", "plot", "text")
+      importFrom("stats", "median", "preplot")
+    to your NAMESPACE file.
+    ```
 
-checking R code for possible problems ... NOTE
-ICAspat: no visible global function definition for ‘rnorm’
-ICAtemp: no visible global function definition for ‘rnorm’
-N2G.Class.Probability: no visible global function definition for
-  ‘dnorm’
-N2G.Class.Probability: no visible global function definition for
-  ‘dgamma’
-N2G.Density: no visible global function definition for ‘dnorm’
-N2G.Density: no visible global function definition for ‘dgamma’
-N2G.Fit: no visible global function definition for ‘optim’
-... 64 lines ...
-  jpeg median optim optimize par pf plot pnorm points pt qf qgamma
-  qnorm qt quantile rnorm sd text write.table
-Consider adding
-  importFrom("grDevices", "dev.off", "heat.colors", "jpeg")
-  importFrom("graphics", "abline", "axis", "box", "image", "par", "plot",
-             "points", "text")
-  importFrom("stats", "dgamma", "dnorm", "fft", "median", "optim",
-             "optimize", "pf", "pnorm", "pt", "qf", "qgamma", "qnorm",
-             "qt", "quantile", "rnorm", "sd")
-  importFrom("utils", "glob2rx", "write.table")
-to your NAMESPACE file.
+# fda
 
-checking Rd line widths ... NOTE
-Rd file 'GaussSmoothArray.Rd':
-  \usage lines wider than 90 characters:
-     GaussSmoothArray(x, voxdim=c(1, 1, 1), ksize=5, sigma=diag(3, 3), mask=NULL, var.norm=FALSE)
+Version: 2.4.8
 
-Rd file 'N2G.Spatial.Mixture.Rd':
-  \usage lines wider than 90 characters:
-     N2G.Spatial.Mixture(data, par.start = c(4, 2, 4, 2, 0.9, 0.05), ksize, ktype = c("2D", "3D"), mask = NULL)
-  \examples lines wider than 100 characters:
-     ans <- N2G.Spatial.Mixture(y, par.start = c(4, 2, 4, 2, 0.9, 0.05), ksize = 3, ktype = "2D", mask = m) 
-... 21 lines ...
-Rd file 'f.complete.hdr.nifti.list.create.Rd':
-  \usage lines wider than 90 characters:
-     f.complete.hdr.nifti.list.create(file,dim.info=character(1),dim,intent.p1=single(1),intent.p2=single(1),intent.p3=single(1),intent.code ... [TRUNCATED]
+## In both
 
-Rd file 'threeDto4D.Rd':
-  \usage lines wider than 90 characters:
-     threeDto4D(outputfile,path.in=NULL,prefix=NULL,regexp=NULL,times=NULL,list.of.in.files=NULL,path.out=NULL,is.nii.pair=FALSE,hdr.number= ... [TRUNCATED]
-  \examples lines wider than 100 characters:
-     # path.fonc <- "/network/home/lafayep/Stage/Data/map284/functional/MondrianApril2007/preprocessing/1801/smoothed/"
+*   checking Rd cross-references ... NOTE
+    ```
+    Packages unavailable to check Rd xrefs: ‘Ecfun’, ‘ifultools’, ‘demography’
+    ```
 
-These lines will be truncated in the PDF manual.
-```
+# hyperSpec
 
-## TRONCO (2.6.0)
-Maintainer: BIMIB Group <tronco@disco.unimib.it>  
-Bug reports: https://github.com/BIMIB-DISCo/TRONCO
+Version: 0.99-20180627
 
-0 errors | 1 warning  | 1 note 
+## In both
 
-```
-checking examples ... WARNING
-Found the following significant warnings:
-  Warning: 3 simultaneous processes spawned
-  Warning: 3 simultaneous processes spawned
-  Warning: 3 simultaneous processes spawned
-Note that CRAN packages must never use more than two cores
-simultaneously during their checks.
-Examples with CPU or elapsed time > 5s
-                  user system elapsed
-tronco.bootstrap 0.168  0.012  12.384
+*   checking installed package size ... NOTE
+    ```
+      installed size is  5.1Mb
+      sub-directories of 1Mb or more:
+        doc   3.8Mb
+    ```
 
-checking R code for possible problems ... NOTE
-Found the following assignments to the global environment:
-File ‘TRONCO/R/capri.hypotheses.R’:
-  assign("lifting.genotypes", genotypes, envir = .GlobalEnv)
-  assign("lifting.annotations", annotations, envir = .GlobalEnv)
-  assign("lifting.edges", NULL, envir = .GlobalEnv)
-  assign("fisher.pvalues", NULL, envir = .GlobalEnv)
-  assign("lifting.genotypes", roll.back.lifting.genotypes, envir = .GlobalEnv)
-  assign("lifting.annotations", roll.back.lifting.annotations, 
-    envir = .GlobalEnv)
-  assign("lifting.edges", roll.back.lifting.edges, envir = .GlobalEnv)
-  assign("fisher.pvalues", roll.back.fisher.pvalues, envir = .GlobalEnv)
-  assign("lifting.edges", lifting.edges.temp, envir = .GlobalEnv)
-  assign("fisher.pvalues", fisher.pvalues.temp, envir = .GlobalEnv)
-  assign("fisher.pvalues", fisher.pvalues.temp, envir = .GlobalEnv)
-  assign("fisher.pvalues", fisher.pvalues.temp, envir = .GlobalEnv)
-```
+*   checking Rd cross-references ... NOTE
+    ```
+    Package unavailable to check Rd xrefs: ‘caTools’
+    ```
+
+# MethylMix
+
+Version: 2.10.2
+
+## In both
+
+*   checking dependencies in R code ... NOTE
+    ```
+    Namespace in Imports field not imported from: ‘digest’
+      All declared Imports should be used.
+    ```
+
+# retistruct
+
+Version: 0.5.12
+
+## In both
+
+*   checking package dependencies ... NOTE
+    ```
+    Packages suggested but not available for checking:
+      ‘gWidgets2RGtk2’ ‘cairoDevice’ ‘RGtk2’
+    ```
 

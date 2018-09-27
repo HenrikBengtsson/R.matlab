@@ -44,7 +44,8 @@
 # \section{To get started}{
 #   To get started, see:
 #   \enumerate{
-#     \item @see "readMat" and @see "writeMat" - For reading and writing MAT files (MATLAB is \emph{not} needed).
+#     \item @see "readMat" and @see "writeMat" - For reading and writing
+#           MAT files (MATLAB is \emph{not} needed).
 #     \item @see "Matlab" - To start MATLAB and communicate with it from \R.
 #   }
 # }
@@ -72,7 +73,7 @@
 #   see their help. For communication with a MATLAB server, use
 #   \preformatted{
 #    matlab <- Matlab()
-#    setVerbose(matlab, threshold=-2)
+#    setVerbose(matlab, threshold = -2)
 #   }
 #   The lower the threshold is the more information you will see.\cr
 #
@@ -96,8 +97,8 @@
 #   \emph{Solution:}
 #   Increase the total waiting time by setting the above options, e.g.
 #   \preformatted{
-#    setOption(matlab, "readResult/interval", 10); # Default is 1 second
-#    setOption(matlab, "readResult/maxTries", 30*(60/10)); # ~30 minutes
+#    setOption(matlab, "readResult/interval", 10)     # Default is 1 second
+#    setOption(matlab, "readResult/maxTries", 30 * (60 / 10)) # ~30 minutes
 #   }
 # }
 #

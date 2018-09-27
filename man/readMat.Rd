@@ -96,7 +96,7 @@
 
 \section{About MAT files saved in MATLAB using '-v7.3'}{
  MAT v7.3 files, saved using for instance \code{save('foo.mat', '-v7.3')},
- stores the data in the Hierarchical Data Format (HDF5) [6,7], which
+ stores the data in the Hierarchical Data Format (HDF5) [6, 7], which
  is a format not supported by this function/package.
  However, there exist other R packages that can parse HDF5, e.g.
  CRAN package \pkg{h5} and Bioconductor package \pkg{rhdf5}.
@@ -112,7 +112,7 @@
 }
 
 \examples{
-path <- system.file("mat-files", package="R.matlab")
+path <- system.file("mat-files", package = "R.matlab")
 pathname <- file.path(path, "ABC.mat")
 data <- readMat(pathname)
 print(data)

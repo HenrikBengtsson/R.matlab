@@ -8,21 +8,21 @@ message("Startup and shutdown code ...")
 
 pkgname <- "R.matlab"
 libname <- pkgname
-libpath <- dirname(system.file(package=pkgname))
+libpath <- dirname(system.file(package = pkgname))
 
 res <- tryCatch({
   .onUnload(libpath)
-}, error = function(ex) { ex })
+}, error = identity)
 print(res)
 
 res <- tryCatch({
   .onLoad(libname, pkgname)
-}, error = function(ex) { ex })
+}, error = identity)
 print(res)
 
 res <- tryCatch({
   .onAttach(libname, pkgname)
-}, error = function(ex) { ex })
+}, error = identity)
 print(res)
 
 message("Startup and shutdown code ... DONE")

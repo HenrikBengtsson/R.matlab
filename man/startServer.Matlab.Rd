@@ -34,7 +34,7 @@
  \item{matlab}{An optional \code{\link[base]{character}} string specifying the name of
    the matlab command, if different from \code{"matlab"}. An absolute
    path are possible.}
- \item{port}{An optional \code{\link[base]{integer}} in [1023,65535].
+ \item{port}{An optional \code{\link[base]{integer}} in [1023, 65535].
    If given, the environment variable \code{MATLABSERVER_PORT} is
    set specifying which port the MATLAB server should listen to for
    clients trying to connect.  The default port is 9999.}
@@ -61,7 +61,7 @@
   telling wether MATLAB was successfully started or not.
 
   To specify the full path to the matlab software set the \code{matlab}
-  option, e.g. \code{options(matlab="/opt/bin/matlab6.1")}. If no such
+  option, e.g. \code{options(matlab = "/opt/bin/matlab6.1")}. If no such
   option exists, the value \code{"matlab"} will be used.
 
   The MATLAB server relies on two files:

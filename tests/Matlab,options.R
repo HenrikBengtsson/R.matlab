@@ -24,4 +24,4 @@ value <- getOption(matlab, "readResult/maxTries")
 print(value)
 
 # Cleanup
-rm(list="matlab")
+rm(list = "matlab")
