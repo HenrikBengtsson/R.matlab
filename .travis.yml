@@ -20,18 +20,28 @@ matrix:
       r: oldrel
     - os: linux
       r: release
-      r_github_packages:
-      - jimhester/covr
-      after_success:
-      - Rscript -e 'covr::codecov(quiet=FALSE)'
-      env: NB='w/ covr' ## Just a label
     - os: linux
       r: devel
+      env:
+        - R_KEEP_PKG_SOURCE=yes
+        - _R_S3_METHOD_LOOKUP_BASEENV_AFTER_GLOBALENV_=true
+        - _R_S3_METHOD_LOOKUP_USE_TOPENV_AS_DEFENV_=true
+        - _R_CHECK_CONNECTIONS_LEFT_OPEN_=true
+        - _R_CHECK_LENGTH_1_CONDITION_=true
+        - _R_CHECK_LENGTH_1_LOGIC2_=true
+        - _R_CLASS_MATRIX_ARRAY_=true
     - os: osx
       r: oldrel
     - os: osx
       r: release
-
+    - os: linux
+      r: release
+      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
+      r_packages:
+        - covr
+      after_success:
+        - Rscript -e 'covr::codecov(quiet=FALSE)'
+      env: NB='w/ covr' ## Just a label
 
 notifications:
   email:
