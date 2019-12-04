@@ -28,7 +28,7 @@
     name of the M-file where the function is stored. If \code{\link[base]{NULL}},
     the name is extracted from the code.}
  \item{collapse}{The string that the code lines, if there are more than
-    one, is going to be concattenated with.}
+    one, is going to be concatenated with.}
  \item{...}{Not used.}
 }
 

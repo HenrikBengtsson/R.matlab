@@ -29,7 +29,7 @@
 #   We use the term \emph{server} to say that MATLAB acts like a server
 #   with regard to \R. Note that it a standard MATLAB session that runs.\cr
 #
-#   Also, the starting of the MatlabServer is simplier from MATLAB v7, 
+#   Also, the starting of the MatlabServer is simpler from MATLAB v7, 
 #   although it is pretty straightforward for MATLAB v6 too.
 #   It is easier in MATLAB v7 and above, because the Java class required
 #   for remote-data-transfer can be automatically/dynamically added to
@@ -40,7 +40,7 @@
 # \section{Remote and non-remote connections}{
 #   When a remote connection (argument \code{remote = TRUE}) is used, 
 #   data is send to and from MATLAB via a data stream. This is needed
-#   when \R is running on a host with a seperated file system than
+#   when \R is running on a host with a separated file system than
 #   the one MATLAB is running on.
 #
 #   If not connection "remotely" (\code{remote = FALSE}), data is
@@ -169,7 +169,7 @@
 #
 #   \preformatted{
 #    > library('R.matlab')
-#    ## Start two seperate MATLAB servers
+#    ## Start two separate MATLAB servers
 #    > Matlab$startServer(port = 9997)
 #    > Matlab$startServer(port = 9999)
 #
@@ -727,7 +727,7 @@ setMethodS3("readResult", "Matlab", function(this, ...) {
 #
 #   Note that this method will return immediately upon calling
 #   \code{system()} internally, i.e. you will not receive a return value
-#   telling wether MATLAB was successfully started or not.
+#   telling whether MATLAB was successfully started or not.
 #
 #   To specify the full path to the matlab software set the \code{matlab}
 #   option, e.g. \code{options(matlab = "/opt/bin/matlab6.1")}. If no such
@@ -1095,7 +1095,7 @@ setMethodS3("setVariable", "Matlab", function(this, ..., remote = this$remote) {
 #     name of the M-file where the function is stored. If @NULL, 
 #     the name is extracted from the code.}
 #  \item{collapse}{The string that the code lines, if there are more than
-#     one, is going to be concattenated with.}
+#     one, is going to be concatenated with.}
 #  \item{...}{Not used.}
 # }
 #

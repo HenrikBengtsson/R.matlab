@@ -46,7 +46,7 @@
   }
 
   Note that \code{...} must \emph{not} contain variables with names equal
-  to the arguments \code{matVersion} and \code{onWrite}, which were choosen
+  to the arguments \code{matVersion} and \code{onWrite}, which were chosen
   because we believe they are quite unique to this write method.
 }
 
@@ -75,7 +75,7 @@
 
   \emph{Note}, in order to provide the number of bytes before actually
   writing the data, a two-pass procedure has to be taken, where the
-  first pass is immitating a complete writing without writing anything
+  first pass is imitating a complete writing without writing anything
   to the connection but only counting the total number of bytes. Then
   in the second pass, after calling \code{onWrite()}, the data is written.
 }

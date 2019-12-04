@@ -77,7 +77,7 @@ $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCa
   We use the term \emph{server} to say that MATLAB acts like a server
   with regard to \R. Note that it a standard MATLAB session that runs.\cr
 
-  Also, the starting of the MatlabServer is simplier from MATLAB v7,
+  Also, the starting of the MatlabServer is simpler from MATLAB v7,
   although it is pretty straightforward for MATLAB v6 too.
   It is easier in MATLAB v7 and above, because the Java class required
   for remote-data-transfer can be automatically/dynamically added to
@@ -88,7 +88,7 @@ $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCa
 \section{Remote and non-remote connections}{
   When a remote connection (argument \code{remote = TRUE}) is used,
   data is send to and from MATLAB via a data stream. This is needed
-  when \R is running on a host with a seperated file system than
+  when \R is running on a host with a separated file system than
   the one MATLAB is running on.
 
   If not connection "remotely" (\code{remote = FALSE}), data is
@@ -236,7 +236,7 @@ Trying to open server socket (port 9999)...done.
 
   \preformatted{
    > library('R.matlab')
-   ## Start two seperate MATLAB servers
+   ## Start two separate MATLAB servers
    > Matlab$startServer(port = 9997)
    > Matlab$startServer(port = 9999)
 
