@@ -2278,7 +2278,9 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
     }
 
     if (header$version == "7.3") {
-      stop("Reading of MAT v7.3 files is not supported. If possible, save the data in MATLAB using 'save -V6'.")
+      stop(paste0("Reading of MAT v7.3 files is not supported. ", 
+                  "If possible, save the data in MATLAB using 'save -V6'.",
+                  "Alternatively, see ?readMat for HDF5 R readers.")
     }
 
     result <- list()
