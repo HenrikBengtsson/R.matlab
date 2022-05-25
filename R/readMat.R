@@ -1079,10 +1079,18 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
         data <- intToChar(data)
 
         # Make into a matrix
-        dim(data) <- c(header$mrows, header$ncols)
+        data <- as.matrix(data) 
+        if (length(data)>0){  #check to support instrument-created .mat files that don't adhere to file standards exactly
+          dim(data) <- c(header$mrows, header$ncols)
+          
+          # Turn text matrix intro strings (if at all)
+          data <- mat4TextMatrixToString(data)
+        }else{
+          data <- ""
+        }
+          
 
-        # Turn text matrix intro strings (if at all)
-        data <- mat4TextMatrixToString(data)
+    
       } else if (header$matrixType %in% c("numeric", "sparse")) {
         real <- readBinMat(con, what = header$what, size = header$size, signed = header$signed, n = n)
         if (header$imagf != 0L) {
@@ -1095,7 +1103,12 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
         }
 
         # Make into a matrix or an array
-        dim(data) <- c(header$mrows, header$ncols)
+        if (is.null(data)){ #check to support instrument-created .mat files that don't adhere to file standards exactly
+          data <- NA
+        }else{
+          dim(data) <- c(header$mrows, header$ncols)  
+        }
+        
 
         if (header$matrixType == "sparse") {
           # From help sparse in MATLAB:
