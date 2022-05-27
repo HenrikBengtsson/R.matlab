@@ -49,6 +49,9 @@ for (version in 4:5) {
   }
 }
 
+
+
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Assert that signed and unsigned integers are read correctly
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -221,3 +224,21 @@ stopifnot(
   inherits(res, "error"),
   grepl("MAT v7.3 files is not supported", conditionMessage(res))
 )
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Reading ADI LabChart export example file
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+pathname <- file.path(path, "ADI_LabChart_Export.mat")
+
+cat("Reading ADI Labchart file: ", basename(pathname), "\n", sep = "")
+tryCatch({
+  mat <- readMat(pathname)
+  print(mat)
+}, error = function(ex) {
+  print(ex)
+  message(pathname)
+})
+  
+
