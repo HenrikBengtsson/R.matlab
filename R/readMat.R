@@ -1080,15 +1080,15 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
 
         # Make into a matrix
         data <- as.matrix(data)
-        if (length(data) > 0) {
-          #check to support LabChart-created .mat files that don't adhere to file standards exactly
-          dim(data) <- c(header$mrows, header$ncols)
-          
-          # Turn text matrix intro strings (if at all)
-          data <- mat4TextMatrixToString(data)
-        } else {
-          data <- NA_character_
-        }
+
+        ## Special case: Empty MATLAB matrices are read as NULL, but
+        ## we want an empty vector of the intended data type
+        if (length(data) == 0) data <- header$what
+        
+        dim(data) <- c(header$mrows, header$ncols)
+        
+        # Turn text matrix intro strings (if at all)
+        data <- mat4TextMatrixToString(data)
           
 
     
@@ -1104,13 +1104,12 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
         }
 
         # Make into a matrix or an array
-        if (is.null(data)) {
-          #check to support LabChart-created .mat files that don't adhere to file standards exactly
-          data <- NA
-          storage.mode(data) <- storage.mode(header$what)
-        } else {
-          dim(data) <- c(header$mrows, header$ncols)
-        }
+        
+        ## Special case: Empty MATLAB matrices are read as NULL, but
+        ## we want an empty vector of the intended data type
+        if (is.null(data)) data <- header$what
+
+        dim(data) <- c(header$mrows, header$ncols)
         
 
         if (header$matrixType == "sparse") {
