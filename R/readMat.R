@@ -1079,14 +1079,15 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
         data <- intToChar(data)
 
         # Make into a matrix
-        data <- as.matrix(data) 
-        if (length(data)>0){  #check to support instrument-created .mat files that don't adhere to file standards exactly
+        data <- as.matrix(data)
+        if (length(data) > 0) {
+          #check to support LabChart-created .mat files that don't adhere to file standards exactly
           dim(data) <- c(header$mrows, header$ncols)
           
           # Turn text matrix intro strings (if at all)
           data <- mat4TextMatrixToString(data)
-        }else{
-          data <- ""
+        } else {
+          data <- NA_character_
         }
           
 
@@ -1103,10 +1104,12 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
         }
 
         # Make into a matrix or an array
-        if (is.null(data)){ #check to support instrument-created .mat files that don't adhere to file standards exactly
+        if (is.null(data)) {
+          #check to support LabChart-created .mat files that don't adhere to file standards exactly
           data <- NA
-        }else{
-          dim(data) <- c(header$mrows, header$ncols)  
+          storage.mode(data) <- storage.mode(header$what)
+        } else {
+          dim(data) <- c(header$mrows, header$ncols)
         }
         
 
