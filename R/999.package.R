@@ -57,7 +57,7 @@
 #   \url{http://www.omegahat.net/RMatlab/}.
 #   To call R from MATLAB on Windows (only), see \emph{MATLAB R-link}
 #   by Robert Henson available at the MATLAB Central File Exchange
-#   (\url{http://www.mathworks.com/matlabcentral/fileexchange/loadFile.do?objectId=5051}).
+#   (\url{https://www.mathworks.com/matlabcentral/fileexchange/5051-matlab-r-link}).
 # }
 #
 # \section{How to cite this package}{

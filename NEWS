@@ -1,9 +1,11 @@
 Package: R.matlab
 =================
 
-Version: 3.6.2-9001 [2022-07-23]
+Version: 3.6.2-9002 [2022-07-23]
 
- * ...
+DOCUMENTATION:
+
+ * Updated URLs that were redirected to a new location.
  
 
 Version: 3.6.2 [2018-09-26]

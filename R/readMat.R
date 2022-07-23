@@ -120,13 +120,13 @@
 #   [4] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version R2012a}, September 2012.\cr
 #   [5] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version R2015b}, September 2015.\cr
 #   [6] The MathWorks Inc., \emph{MATLAB - MAT-File Versions}, December 2015.
-#       \url{http://www.mathworks.com/help/matlab/import_export/mat-file-versions.html}\cr
+#       \url{https://www.mathworks.com/help/matlab/import_export/mat-file-versions.html}\cr
 #   [7] Undocumented Matlab, \emph{Improving save performance}, May 2013.
-#       \url{http://undocumentedmatlab.com/blog/improving-save-performance/}\cr
+#       \url{https://undocumentedmatlab.com/blog/improving-save-performance/}\cr
 #   [8] J. Gilbert et al., {Sparse Matrices in MATLAB: Design and Implementation}, SIAM J. Matrix Anal. Appl., 1992.
 #       \url{https://www.mathworks.com/help/pdf_doc/otherdocs/simax.pdf}\cr
 #   [9] J. Burkardt, \emph{HB Files: Harwell Boeing Sparse Matrix File Format}, Apr 2010.
-#       \url{http://people.sc.fsu.edu/~jburkardt/data/hb/hb.html}
+#       \url{https://people.sc.fsu.edu/~jburkardt/data/hb/hb.html}
 # }
 #
 # @keyword file

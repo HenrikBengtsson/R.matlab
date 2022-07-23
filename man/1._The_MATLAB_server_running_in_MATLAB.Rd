@@ -21,7 +21,7 @@
  Note that you "cannot prevent MATLAB from creating a window when
  starting on Windows systems, but you can force the window to be hidden,
  by using " the option -minimize.
- See \url{http://www.mathworks.com/support/solutions/data/1-16B8X.html}
+ See \url{https://www.mathworks.com/matlabcentral/answers/102082}
  for more information.
 }
 

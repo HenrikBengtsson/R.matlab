@@ -90,7 +90,7 @@
 #   [4] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version R2012a}, September 2012.\cr
 #   [5] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version R2015b}, September 2015.\cr
 #   [6] The MathWorks Inc., \emph{MATLAB - MAT-File Versions}, December 2015.
-#       \url{http://www.mathworks.com/help/matlab/import_export/mat-file-versions.html}\cr
+#       \url{https://www.mathworks.com/help/matlab/import_export/mat-file-versions.html}\cr
 # }
 #
 # \seealso{
