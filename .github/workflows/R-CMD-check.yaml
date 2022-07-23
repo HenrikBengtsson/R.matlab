@@ -76,7 +76,7 @@ jobs:
       - name: Check
         run: |
           rcmdcheck::rcmdcheck(
-            args = c("--no-manual", "--as-cran"),
+            args = "--as-cran",
             error_on = "note",
             check_dir = "check"
           )
