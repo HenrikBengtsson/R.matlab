@@ -50,12 +50,17 @@ jobs:
 
       - uses: r-lib/actions/setup-tinytex@v2
 
+      - name: Install system dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: |
+        sudo apt-get install -y tidy
+
       - uses: r-lib/actions/setup-r@v2
         with:
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
-          
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck
@@ -73,10 +78,21 @@ jobs:
           tryCatch(log("a"), error = conditionMessage)
         shell: Rscript {0}
 
-      - name: Check
+      - name: Check (!Windows)
+        if: runner.os != 'Windows'
         run: |
           rcmdcheck::rcmdcheck(
             args = "--as-cran",
+            error_on = "note",
+            check_dir = "check"
+          )
+        shell: Rscript {0}
+
+      - name: Check (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          rcmdcheck::rcmdcheck(
+            args = c("--no-manual", "--as-cran"),
             error_on = "note",
             check_dir = "check"
           )
