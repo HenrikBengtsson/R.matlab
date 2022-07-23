@@ -122,7 +122,7 @@
 #   [6] The MathWorks Inc., \emph{MATLAB - MAT-File Versions}, December 2015.
 #       \url{https://www.mathworks.com/help/matlab/import_export/mat-file-versions.html}\cr
 #   [7] Undocumented Matlab, \emph{Improving save performance}, May 2013.
-#       \url{https://undocumentedmatlab.com/blog/improving-save-performance/}\cr
+#       \url{https://undocumentedmatlab.com/articles/improving-save-performance/}\cr
 #   [8] J. Gilbert et al., {Sparse Matrices in MATLAB: Design and Implementation}, SIAM J. Matrix Anal. Appl., 1992.
 #       \url{https://www.mathworks.com/help/pdf_doc/otherdocs/simax.pdf}\cr
 #   [9] J. Burkardt, \emph{HB Files: Harwell Boeing Sparse Matrix File Format}, Apr 2010.
@@ -2278,7 +2278,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
     }
 
     if (header$version == "7.3") {
-      stop("Reading of MAT v7.3 files is not supported. If possible, save the data in MATLAB using 'save -V6'.")
+      stop("Reading of MAT v7.3 files, which use the Hierarchical Data Format (HDF5), is not supported. If possible, save the data in MATLAB using 'save -V6'.")
     }
 
     result <- list()

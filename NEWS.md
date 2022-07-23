@@ -1,5 +1,10 @@
 # Version (development version)
 
+## New Features
+
+ * The error message from attempting to read MAT v7.3 files no mentions
+   "Hierarchical Data Format (HDF5)".
+
 ## Documentation
 
  * Updated URLs that were redirected to a new location.
