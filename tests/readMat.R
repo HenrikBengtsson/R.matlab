@@ -219,5 +219,5 @@ res <- tryCatch({
 print(res)
 stopifnot(
   inherits(res, "error"),
-  grepl("MAT v7.3 files is not supported", conditionMessage(res))
+  grepl("MAT v7.3 files.*is not supported", conditionMessage(res))
 )
