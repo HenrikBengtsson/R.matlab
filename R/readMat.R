@@ -2278,7 +2278,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
     }
 
     if (header$version == "7.3") {
-      stop("Reading of MAT v7.3 files, which use the Hierarchical Data Format (HDF5), is not supported. If possible, save the data in MATLAB using 'save -V6'.")
+      stop("Reading of MAT v7.3 files, which use the Hierarchical Data Format (HDF5), is not supported. If possible, save the data in MATLAB using 'save -V6'. Alternatively, use HDF5 file readers available in other R packages.")
     }
 
     result <- list()
