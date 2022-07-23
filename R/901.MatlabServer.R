@@ -18,7 +18,7 @@
 # \section{MatlabServer.m script}{
 #  \preformatted{
 #   @include "../inst/externals/MatlabServer.m"
-#  }\emph{}
+#  }
 # }
 #
 # \section{InputStreamByteWrapper.(class|java) script}{
@@ -29,6 +29,6 @@
 #
 #  \preformatted{
 #   @include "../java/InputStreamByteWrapper.java"
-#  }\emph{}
+#  }
 # }
 #*/#########################################################################

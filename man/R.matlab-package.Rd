@@ -77,10 +77,8 @@
   Whenever using this package, please cite as\cr
 
   \preformatted{
-Henrik Bengtsson (2019). R.matlab: Read and Write MAT Files and Call MATLAB from
-Within R. R package version 3.6.2-9000. https://github.com/HenrikBengtsson/R.matlab
+
 }
-\emph{}
 
 }
 
