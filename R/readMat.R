@@ -1078,9 +1078,6 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
                                                      signed = header$signed, n = n)
         data <- intToChar(data)
 
-        # Make into a matrix
-    #    data <- as.matrix(data)
-
         ## Special case: Empty MATLAB matrices are read as NULL, but
         ## we want an empty vector of the intended data type
         if (length(data) == 0) data <- header$what
