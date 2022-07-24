@@ -1079,7 +1079,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
         data <- intToChar(data)
 
         # Make into a matrix
-        data <- as.matrix(data)
+    #    data <- as.matrix(data)
 
         ## Special case: Empty MATLAB matrices are read as NULL, but
         ## we want an empty vector of the intended data type
@@ -1089,9 +1089,6 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
         
         # Turn text matrix intro strings (if at all)
         data <- mat4TextMatrixToString(data)
-          
-
-    
       } else if (header$matrixType %in% c("numeric", "sparse")) {
         real <- readBinMat(con, what = header$what, size = header$size, signed = header$signed, n = n)
         if (header$imagf != 0L) {
