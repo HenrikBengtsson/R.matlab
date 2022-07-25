@@ -49,6 +49,9 @@ for (version in 4:5) {
   }
 }
 
+
+
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Assert that signed and unsigned integers are read correctly
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -220,4 +223,22 @@ print(res)
 stopifnot(
   inherits(res, "error"),
   grepl("MAT v7.3 files.*is not supported", conditionMessage(res))
+)
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Assert that we call read data fields with empty dimensions
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+pathname <- file.path(path, "ADI_LabChart_Export.mat")
+
+cat("Reading ADI Labchart file: ", basename(pathname), "\n", sep = "")
+
+mat <- readMat(pathname)
+str(mat)
+stopifnot(
+  length(mat) == 14,
+  identical(dim(mat$data), c(1L, 4360L)),
+  identical(mat$comtext, character(0)),
+  identical(dim(mat$com), c(0L, 5L))
 )

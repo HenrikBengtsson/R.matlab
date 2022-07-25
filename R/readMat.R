@@ -1078,9 +1078,12 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
                                                      signed = header$signed, n = n)
         data <- intToChar(data)
 
-        # Make into a matrix
+        ## Special case: Empty MATLAB matrices are read as NULL, but
+        ## we want an empty vector of the intended data type
+        if (length(data) == 0) data <- header$what
+        
         dim(data) <- c(header$mrows, header$ncols)
-
+        
         # Turn text matrix intro strings (if at all)
         data <- mat4TextMatrixToString(data)
       } else if (header$matrixType %in% c("numeric", "sparse")) {
@@ -1095,7 +1098,13 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
         }
 
         # Make into a matrix or an array
+        
+        ## Special case: Empty MATLAB matrices are read as NULL, but
+        ## we want an empty vector of the intended data type
+        if (is.null(data)) data <- header$what
+
         dim(data) <- c(header$mrows, header$ncols)
+        
 
         if (header$matrixType == "sparse") {
           # From help sparse in MATLAB:
