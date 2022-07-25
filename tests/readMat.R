@@ -227,18 +227,19 @@ stopifnot(
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Reading ADI LabChart export example file
+# Assert that we call read data fields with empty dimensions
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 pathname <- file.path(path, "ADI_LabChart_Export.mat")
 
 cat("Reading ADI Labchart file: ", basename(pathname), "\n", sep = "")
-tryCatch({
-  mat <- readMat(pathname)
-  print(mat)
-}, error = function(ex) {
-  print(ex)
-  message(pathname)
-})
-  
+
+mat <- readMat(pathname)
+str(mat)
+stopifnot(
+  length(mat) == 14,
+  identical(dim(mat$data), c(1L, 4360L)),
+  identical(mat$comtext, character(0)),
+  identical(dim(mat$com), c(0L, 5L))
+)
 
