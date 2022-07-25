@@ -1080,7 +1080,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
 
         ## Special case: Empty MATLAB matrices are read as NULL, but
         ## we want an empty vector of the intended data type
-        if (length(data) == 0) data <- header$what
+        if (is.null(data)) data <- header$what
         
         dim(data) <- c(header$mrows, header$ncols)
         
