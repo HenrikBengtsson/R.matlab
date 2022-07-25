@@ -4,10 +4,17 @@
 
  * The error message from attempting to read MAT v7.3 files no mentions
    "Hierarchical Data Format (HDF5)".
-
+   
 ## Documentation
 
  * Updated URLs that were redirected to a new location.
+
+## Bug Fixes
+
+ * `readMat()` read empty MATLAB matrices as NULL. Now it preserves
+    the original data type and dimension, e.g. `matrix(integer(), nrow
+    = 0, ncol = 5)`.  Thank you Gordon Turner for the troubleshooting,
+    the bug fix, and the package test solving this.
  
 
 # Version 3.6.2 [2018-09-26]
