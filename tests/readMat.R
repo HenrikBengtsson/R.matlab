@@ -242,4 +242,3 @@ stopifnot(
   identical(mat$comtext, character(0)),
   identical(dim(mat$com), c(0L, 5L))
 )
-
