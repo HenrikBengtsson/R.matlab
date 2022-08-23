@@ -2,8 +2,8 @@
 
 ## New Features
 
- * The error message from attempting to read MAT v7.3 files no mentions
-   "Hierarchical Data Format (HDF5)".
+ * The error message from attempting to read MAT v7.3 files now
+   mentions "Hierarchical Data Format (HDF5)".
    
 ## Documentation
 
