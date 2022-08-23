@@ -221,3 +221,12 @@ stopifnot(
   inherits(res, "error"),
   grepl("MAT v7.3 files is not supported", conditionMessage(res))
 )
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Assert that cell arrays preserve original dimensionality
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+res <- tryCatch({
+  readMat(file.path(path, "2by3cellarray.mat"))
+}, error = identity)
+print(res)
+stopifnot(dim(res$source.list) == c(3,2))
