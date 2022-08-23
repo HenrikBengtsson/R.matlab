@@ -67,7 +67,7 @@
   A related initiative is \emph{RMatlab} by Duncan Temple Lang
   and Omegahat.  It provides a bi-directional interface between the
   \R and MATLAB languages. For more details, see
-  \url{http://www.omegahat.net/RMatlab/}.
+  \url{https://www.omegahat.net/RMatlab/}.
   To call R from MATLAB on Windows (only), see \emph{MATLAB R-link}
   by Robert Henson available at the MATLAB Central File Exchange
   (\url{https://www.mathworks.com/matlabcentral/fileexchange/5051-matlab-r-link}).
