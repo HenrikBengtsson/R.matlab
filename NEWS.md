@@ -19,7 +19,9 @@
     the original data type and dimension, e.g. `matrix(integer(), nrow
     = 0, ncol = 5)`.  Thank you Gordon Turner for the troubleshooting,
     the bug fix, and the package test solving this.
- 
+
+ * `readMat()` lost the dimension for MATLAB cell arrays.
+
 
 # Version 3.6.2 [2018-09-26]
 
