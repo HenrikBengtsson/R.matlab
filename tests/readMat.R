@@ -246,8 +246,9 @@ stopifnot(
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Assert that cell arrays preserve original dimensionality
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-res <- tryCatch({
-  readMat(file.path(path, "2by3cellarray.mat"))
-}, error = identity)
-print(res)
-stopifnot(dim(res$source.list) == c(3,2))
+mat <- readMat(file.path(path, "2by3cellarray.mat"))
+str(mat)
+stopifnot(
+  length(mat) == 1,
+  identical(dim(mat$source.list), c(3L, 2L))
+)
