@@ -17,10 +17,12 @@
 
  * `readMat()` read empty MATLAB matrices as NULL. Now it preserves
     the original data type and dimension, e.g. `matrix(integer(), nrow
-    = 0, ncol = 5)`.  Thank you Gordon Turner for the troubleshooting,
+    = 0, ncol = 5)`.  Thanks to Gordon Turner for the troubleshooting,
     the bug fix, and the package test solving this.
 
- * `readMat()` lost the dimension for MATLAB cell arrays.
+ * `readMat()` lost the dimension for MATLAB cell arrays.  Thanks to
+   Brian James for the troubleshooting, the bug fix, and the package
+   test solving this.
 
 
 # Version 3.6.2 [2018-09-26]
