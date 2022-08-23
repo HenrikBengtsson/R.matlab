@@ -1859,6 +1859,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
       arrayFlags$signed <- tag$signed
 
       dimensionsArray <- mat5ReadDimensionsArray(this)
+      verbose && cat(verbose, level = -70, "DimensionsArray: ", dimensionsArray$dim)
       arrayName <- mat5ReadName(this)
       verbose && cat(verbose, "Array name: ", sQuote(arrayName$name))
 
@@ -1874,6 +1875,12 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
           if (tag$nbrOfBytes > 0L) {
             matrix[[kk]] <- mat5ReadMiMATRIX(this, tag)
           }
+        }
+
+        # Set the dimension of the cell array
+        ## FIXME: Issue #30 may apply here also? /Tofof 2022-06-21
+        if (prod(dimensionsArray$dim) > 0) {
+          matrix <- structure(matrix, dim = dimensionsArray$dim)
         }
 
         matrix <- list(matrix)

@@ -242,3 +242,12 @@ stopifnot(
   identical(mat$comtext, character(0)),
   identical(dim(mat$com), c(0L, 5L))
 )
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Assert that cell arrays preserve original dimensionality
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+res <- tryCatch({
+  readMat(file.path(path, "2by3cellarray.mat"))
+}, error = identity)
+print(res)
+stopifnot(dim(res$source.list) == c(3,2))
