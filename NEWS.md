@@ -9,6 +9,10 @@
 
  * Updated URLs that were redirected to a new location.
 
+## Miscellaneous
+
+ * Prepare `readMat()` for the upcoming Matrix (>= 1.4.2).
+
 ## Bug Fixes
 
  * `readMat()` read empty MATLAB matrices as NULL. Now it preserves

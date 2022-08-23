@@ -1151,7 +1151,10 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
             j <- j-1L
             dim <- as.integer(c(n, m))
             data <- new("dgTMatrix", i = i, j = j, x = s, Dim = dim)
-            data <- as(data, "dgCMatrix")
+            ## as(data, "dgCMatrix") is deprecated in Matrix (>= 1.4.2)
+            data <- as(data, "dMatrix")
+            data <- as(data, "generalMatrix")
+            data <- as(data, "CsparseMatrix")
           } else if (sparseMatrixClass == "SparseM" && .require("SparseM", quietly = TRUE)) {
             dim <- as.integer(c(n, m))
             data <- new("matrix.coo", ra = s, ia = i, ja = j, dimension = dim)
