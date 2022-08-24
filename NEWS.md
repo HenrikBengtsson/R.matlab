@@ -1,5 +1,11 @@
 # Version (development version)
 
+## Significant changes
+
+ * `readMat()` now preserves the dimension of cell arrays and empty
+   matrices produces by MATLAB.  See below Bug Fixes for details.
+ 
+
 ## New Features
 
  * The error message from attempting to read MAT v7.3 files now
