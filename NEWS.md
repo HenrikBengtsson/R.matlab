@@ -1,4 +1,4 @@
-# Version (development version)
+# Version 3.7.0 [2022-08-25]
 
 ## Significant changes
 
