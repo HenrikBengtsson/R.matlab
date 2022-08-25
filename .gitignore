@@ -2,6 +2,7 @@
 *~
 **/*~
 .R
+.Rdump
 .benchmark
 .check
 .devel
