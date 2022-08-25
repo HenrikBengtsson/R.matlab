@@ -58,7 +58,7 @@
 
   Note that this method will return immediately upon calling
   \code{system()} internally, i.e. you will not receive a return value
-  telling wether MATLAB was successfully started or not.
+  telling whether MATLAB was successfully started or not.
 
   To specify the full path to the matlab software set the \code{matlab}
   option, e.g. \code{options(matlab = "/opt/bin/matlab6.1")}. If no such

@@ -54,10 +54,10 @@
 #   A related initiative is \emph{RMatlab} by Duncan Temple Lang
 #   and Omegahat.  It provides a bi-directional interface between the
 #   \R and MATLAB languages. For more details, see
-#   \url{http://www.omegahat.net/RMatlab/}.
+#   \url{https://www.omegahat.net/RMatlab/}.
 #   To call R from MATLAB on Windows (only), see \emph{MATLAB R-link}
 #   by Robert Henson available at the MATLAB Central File Exchange
-#   (\url{http://www.mathworks.com/matlabcentral/fileexchange/loadFile.do?objectId=5051}).
+#   (\url{https://www.mathworks.com/matlabcentral/fileexchange/5051-matlab-r-link}).
 # }
 #
 # \section{How to cite this package}{
@@ -93,7 +93,7 @@
 #   i.e. it should wait until it receives something. For unknown reasons,
 #   this is not always happening. The workaround we have implemented is to
 #   try \code{readResult/maxTries} waiting \code{readResult/interval} seconds
-#   inbetween.\cr
+#   in-between.\cr
 #   \emph{Solution:}
 #   Increase the total waiting time by setting the above options, e.g.
 #   \preformatted{
@@ -135,7 +135,7 @@
 #  already implemented by downloading the latest "devel" version!
 # }
 #
-# \section{Acknowledgements}{
+# \section{Acknowledgments}{
 #   Thanks to the following people who contributed with valuable
 #   feedback, suggestions, code and more:
 #   \itemize{
@@ -157,7 +157,7 @@
 #   The releases of this package is licensed under
 #   LGPL version 2.1 or newer.
 #
-#   The development code of the packages is under a private licence
+#   The development code of the packages is under a private license
 #   (where applicable) and patches sent to the author fall under the
 #   latter license, but will be, if incorporated, released under the
 #   "release" license above.

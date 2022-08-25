@@ -120,13 +120,13 @@
 #   [4] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version R2012a}, September 2012.\cr
 #   [5] The MathWorks Inc., \emph{MATLAB - MAT-File Format, version R2015b}, September 2015.\cr
 #   [6] The MathWorks Inc., \emph{MATLAB - MAT-File Versions}, December 2015.
-#       \url{http://www.mathworks.com/help/matlab/import_export/mat-file-versions.html}\cr
+#       \url{https://www.mathworks.com/help/matlab/import_export/mat-file-versions.html}\cr
 #   [7] Undocumented Matlab, \emph{Improving save performance}, May 2013.
-#       \url{http://undocumentedmatlab.com/blog/improving-save-performance/}\cr
+#       \url{https://undocumentedmatlab.com/articles/improving-save-performance/}\cr
 #   [8] J. Gilbert et al., {Sparse Matrices in MATLAB: Design and Implementation}, SIAM J. Matrix Anal. Appl., 1992.
 #       \url{https://www.mathworks.com/help/pdf_doc/otherdocs/simax.pdf}\cr
 #   [9] J. Burkardt, \emph{HB Files: Harwell Boeing Sparse Matrix File Format}, Apr 2010.
-#       \url{http://people.sc.fsu.edu/~jburkardt/data/hb/hb.html}
+#       \url{https://people.sc.fsu.edu/~jburkardt/data/hb/hb.html}
 # }
 #
 # @keyword file
@@ -1078,9 +1078,12 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
                                                      signed = header$signed, n = n)
         data <- intToChar(data)
 
-        # Make into a matrix
+        ## Special case: Empty MATLAB matrices are read as NULL, but
+        ## we want an empty vector of the intended data type
+        if (is.null(data)) data <- header$what
+        
         dim(data) <- c(header$mrows, header$ncols)
-
+        
         # Turn text matrix intro strings (if at all)
         data <- mat4TextMatrixToString(data)
       } else if (header$matrixType %in% c("numeric", "sparse")) {
@@ -1095,7 +1098,13 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
         }
 
         # Make into a matrix or an array
+        
+        ## Special case: Empty MATLAB matrices are read as NULL, but
+        ## we want an empty vector of the intended data type
+        if (is.null(data)) data <- header$what
+
         dim(data) <- c(header$mrows, header$ncols)
+        
 
         if (header$matrixType == "sparse") {
           # From help sparse in MATLAB:
@@ -1142,7 +1151,10 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
             j <- j-1L
             dim <- as.integer(c(n, m))
             data <- new("dgTMatrix", i = i, j = j, x = s, Dim = dim)
-            data <- as(data, "dgCMatrix")
+            ## as(data, "dgCMatrix") is deprecated in Matrix (>= 1.4.2)
+            data <- as(data, "dMatrix")
+            data <- as(data, "generalMatrix")
+            data <- as(data, "CsparseMatrix")
           } else if (sparseMatrixClass == "SparseM" && .require("SparseM", quietly = TRUE)) {
             dim <- as.integer(c(n, m))
             data <- new("matrix.coo", ra = s, ia = i, ja = j, dimension = dim)
@@ -1847,6 +1859,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
       arrayFlags$signed <- tag$signed
 
       dimensionsArray <- mat5ReadDimensionsArray(this)
+      verbose && cat(verbose, level = -70, "DimensionsArray: ", dimensionsArray$dim)
       arrayName <- mat5ReadName(this)
       verbose && cat(verbose, "Array name: ", sQuote(arrayName$name))
 
@@ -1862,6 +1875,12 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
           if (tag$nbrOfBytes > 0L) {
             matrix[[kk]] <- mat5ReadMiMATRIX(this, tag)
           }
+        }
+
+        # Set the dimension of the cell array
+        ## FIXME: Issue #30 may apply here also? /Tofof 2022-06-21
+        if (prod(dimensionsArray$dim) > 0) {
+          matrix <- structure(matrix, dim = dimensionsArray$dim)
         }
 
         matrix <- list(matrix)
@@ -2278,7 +2297,7 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
     }
 
     if (header$version == "7.3") {
-      stop("Reading of MAT v7.3 files is not supported. If possible, save the data in MATLAB using 'save -V6'.")
+      stop("Reading of MAT v7.3 files, which use the Hierarchical Data Format (HDF5), is not supported. If possible, save the data in MATLAB using 'save -V6'. Alternatively, use HDF5 file readers available in other R packages.")
     }
 
     result <- list()
