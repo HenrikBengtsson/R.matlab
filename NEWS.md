@@ -1,6 +1,8 @@
 # Version (development version)
 
- * ...
+## Documentation
+
+ * Fix Rd mistake.
 
 
 # Version 3.7.0 [2022-08-25]

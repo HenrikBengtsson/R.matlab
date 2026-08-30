@@ -318,7 +318,7 @@ setMethodS3("getOption", "Matlab", function(this, ...) {
 # }
 #
 # \section{Available options}{
-#  \itemize{
+#  \describe{
 #   \item{readResult/maxTries}{The maximum number of times the connection
 #      is check for an answer from the MATLAB server before giving up.
 #      Default values is 30 times.}
