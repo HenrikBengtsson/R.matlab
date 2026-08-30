@@ -2,6 +2,8 @@
 
 ## Documentation
 
+ * Drop no-longer existing reference to legacy 'RMatlab' package.
+
  * Fix Rd mistake.
 
 
