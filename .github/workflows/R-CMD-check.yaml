@@ -1,16 +1,16 @@
 on: [push, pull_request]
-
+  
 name: R-CMD-check
 
 jobs:
   R-CMD-check:
     if: "! contains(github.event.head_commit.message, '[ci skip]')"    
 
-    timeout-minutes: 30
+    timeout-minutes: 120
 
     runs-on: ${{ matrix.config.os }}
 
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }}) ${{ matrix.config.label }}
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
 
     strategy:
       fail-fast: false
@@ -21,48 +21,51 @@ jobs:
           - {os: windows-latest, r: 'oldrel'   }
           - {os: macOS-latest,   r: 'devel'    }
           - {os: macOS-latest,   r: 'release'  }
-          - {os: macOS-latest,   r: 'oldrel'   }
-          - {os: ubuntu-20.04,   r: 'devel'    }
-          - {os: ubuntu-20.04,   r: 'release'  }
-          - {os: ubuntu-20.04,   r: 'oldrel'   }
-          - {os: ubuntu-20.04,   r: 'oldrel-1' }
-          - {os: ubuntu-20.04,   r: '3.4'      }
-          - {os: ubuntu-20.04,   r: 'release'  , language: ko,    label: ko    }
-#          - {os: ubuntu-20.04,   r: 'release'  , language: zh_CN, label: zh_CN }
-#          - {os: ubuntu-20.04,   r: 'release'  , language: zh_TW, label: zh_TW }
+          - {os: ubuntu-latest,  r: 'devel'    }
+          - {os: ubuntu-latest,  r: 'release'  }
+          - {os: ubuntu-latest,  r: 'oldrel'   }
+          - {os: ubuntu-latest,  r: '4.4'      }
+ 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
-      ## Test in other locale (optional)
-      LANGUAGE: ${{ matrix.config.language }}
+      ## R (>= 4.4.0) Note, no trailing underscore (sic!)
+      _R_COMPARE_LANG_OBJECTS: eqonly
       ## R CMD check
       _R_CHECK_CRAN_INCOMING_: false
-      _R_CHECK_LENGTH_1_CONDITION_: true
-      _R_CHECK_LENGTH_1_LOGIC2_: true
       _R_CHECK_MATRIX_DATA_: true
-      _R_CHECK_SUGGESTS_ONLY_: true
-      
+      _R_CHECK_THINGS_IN_TEMP_DIR_: true
+      _R_CHECK_TESTS_NLINES_: 300
+      _R_CHECK_TESTS_ELAPSED_THRESHOLD_: 0
+      RCMDCHECK_ERROR_ON: note
+      NOT_CRAN: true
+      ## Specific to futures
+#      R_FUTURE_CONNECTIONS_ONMISUSE: "error[details=TRUE]"
+      R_FUTURE_GLOBALENV_ONMISUSE: "error"
+      R_FUTURE_GLOBALS_ONREFERENCE: "warning"
+      R_FUTURE_RNG_ONMISUSE: error
+      R_FUTURE_FUTURE_EARLYSIGNAL: defunct
+      R_FUTURE_FUTURE_LOCAL: defunct
+      R_FUTURE_FUTURE_GC: defunct
+      R_FUTURE_PLAN_EARLYSIGNAL: defunct
+      R_FUTURE_RESOLVED_RUN: defunct
+
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: r-lib/actions/setup-pandoc@v2
-
-      - uses: r-lib/actions/setup-tinytex@v2
-
-      - name: Install system dependencies (Linux)
-        if: runner.os == 'Linux'
-        run: sudo apt-get install -y tidy
 
       - uses: r-lib/actions/setup-r@v2
         with:
           r-version: ${{ matrix.config.r }}
-          http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
-
+          
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck, any::V8
+          extra-packages: |
+            any::rcmdcheck
+            any::remotes
           needs: check
 
       - name: Session info
@@ -77,29 +80,27 @@ jobs:
           tryCatch(log("a"), error = conditionMessage)
         shell: Rscript {0}
 
-      - name: Check (!Windows)
+      - name: Check
         if: runner.os != 'Windows'
         run: |
           rcmdcheck::rcmdcheck(
-            args = "--as-cran",
-            error_on = "note",
+            args = c("--no-manual", "--as-cran"),
             check_dir = "check"
           )
         shell: Rscript {0}
-
+ 
       - name: Check (Windows)
         if: runner.os == 'Windows'
         run: |
           rcmdcheck::rcmdcheck(
-            args = c("--no-manual", "--as-cran"),
-            error_on = "note",
+            args = c("--no-manual", "--as-cran", if (getRversion() >= "4.2.0") "--no-multiarch"),
             check_dir = "check"
           )
         shell: Rscript {0}
 
       - name: Upload check results
         if: failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ runner.os }}-r${{ matrix.config.r }}-results
           path: check
