@@ -1,5 +1,12 @@
 # Version (development version)
 
+## Bug Fixes
+
+ * `readMat()` read UTF-8, UTF-16, and UTF-32 character data as
+   _signed_ integers, which could result in warnings on "out-of-range
+   values treated as 0 in coercion to raw" and invalid non-ASCII
+   characters.
+
 ## Documentation
 
  * Drop no-longer existing reference to legacy 'RMatlab' package.

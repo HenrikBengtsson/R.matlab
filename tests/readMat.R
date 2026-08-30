@@ -252,3 +252,25 @@ stopifnot(
   length(mat) == 1,
   identical(dim(mat$source.list), c(3L, 2L))
 )
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Assert that UTF-8 character data with 8-bit code units (values
+# 128-255) is read without warnings and without being zeroed out.
+# https://github.com/HenrikBengtsson/R.matlab/issues/ (signed vs
+# unsigned read of miUTF8/miUTF16/miUTF32).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pathname <- file.path(path, "CharUTF8-8bit.mat")
+warns <- NULL
+mat <- withCallingHandlers(
+  readMat(pathname),
+  warning = function(w) {
+    warns <<- c(warns, conditionMessage(w))
+    invokeRestart("muffleWarning")
+  }
+)
+str(mat)
+bytes <- as.integer(charToRaw(mat$x))
+stopifnot(
+  length(warns) == 0L,
+  identical(bytes, c(99L, 97L, 102L, 233L, 128L, 255L))
+)

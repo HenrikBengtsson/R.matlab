@@ -1331,6 +1331,8 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
     names(SIGNED_KNOWN_TYPES) <- NAMES_OF_KNOWN_TYPES
     SIGNED_KNOWN_TYPES[grep("miINT", NAMES_OF_KNOWN_TYPES)] <- TRUE
     SIGNED_KNOWN_TYPES[grep("miUINT", NAMES_OF_KNOWN_TYPES)] <- FALSE
+    # UTF-8/16/32 code units are unsigned
+    SIGNED_KNOWN_TYPES[grep("miUTF", NAMES_OF_KNOWN_TYPES)] <- FALSE
 
     KNOWN_WHATS <- list(
       "miMATRIX" = double(),
