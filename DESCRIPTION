@@ -1,5 +1,5 @@
 Package: R.matlab
-Version: 3.7.0-9003
+Version: 3.7.0-9004
 Depends:
   R (>= 2.14.0)
 Imports:
@@ -24,7 +24,8 @@ Author: Henrik Bengtsson [aut, cre, cph] (<https://orcid.org/0000-0002-7579-5165
 Maintainer: Henrik Bengtsson <henrikb@braju.com>
 Description: Methods readMat() and writeMat() for reading and writing MAT files.  For user with MATLAB v6 or newer installed (either locally or on a remote host), the package also provides methods for controlling MATLAB (trademark) via R and sending and retrieving data between R and MATLAB.
 License: LGPL (>= 2.1)
-LazyLoad: TRUE
-ByteCompile: TRUE
 URL: https://github.com/HenrikBengtsson/R.matlab
 BugReports: https://github.com/HenrikBengtsson/R.matlab/issues
+Language: en-US
+Encoding: UTF-8
+LazyLoad: TRUE
