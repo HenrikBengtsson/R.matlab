@@ -12,6 +12,13 @@
    code point above 255 with warnings on "out-of-range values
    treated as 0 in coercion to raw".
 
+ * `readMat()` decoded `miUTF8` character arrays one byte at a time,
+   which corrupted multi-byte characters and, when the number of bytes
+   differed from the number of characters, failed with "dims [product
+   ...] do not match the length of object ...".  Such arrays are now
+   decoded as a byte stream.  This case occurs with MAT files written
+   by, for instance, SciPy and recent versions of MATLAB.
+
 ## Documentation
 
  * Drop no-longer existing reference to legacy 'RMatlab' package.

@@ -378,28 +378,22 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
 
   ## convert* are internal helper functions.  They handle type dispatch
   ## and defaults for charset conversions.
+
+  ## 'ary' holds UTF-8 code *units* (bytes); a multi-byte character
+  ## spans several of them, so 'ary' must be the whole byte stream, not
+  ## a single element.  Out-of-range values (should not happen once the
+  ## data is read unsigned) are dropped rather than coerced to 0, which
+  ## also warned "out-of-range values treated as 0 in coercion to raw".
   convertUTF8 <- function(ary) {
     if (length(ary) > 0L) {
-      ary <- as.raw(ary)
-      ary <- rawToChar(ary)
+      ary <- ary[!is.na(ary) & ary >= 0L & ary <= 255L]
+      ary <- rawToChar(as.raw(ary))
     } else {
       ary <- ""
     }
     Encoding(ary) <- "UTF-8"
     ary
   }
-##   Was:
-##   convertUTF8 <- function(ary) {
-##     if (length(ary) > 0L) {
-##       ary <- as.integer(ary)
-##       ary <- intToChar(ary)
-##       ary <- paste(ary, collapse = "")
-##     } else {
-##       ary <- ""
-##     }
-##     Encoding(ary) <- "UTF-8"
-##     ary
-##   }
 
   convertASCII <- function(ary) {
     ## WAS: The below would also drop newlines etc. /HB 2014-04-29
@@ -2198,11 +2192,33 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
           dim(matrix) <- dimensionsArray$dim
         } else if (arrayFlags$class == "mxCHAR_CLASS") {
           verbose && cat(verbose, level = -5, "Encoding type: ", data$tag$type)
-          matrix <- matToCharArray(matrix, data$tag$type)
           dim <- dimensionsArray$dim
+          if (identical(data$tag$type, "miUTF8")) {
+            # miUTF8 data is a stream of UTF-8 code *units* (bytes); a
+            # multi-byte character occupies several of them, so decode
+            # the whole stream and split it into one element per
+            # character to match 'dim'. /HB 2026-08-30
+            str <- convertUTF8(matrix)
+            n <- tryCatch(nchar(str), error = function(e) NA_integer_)
+            if (is.na(n)) {
+              # Malformed UTF-8; keep the decoded bytes as one string.
+              matrix <- str
+            } else {
+              matrix <- substring(str, seq_len(n), seq_len(n))
+            }
+          } else {
+            matrix <- matToCharArray(matrix, data$tag$type)
+          }
           # AD HOC/special/illegal case?  /HB 2010-09-18
           if (length(matrix) == 0L && prod(dim) > 0) {
             matrix <- ""
+          }
+          # If the character count does not match the declared
+          # dimensions (e.g. malformed multi-byte data), fall back to a
+          # single pasted string rather than error in dim<-().
+          if (length(matrix) != prod(dim)) {
+            matrix <- paste(matrix, collapse = "")
+            dim <- c(1L, 1L)
           }
           dim(matrix) <- dim
           matrix <- apply(matrix, MARGIN = 1L, FUN = paste, collapse = "")

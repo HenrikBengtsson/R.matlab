@@ -254,12 +254,12 @@ stopifnot(
 )
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Assert that UTF-8 character data with 8-bit code units (values
-# 128-255) is read without warnings and without being zeroed out.
-# https://github.com/HenrikBengtsson/R.matlab/issues/ (signed vs
-# unsigned read of miUTF8/miUTF16/miUTF32).
+# Assert that a character array stored as a multi-byte UTF-8 stream
+# (miUTF8, where the number of bytes differs from the number of
+# characters given by the array dimensions) is read without warnings
+# and decoded into the correct string.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pathname <- file.path(path, "CharUTF8-8bit.mat")
+pathname <- file.path(path, "CharUTF8-multibyte.mat")
 warns <- NULL
 mat <- withCallingHandlers(
   readMat(pathname),
@@ -269,10 +269,13 @@ mat <- withCallingHandlers(
   }
 )
 str(mat)
-bytes <- as.integer(charToRaw(mat$x))
+mystr <- mat$x[1, 1]
+## "cafe" with an acute e, a space and U+263A - 6 characters, 9 bytes
 stopifnot(
   length(warns) == 0L,
-  identical(bytes, c(99L, 97L, 102L, 233L, 128L, 255L))
+  identical(Encoding(mystr), "UTF-8"),
+  nchar(mystr) == 6L,
+  identical(utf8ToInt(mystr), c(99L, 97L, 102L, 0xE9L, 32L, 0x263AL))
 )
 
 
