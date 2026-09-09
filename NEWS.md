@@ -7,6 +7,11 @@
    values treated as 0 in coercion to raw" and invalid non-ASCII
    characters.
 
+ * `readMat()` ignored the character encoding of a MAT v5 character
+   array, treating every array as 8-bit text and therefore dropping any
+   code point above 255 with warnings on "out-of-range values
+   treated as 0 in coercion to raw".
+
 ## Documentation
 
  * Drop no-longer existing reference to legacy 'RMatlab' package.

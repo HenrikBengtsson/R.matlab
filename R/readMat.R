@@ -68,10 +68,9 @@
 #
 # \section{Unicode strings}{
 #  Recent versions of MATLAB store some strings using Unicode
-#  encodings.  If the R installation supports \code{\link{iconv}},
-#  these strings will be read correctly.  Otherwise non-ASCII codes
-#  are converted to NA.  Saving to an earlier file format version
-#  may avoid this problem as well.
+#  encodings (\code{miUTF8}, \code{miUTF16}, \code{miUTF32}), which are
+#  read as UTF-8.  UTF-16 surrogate pairs (Unicode code points above
+#  \code{0xFFFF}) are not reassembled.
 # }
 #
 # \section{Reading compressed MAT files}{
@@ -429,34 +428,21 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
     convertUTF8(ary)
   } # convertASCII()
 
-  ## By default, just pick out the ASCII range, ...
-  convertUTF16 <- convertUTF32 <- convertASCII
-
-  ## However, if there's support for more on the current system,
-  ## use that instead.
-  if (capabilities("iconv")) {
-    utfs <- grep("UTF", iconvlist(), value = TRUE)
-    ## The convertUTF{16, 32} routines below work in big-endian, so
-    ## look for UTF-16BE or UTF16BE, etc..
-    utf16 <- head(grep("UTF-?16BE", utfs, value = TRUE), n = 1L)
-    if (length(utf16) > 0L) {
-      convertUTF16 <- function(ary) {
-        ary16 <- paste(intToChar(c(sapply(ary, FUN = function(x) {
-          c(x%/%256, x%%256)
-        }))), collapse = "")
-        iconv(ary16, from = utf16, to = "UTF-8")
-      }
-    }
-    utf32 <- head(grep("UTF-?32BE", utfs, value = TRUE), n = 1L)
-    if (length(utf32) > 0L) {
-      convertUTF32 <- function(ary) {
-        ary32 <- paste(intToChar(c(sapply(ary, FUN = function(x) {
-          c((x%/%16777216)%%256, (x%/%65536)%%256, (x%/%256)%%256, x%%256)
-        }))), collapse = "")
-        iconv(ary32, from = utf32, to = "UTF-8")
-      }
-    }
-  } # if (capabilities("iconv"))
+  ## miUTF16 and miUTF32 hold Unicode code points (for UTF-16 a code
+  ## unit equals the code point within the Basic Multilingual Plane;
+  ## surrogate pairs, i.e. code points > 0xFFFF, are not reassembled).
+  ## base::intToUtf8() turns them into a UTF-8-encoded string.
+  ##
+  ## WAS: The previous implementation replaced non-ASCII code points by
+  ## NA (convertASCII) or, on iconv-capable systems, went via
+  ## intToChar() - which maps code unit 0 to "" and therefore dropped
+  ## the high byte of every character in the range 1-255. /HB 2026-08-30
+  convertUTF16 <- convertUTF32 <- function(ary) {
+    if (length(ary) == 0L) return("")
+    ary <- as.integer(ary)
+    ary[is.na(ary) | ary < 0L] <- 0L
+    intToUtf8(ary)
+  }
 
   charConverter <- function(type) {
     switch(type,
@@ -467,10 +453,8 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
   }
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Function to convert an array of numbers to a UTF-8 string.  If the
-  # type is miUTF16 or miUTF32, iconv-supporting implementations will
-  # convert the charset correctly.  Otherwise non-ASCII characters are
-  # replaced by NA.
+  # Function to convert an array of numbers to a UTF-8 string, using the
+  # encoding-specific converter picked by charConverter(type).
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   matToString <- function(ary, type) {
     do.call(charConverter(type), list(ary))
@@ -478,9 +462,8 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Function to convert an array of numbers to an array of UTF-8
-  # characters.  If the type is miUTF16 or miUTF32, iconv-supporting
-  # implementations will convert the charset correctly.  Otherwise
-  # non-ASCII characters are replaced by NA.
+  # characters, one element at a time, using the encoding-specific
+  # converter picked by charConverter(type).
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # sapply(X, ...) function that treats length(X) == 0 specially
   sapply0 <- function(X, FUN, ...) {
@@ -2214,8 +2197,8 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
           matrix <- as.integer(matrix)
           dim(matrix) <- dimensionsArray$dim
         } else if (arrayFlags$class == "mxCHAR_CLASS") {
-          verbose && cat(verbose, level = -5, "Encoding type: ", tag$type)
-          matrix <- matToCharArray(matrix, tag$type)
+          verbose && cat(verbose, level = -5, "Encoding type: ", data$tag$type)
+          matrix <- matToCharArray(matrix, data$tag$type)
           dim <- dimensionsArray$dim
           # AD HOC/special/illegal case?  /HB 2010-09-18
           if (length(matrix) == 0L && prod(dim) > 0) {

@@ -274,3 +274,29 @@ stopifnot(
   length(warns) == 0L,
   identical(bytes, c(99L, 97L, 102L, 233L, 128L, 255L))
 )
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Assert that a MATLAB character array stored as UTF-16 (miUTF16) and
+# containing a code point > 255 is read without the warning
+# "out-of-range values treated as 0 in coercion to raw" and with the
+# character preserved rather than dropped. https://github.com/
+# HenrikBengtsson/R.matlab/issues/58
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pathname <- file.path(path, "CharUTF16-wide.mat")
+warns <- NULL
+mat <- withCallingHandlers(
+  readMat(pathname),
+  warning = function(w) {
+    warns <<- c(warns, conditionMessage(w))
+    invokeRestart("muffleWarning")
+  }
+)
+str(mat)
+mystr <- mat$x[1, 1]
+stopifnot(
+  length(warns) == 0L,
+  identical(Encoding(mystr), "UTF-8"),
+  identical(utf8ToInt(mystr),
+            c(utf8ToInt("Erythrops go"), 0xFFFDL, utf8ToInt("si")))
+)
