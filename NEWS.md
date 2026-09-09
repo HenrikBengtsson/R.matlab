@@ -1,3 +1,42 @@
+# Version 3.8.0 [2026-09-09]
+
+## Bug Fixes
+
+ * `setFunction()` produced an error "The code does not contain a
+   proper MATLAB function definition" for MATLAB functions that had
+   whitespace between the `=` and the function name, e.g. `function
+   [a, b] = foo(x)` failed but `function [a, b] =foo(x)`
+   worked. Thanks to Eoghan O'Neill for troubleshooting and reporting
+   on this.
+
+ * `readMat()` read UTF-8, UTF-16, and UTF-32 character data as
+   _signed_ integers, which could result in warnings on "out-of-range
+   values treated as 0 in coercion to raw" and invalid non-ASCII
+   characters.
+
+ * `readMat()` ignored the character encoding of a MAT v5 character
+   array, treating every array as 8-bit text and therefore dropping any
+   code point above 255 with warnings on "out-of-range values
+   treated as 0 in coercion to raw".
+
+ * `readMat()` decoded `miUTF8` character arrays one byte at a time,
+   which corrupted multi-byte characters and, when the number of bytes
+   differed from the number of characters, failed with "dims [product
+   ...] do not match the length of object ...". Thanks to Mats
+   Blomqvist for reporting on these bugs.
+
+ * `readMat()` only recognized the `miUTF16` and `miUTF32` data types
+   as Unicode text. Character arrays stored using a plain integer type
+   (`miUINT16`, `miINT16`, `miUINT32`, `miINT32`) were only treated
+   as 8-bit text.
+
+## Documentation
+
+ * Drop an obsolete reference to the legacy 'RMatlab' package.
+
+ * Fix Rd mistake.
+
+
 # Version 3.7.0 [2022-08-25]
 
 ## Significant changes

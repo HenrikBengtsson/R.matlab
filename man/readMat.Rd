@@ -80,10 +80,9 @@
 
 \section{Unicode strings}{
  Recent versions of MATLAB store some strings using Unicode
- encodings.  If the R installation supports \code{\link{iconv}},
- these strings will be read correctly.  Otherwise non-ASCII codes
- are converted to NA.  Saving to an earlier file format version
- may avoid this problem as well.
+ encodings (\code{miUTF8}, \code{miUTF16}, \code{miUTF32}), which are
+ read as UTF-8.  UTF-16 surrogate pairs (Unicode code points above
+ \code{0xFFFF}) are not reassembled.
 }
 
 \section{Reading compressed MAT files}{

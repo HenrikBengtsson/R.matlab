@@ -252,3 +252,79 @@ stopifnot(
   length(mat) == 1,
   identical(dim(mat$source.list), c(3L, 2L))
 )
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Assert that a character array stored as a multi-byte UTF-8 stream
+# (miUTF8, where the number of bytes differs from the number of
+# characters given by the array dimensions) is read without warnings
+# and decoded into the correct string.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pathname <- file.path(path, "CharUTF8-multibyte.mat")
+warns <- NULL
+mat <- withCallingHandlers(
+  readMat(pathname),
+  warning = function(w) {
+    warns <<- c(warns, conditionMessage(w))
+    invokeRestart("muffleWarning")
+  }
+)
+str(mat)
+mystr <- mat$x[1, 1]
+## "cafe" with an acute e, a space and U+263A - 6 characters, 9 bytes
+stopifnot(
+  length(warns) == 0L,
+  identical(Encoding(mystr), "UTF-8"),
+  nchar(mystr) == 6L,
+  identical(utf8ToInt(mystr), c(99L, 97L, 102L, 0xE9L, 32L, 0x263AL))
+)
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Assert that a MATLAB character array stored as UTF-16 (miUTF16) and
+# containing a code point > 255 is read without the warning
+# "out-of-range values treated as 0 in coercion to raw" and with the
+# character preserved rather than dropped. https://github.com/
+# HenrikBengtsson/R.matlab/issues/58
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pathname <- file.path(path, "CharUTF16-wide.mat")
+warns <- NULL
+mat <- withCallingHandlers(
+  readMat(pathname),
+  warning = function(w) {
+    warns <<- c(warns, conditionMessage(w))
+    invokeRestart("muffleWarning")
+  }
+)
+str(mat)
+mystr <- mat$x[1, 1]
+stopifnot(
+  length(warns) == 0L,
+  identical(Encoding(mystr), "UTF-8"),
+  identical(utf8ToInt(mystr),
+            c(utf8ToInt("Erythrops go"), 0xFFFDL, utf8ToInt("si")))
+)
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Assert that a MATLAB character array stored using a plain integer
+# data type (miUINT16) rather than miUTF16 is still decoded as UTF-16,
+# so that code points above 255 are preserved and not dropped.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pathname <- file.path(path, "CharUINT16-wide.mat")
+warns <- NULL
+mat <- withCallingHandlers(
+  readMat(pathname),
+  warning = function(w) {
+    warns <<- c(warns, conditionMessage(w))
+    invokeRestart("muffleWarning")
+  }
+)
+str(mat)
+mystr <- mat$x[1, 1]
+## "A", en-dash (U+2013), "B", left double quote (U+201C), "e", e-acute
+stopifnot(
+  length(warns) == 0L,
+  identical(Encoding(mystr), "UTF-8"),
+  identical(utf8ToInt(mystr),
+            c(65L, 0x2013L, 66L, 0x201CL, 101L, 0xE9L))
+)

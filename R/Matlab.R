@@ -318,7 +318,7 @@ setMethodS3("getOption", "Matlab", function(this, ...) {
 # }
 #
 # \section{Available options}{
-#  \itemize{
+#  \describe{
 #   \item{readResult/maxTries}{The maximum number of times the connection
 #      is check for an answer from the MATLAB server before giving up.
 #      Default values is 30 times.}
@@ -1119,19 +1119,17 @@ setMethodS3("setFunction", "Matlab", function(this, code, name = NULL,
   printf(this$.verbose, level = -1, "Building MATLAB source code for the function to be passed to the MATLAB server...\n")
   code <- paste(code, collapse = collapse)
 
-  pos <- regexpr("^[ \t\n\r\v]*function[^=]*=[^ \t\n\r\v(]", code)
-  if (pos == -1) {
+  parsedName <- parseMatlabFunctionName(code)
+  error <- attr(parsedName, "error")
+  if (identical(error, "missing-definition")) {
     throw("The code does not contain a proper MATLAB function definition: ", substring(code, 1, 20), "...")
   }
 
   if (is.null(name)) {
-    nameStart <- as.integer(pos + attr(pos, "match.length") - 1L)
-    pos <- regexpr("^[ \t\n\r\v]*function[^=]*=[^( \t\n\r\v]*[( \t\n\r\v]", code)
-    if (pos == -1) {
+    if (identical(error, "missing-name-end")) {
       throw("The code does not contain a open parentesis ('(') or a whitespace that defines the end of the function name: ", substring(code, 1, 20), "...")
     }
-    nameStop <- as.integer(pos + attr(pos, "match.length") - 2L)
-    name <- substring(code, nameStart, nameStop)
+    name <- parsedName
   }
 
   printf(this$.verbose, level = -1, "Building MATLAB source code for the function to be passed to the MATLAB server...done\n")

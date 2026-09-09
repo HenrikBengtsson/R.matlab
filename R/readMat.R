@@ -68,10 +68,9 @@
 #
 # \section{Unicode strings}{
 #  Recent versions of MATLAB store some strings using Unicode
-#  encodings.  If the R installation supports \code{\link{iconv}},
-#  these strings will be read correctly.  Otherwise non-ASCII codes
-#  are converted to NA.  Saving to an earlier file format version
-#  may avoid this problem as well.
+#  encodings (\code{miUTF8}, \code{miUTF16}, \code{miUTF32}), which are
+#  read as UTF-8.  UTF-16 surrogate pairs (Unicode code points above
+#  \code{0xFFFF}) are not reassembled.
 # }
 #
 # \section{Reading compressed MAT files}{
@@ -379,28 +378,22 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
 
   ## convert* are internal helper functions.  They handle type dispatch
   ## and defaults for charset conversions.
+
+  ## 'ary' holds UTF-8 code *units* (bytes); a multi-byte character
+  ## spans several of them, so 'ary' must be the whole byte stream, not
+  ## a single element.  Out-of-range values (should not happen once the
+  ## data is read unsigned) are dropped rather than coerced to 0, which
+  ## also warned "out-of-range values treated as 0 in coercion to raw".
   convertUTF8 <- function(ary) {
     if (length(ary) > 0L) {
-      ary <- as.raw(ary)
-      ary <- rawToChar(ary)
+      ary <- ary[!is.na(ary) & ary >= 0L & ary <= 255L]
+      ary <- rawToChar(as.raw(ary))
     } else {
       ary <- ""
     }
     Encoding(ary) <- "UTF-8"
     ary
   }
-##   Was:
-##   convertUTF8 <- function(ary) {
-##     if (length(ary) > 0L) {
-##       ary <- as.integer(ary)
-##       ary <- intToChar(ary)
-##       ary <- paste(ary, collapse = "")
-##     } else {
-##       ary <- ""
-##     }
-##     Encoding(ary) <- "UTF-8"
-##     ary
-##   }
 
   convertASCII <- function(ary) {
     ## WAS: The below would also drop newlines etc. /HB 2014-04-29
@@ -429,48 +422,47 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
     convertUTF8(ary)
   } # convertASCII()
 
-  ## By default, just pick out the ASCII range, ...
-  convertUTF16 <- convertUTF32 <- convertASCII
+  ## miUTF16 and miUTF32 hold Unicode code points (for UTF-16 a code
+  ## unit equals the code point within the Basic Multilingual Plane;
+  ## surrogate pairs, i.e. code points > 0xFFFF, are not reassembled).
+  ## base::intToUtf8() turns them into a UTF-8-encoded string.  Values
+  ## it cannot render - NA, negatives, lone UTF-16 surrogates, and code
+  ## points above U+10FFFF - are dropped; otherwise intToUtf8() would
+  ## return NA for the whole element and paste() would inject a literal
+  ## "NA" into the string.
+  ##
+  ## WAS: The previous implementation replaced non-ASCII code points by
+  ## NA (convertASCII) or, on iconv-capable systems, went via
+  ## intToChar() - which maps code unit 0 to "" and therefore dropped
+  ## the high byte of every character in the range 1-255. /HB 2026-08-30
+  convertUTF16 <- convertUTF32 <- function(ary) {
+    if (length(ary) == 0L) return("")
+    ary <- as.integer(ary)
+    bad <- is.na(ary) | ary < 0L |
+           (ary >= 0xD800L & ary <= 0xDFFFL) | ary > 0x10FFFFL
+    ary[bad] <- 0L
+    intToUtf8(ary)
+  }
 
-  ## However, if there's support for more on the current system,
-  ## use that instead.
-  if (capabilities("iconv")) {
-    utfs <- grep("UTF", iconvlist(), value = TRUE)
-    ## The convertUTF{16, 32} routines below work in big-endian, so
-    ## look for UTF-16BE or UTF16BE, etc..
-    utf16 <- head(grep("UTF-?16BE", utfs, value = TRUE), n = 1L)
-    if (length(utf16) > 0L) {
-      convertUTF16 <- function(ary) {
-        ary16 <- paste(intToChar(c(sapply(ary, FUN = function(x) {
-          c(x%/%256, x%%256)
-        }))), collapse = "")
-        iconv(ary16, from = utf16, to = "UTF-8")
-      }
-    }
-    utf32 <- head(grep("UTF-?32BE", utfs, value = TRUE), n = 1L)
-    if (length(utf32) > 0L) {
-      convertUTF32 <- function(ary) {
-        ary32 <- paste(intToChar(c(sapply(ary, FUN = function(x) {
-          c((x%/%16777216)%%256, (x%/%65536)%%256, (x%/%256)%%256, x%%256)
-        }))), collapse = "")
-        iconv(ary32, from = utf32, to = "UTF-8")
-      }
-    }
-  } # if (capabilities("iconv"))
-
+  ## MATLAB character arrays are commonly stored using plain integer
+  ## data types rather than the miUTF* ones; map those to the matching
+  ## Unicode width so that code points above 255 are not lost.
   charConverter <- function(type) {
     switch(type,
-           miUTF8 = convertUTF8,
-           miUTF16 = convertUTF16,
-           miUTF32 = convertUTF32,
-           convertASCII)
+        miUTF8 = convertUTF8,
+       miUTF16 = convertUTF16,
+      miUINT16 = convertUTF16,
+       miINT16 = convertUTF16,
+       miUTF32 = convertUTF32,
+      miUINT32 = convertUTF32,
+       miINT32 = convertUTF32,
+                 convertASCII
+    )
   }
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Function to convert an array of numbers to a UTF-8 string.  If the
-  # type is miUTF16 or miUTF32, iconv-supporting implementations will
-  # convert the charset correctly.  Otherwise non-ASCII characters are
-  # replaced by NA.
+  # Function to convert an array of numbers to a UTF-8 string, using the
+  # encoding-specific converter picked by charConverter(type).
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   matToString <- function(ary, type) {
     do.call(charConverter(type), list(ary))
@@ -478,9 +470,8 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Function to convert an array of numbers to an array of UTF-8
-  # characters.  If the type is miUTF16 or miUTF32, iconv-supporting
-  # implementations will convert the charset correctly.  Otherwise
-  # non-ASCII characters are replaced by NA.
+  # characters, one element at a time, using the encoding-specific
+  # converter picked by charConverter(type).
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # sapply(X, ...) function that treats length(X) == 0 specially
   sapply0 <- function(X, FUN, ...) {
@@ -1331,6 +1322,8 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
     names(SIGNED_KNOWN_TYPES) <- NAMES_OF_KNOWN_TYPES
     SIGNED_KNOWN_TYPES[grep("miINT", NAMES_OF_KNOWN_TYPES)] <- TRUE
     SIGNED_KNOWN_TYPES[grep("miUINT", NAMES_OF_KNOWN_TYPES)] <- FALSE
+    # UTF-8/16/32 code units are unsigned
+    SIGNED_KNOWN_TYPES[grep("miUTF", NAMES_OF_KNOWN_TYPES)] <- FALSE
 
     KNOWN_WHATS <- list(
       "miMATRIX" = double(),
@@ -2212,12 +2205,34 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
           matrix <- as.integer(matrix)
           dim(matrix) <- dimensionsArray$dim
         } else if (arrayFlags$class == "mxCHAR_CLASS") {
-          verbose && cat(verbose, level = -5, "Encoding type: ", tag$type)
-          matrix <- matToCharArray(matrix, tag$type)
+          verbose && cat(verbose, level = -5, "Encoding type: ", data$tag$type)
           dim <- dimensionsArray$dim
+          if (identical(data$tag$type, "miUTF8")) {
+            # miUTF8 data is a stream of UTF-8 code *units* (bytes); a
+            # multi-byte character occupies several of them, so decode
+            # the whole stream and split it into one element per
+            # character to match 'dim'. /HB 2026-08-30
+            str <- convertUTF8(matrix)
+            n <- tryCatch(nchar(str), error = function(e) NA_integer_)
+            if (is.na(n)) {
+              # Malformed UTF-8; keep the decoded bytes as one string.
+              matrix <- str
+            } else {
+              matrix <- substring(str, seq_len(n), seq_len(n))
+            }
+          } else {
+            matrix <- matToCharArray(matrix, data$tag$type)
+          }
           # AD HOC/special/illegal case?  /HB 2010-09-18
           if (length(matrix) == 0L && prod(dim) > 0) {
             matrix <- ""
+          }
+          # If the character count does not match the declared
+          # dimensions (e.g. malformed multi-byte data), fall back to a
+          # single pasted string rather than error in dim<-().
+          if (length(matrix) != prod(dim)) {
+            matrix <- paste(matrix, collapse = "")
+            dim <- c(1L, 1L)
           }
           dim(matrix) <- dim
           matrix <- apply(matrix, MARGIN = 1L, FUN = paste, collapse = "")
