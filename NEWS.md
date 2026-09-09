@@ -18,6 +18,11 @@
    ...] do not match the length of object ...". Thanks to Mats
    Blomqvist for reporting on these bugs.
 
+ * `readMat()` only recognized the `miUTF16` and `miUTF32` data types
+   as Unicode text. Character arrays stored using a plain integer type
+   (`miUINT16`, `miINT16`, `miUINT32`, `miINT32`) were only treated
+   as 8-bit text.
+
 ## Documentation
 
  * Drop no-longer existing reference to legacy 'RMatlab' package.

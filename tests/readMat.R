@@ -303,3 +303,28 @@ stopifnot(
   identical(utf8ToInt(mystr),
             c(utf8ToInt("Erythrops go"), 0xFFFDL, utf8ToInt("si")))
 )
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Assert that a MATLAB character array stored using a plain integer
+# data type (miUINT16) rather than miUTF16 is still decoded as UTF-16,
+# so that code points above 255 are preserved and not dropped.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pathname <- file.path(path, "CharUINT16-wide.mat")
+warns <- NULL
+mat <- withCallingHandlers(
+  readMat(pathname),
+  warning = function(w) {
+    warns <<- c(warns, conditionMessage(w))
+    invokeRestart("muffleWarning")
+  }
+)
+str(mat)
+mystr <- mat$x[1, 1]
+## "A", en-dash (U+2013), "B", left double quote (U+201C), "e", e-acute
+stopifnot(
+  length(warns) == 0L,
+  identical(Encoding(mystr), "UTF-8"),
+  identical(utf8ToInt(mystr),
+            c(65L, 0x2013L, 66L, 0x201CL, 101L, 0xE9L))
+)

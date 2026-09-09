@@ -425,7 +425,11 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
   ## miUTF16 and miUTF32 hold Unicode code points (for UTF-16 a code
   ## unit equals the code point within the Basic Multilingual Plane;
   ## surrogate pairs, i.e. code points > 0xFFFF, are not reassembled).
-  ## base::intToUtf8() turns them into a UTF-8-encoded string.
+  ## base::intToUtf8() turns them into a UTF-8-encoded string.  Values
+  ## it cannot render - NA, negatives, lone UTF-16 surrogates, and code
+  ## points above U+10FFFF - are dropped; otherwise intToUtf8() would
+  ## return NA for the whole element and paste() would inject a literal
+  ## "NA" into the string.
   ##
   ## WAS: The previous implementation replaced non-ASCII code points by
   ## NA (convertASCII) or, on iconv-capable systems, went via
@@ -434,16 +438,26 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
   convertUTF16 <- convertUTF32 <- function(ary) {
     if (length(ary) == 0L) return("")
     ary <- as.integer(ary)
-    ary[is.na(ary) | ary < 0L] <- 0L
+    bad <- is.na(ary) | ary < 0L |
+           (ary >= 0xD800L & ary <= 0xDFFFL) | ary > 0x10FFFFL
+    ary[bad] <- 0L
     intToUtf8(ary)
   }
 
+  ## MATLAB character arrays are commonly stored using plain integer
+  ## data types rather than the miUTF* ones; map those to the matching
+  ## Unicode width so that code points above 255 are not lost.
   charConverter <- function(type) {
     switch(type,
-           miUTF8 = convertUTF8,
-           miUTF16 = convertUTF16,
-           miUTF32 = convertUTF32,
-           convertASCII)
+        miUTF8 = convertUTF8,
+       miUTF16 = convertUTF16,
+      miUINT16 = convertUTF16,
+       miINT16 = convertUTF16,
+       miUTF32 = convertUTF32,
+      miUINT32 = convertUTF32,
+       miINT32 = convertUTF32,
+                 convertASCII
+    )
   }
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
