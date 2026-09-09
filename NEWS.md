@@ -15,9 +15,8 @@
  * `readMat()` decoded `miUTF8` character arrays one byte at a time,
    which corrupted multi-byte characters and, when the number of bytes
    differed from the number of characters, failed with "dims [product
-   ...] do not match the length of object ...".  Such arrays are now
-   decoded as a byte stream.  This case occurs with MAT files written
-   by, for instance, SciPy and recent versions of MATLAB.
+   ...] do not match the length of object ...". Thanks to Mats
+   Blomqvist for reporting on these bugs.
 
 ## Documentation
 
