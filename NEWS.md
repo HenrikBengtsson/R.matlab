@@ -2,6 +2,13 @@
 
 ## Bug Fixes
 
+ * `setFunction()` produced an error "The code does not contain a
+   proper MATLAB function definition" for MATLAB functions that had
+   whitespace between the `=` and the function name, e.g. `function
+   [a, b] = foo(x)` failed but `function [a, b] =foo(x)`
+   worked. Thanks to Eoghan O'Neill for troubleshooting and reporting
+   on this.
+
  * `readMat()` read UTF-8, UTF-16, and UTF-32 character data as
    _signed_ integers, which could result in warnings on "out-of-range
    values treated as 0 in coercion to raw" and invalid non-ASCII
