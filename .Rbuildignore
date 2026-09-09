@@ -11,5 +11,6 @@
 ^vignettes/.*[.](r|R)$
 ^CONDUCT[.]md$
 ^CONTRIBUTING[.]md$
+^README[.]md$
 ^LICENSE\.md$
 ^Makefile$

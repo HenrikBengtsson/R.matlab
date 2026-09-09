@@ -1,5 +1,5 @@
 Package: R.matlab
-Version: 3.7.0-9006
+Version: 3.8.0
 Depends:
   R (>= 2.14.0)
 Imports:
@@ -22,7 +22,7 @@ Authors@R: c(
          comment=c("Support for reading compressed files, sparse matrices and UTF-encoded strings.", ORCID="0000-0002-4345-4200")))
 Author: Henrik Bengtsson [aut, cre, cph] (<https://orcid.org/0000-0002-7579-5165>), Andy Jacobson [ctb] (Internal MAT v4 reader, <https://orcid.org/0000-0002-8501-3382>), Jason Riedy [ctb] (Support for reading compressed files, sparse matrices and UTF-encoded strings., <https://orcid.org/0000-0002-4345-4200>)
 Maintainer: Henrik Bengtsson <henrikb@braju.com>
-Description: Methods readMat() and writeMat() for reading and writing MAT files.  For user with MATLAB v6 or newer installed (either locally or on a remote host), the package also provides methods for controlling MATLAB (trademark) via R and sending and retrieving data between R and MATLAB.
+Description: Methods readMat() and writeMat() for reading and writing MAT files.  For users with MATLAB v6 or newer installed (either locally or on a remote host), the package also provides methods for controlling MATLAB (trademark) via R and sending and retrieving data between R and MATLAB.
 License: LGPL (>= 2.1)
 URL: https://github.com/HenrikBengtsson/R.matlab
 BugReports: https://github.com/HenrikBengtsson/R.matlab/issues
