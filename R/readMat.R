@@ -2217,7 +2217,13 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
             if (is.na(n)) {
               # Malformed UTF-8; keep the decoded bytes as one string.
               matrix <- str
+            } else if (n == 0L) {
+              # Empty text, e.g. an unset field. There is nothing to split
+              # and substring() rejects a zero-length index. The AD HOC case
+              # below turns this into "" when 'dim' calls for it.
+              matrix <- character(0L)
             } else {
+				
               matrix <- substring(str, seq_len(n), seq_len(n))
             }
           } else {
