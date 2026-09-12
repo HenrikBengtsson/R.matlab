@@ -1,7 +1,9 @@
 # Version (development version)
 
- * ...
- 
+## Bug Fixes
+
+ * `readMat()` failed on MAT files with empty text fields (a
+   regression in R.matlab 3.8.0).
 
 # Version 3.8.0 [2026-09-09]
 

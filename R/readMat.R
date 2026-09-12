@@ -2217,6 +2217,8 @@ setMethodS3("readMat", "default", function(con, maxLength = NULL, fixNames = TRU
             if (is.na(n)) {
               # Malformed UTF-8; keep the decoded bytes as one string.
               matrix <- str
+            } else if (n == 0L) {
+              matrix <- character(0L)
             } else {
               matrix <- substring(str, seq_len(n), seq_len(n))
             }
