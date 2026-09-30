@@ -1,4 +1,4 @@
-# Version (development version)
+# Version 3.8.1 [2026-09-29]
 
 ## Bug Fixes
 
