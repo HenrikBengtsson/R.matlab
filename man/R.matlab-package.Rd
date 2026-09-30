@@ -15,7 +15,7 @@
 
 
 \description{
-  Methods readMat() and writeMat() for reading and writing MAT files.  For user with MATLAB v6 or newer installed (either locally or on a remote host), the package also provides methods for controlling MATLAB (trademark) via R and sending and retrieving data between R and MATLAB.
+  Methods readMat() and writeMat() for reading and writing MAT files.  For users with MATLAB v6 or newer installed (either locally or on a remote host), the package also provides methods for controlling MATLAB (trademark) via R and sending and retrieving data between R and MATLAB.
 
   In brief, this package provides a one-directional interface from
   \R to MATLAB, with communication taking place via a TCP/IP connection
